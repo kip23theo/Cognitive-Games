@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Settings · Cognitive Training Games</title>
+<style>
+:root {
+  --bg:           #F8F6F3;
+  --surface:      #FFFFFF;
+  --surface2:     #F0EDE8;
+  --text:         #2D3436;
+  --text-light:   #636E72;
+  --border:       #E0DBD5;
+  --accent:       #E17055;
+  --accent-soft:  rgba(225,112,85,0.12);
+  --success:      #00B894;
+  --highlight:    #74B9FF;
+  --shadow-sm:    0 2px 10px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 20px rgba(0,0,0,0.10);
+  --radius:       16px;
+  --radius-sm:    10px;
+}
+[data-theme="dark"] {
+  --bg:           #141414;
+  --surface:      #1F1F1F;
+  --surface2:     #2A2A2A;
+  --text:         #F0EDE8;
+  --text-light:   #9A9590;
+  --border:       #333333;
+  --accent:       #FF7A5A;
+  --accent-soft:  rgba(255,122,90,0.15);
+  --success:      #00D4A8;
+  --highlight:    #90C8FF;
+  --shadow-sm:    0 2px 10px rgba(0,0,0,0.3);
+  --shadow-md:    0 4px 20px rgba(0,0,0,0.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
+}
+
+#ctg-zoom-wrap {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: background 0.3s;
+}
+.header-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: max(env(safe-area-inset-top),10px) max(env(safe-area-inset-right),16px) 10px max(env(safe-area-inset-left),16px);
+}
+.back-btn {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  min-height: 40px;
+  flex-shrink: 0;
+  transition: background 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.back-btn:hover { background: var(--border); }
+
+.header-title {
+  font-size: clamp(16px, 4.5vw, 20px);
+  font-weight: 700;
+  flex: 1;
+  text-align: center;
+}
+
+.header-spacer { width: 72px; flex-shrink: 0; }
+
+/* ── CONTENT ── */
+.content {
+  flex: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px max(env(safe-area-inset-right),16px) max(env(safe-area-inset-bottom),32px) max(env(safe-area-inset-left),16px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── SETTING CARD ── */
+.setting-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.setting-card-header {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.setting-card-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.setting-card-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.setting-card-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 1px;
+}
+
+.setting-card-body {
+  padding: 18px;
+}
+
+/* ── THEME BUTTONS ── */
+.theme-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.theme-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 12px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--surface2);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-light);
+  transition: all 0.2s;
+  min-height: 90px;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.theme-btn.setting-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.theme-preview {
+  width: 48px; height: 28px;
+  border-radius: 7px;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  display: flex;
+}
+.preview-light { background: #F8F6F3; width: 100%; }
+.preview-dark  { background: #1A1A1A; width: 100%; }
+
+.theme-preview-inner {
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.preview-dot  { width: 6px; height: 6px; border-radius: 2px; }
+.preview-line { height: 3px; border-radius: 2px; width: 100%; }
+
+/* ── ZOOM CONTROLS ── */
+.zoom-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zoom-btn {
+  width: 52px; height: 52px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--surface2);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.zoom-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.zoom-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.zoom-display-wrap {
+  flex: 1;
+  text-align: center;
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 10px 6px;
+  border: 1.5px solid var(--border);
+}
+
+.zoom-display-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  display: block;
+  margin-bottom: 2px;
+}
+
+#ctg-zoom-display {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  display: block;
+  letter-spacing: -0.02em;
+}
+
+.zoom-reset-wrap {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.zoom-reset-btn {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.zoom-reset-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* ── ABOUT CARD ── */
+.about-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.about-item:last-child { border-bottom: none; padding-bottom: 0; }
+.about-item-label { color: var(--text-light); font-weight: 500; }
+.about-item-val   { font-weight: 700; color: var(--text); }
+
+/* ── GAMES QUICK-LAUNCH ── */
+.games-quick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quick-game-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 12px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  border: 1.5px solid var(--accent);
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.quick-game-btn:hover { background: var(--accent); color: #fff; }
+.quick-game-btn span { font-size: 26px; }
+
+/* ── TOAST ── */
+.ctg-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--text);
+  color: var(--bg);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9999;
+  pointer-events: none;
+  transition: transform 0.25s, opacity 0.25s;
+  opacity: 0;
+  white-space: nowrap;
+}
+.ctg-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .content { gap: 14px; }
+  .setting-card-body { padding: 14px; }
+  .theme-row { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .theme-btn { min-height: 70px; padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="ctg-zoom-wrap">
+
+  <div class="header">
+    <div class="header-inner">
+      <a href="index.html" class="back-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </a>
+      <div class="header-title">Settings</div>
+      <div class="header-spacer"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── THEME ── -->
+    <div class="setting-card">
+      <div class="setting-card-header">
+        <span class="setting-card-icon">🎨</span>
+        <div>
+          <h2>Appearance</h2>
+          <p class="setting-card-desc">Choose your preferred colour theme</p>
+        </div>
+      </div>
+      <div class="setting-card-body">
+        <div class="theme-row">
+
+          <button class="theme-btn setting-active" data-theme-btn="light">
+            <div class="theme-preview">
+              <div class="preview-light">
+                <div class="theme-preview-inner">
+                  <div class="preview-dot" style="background:#E17055;"></div>
+                  <div class="preview-line" style="background:#DDD;"></div>
+                  <div class="preview-line" style="background:#DDD; width:60%;"></div>
+                </div>
+              </div>
+            </div>
+            ☀️ Light Mode
+          </button>
+
+          <button class="theme-btn" data-theme-btn="dark">
+            <div class="theme-preview">
+              <div class="preview-dark">
+                <div class="theme-preview-inner">
+                  <div class="preview-dot" style="background:#FF7A5A;"></div>
+                  <div class="preview-line" style="background:#444;"></div>
+                  <div class="preview-line" style="background:#444; width:60%;"></div>
+                </div>
+              </div>
+            </div>
+            🌙 Dark Mode
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ZOOM ── -->
+    <div class="setting-card">
+      <div class="setting-card-header">
+        <span class="setting-card-icon">🔍</span>
+        <div>
+          <h2>Text &amp; UI Size</h2>
+          <p class="setting-card-desc">Adjust zoom level — applies across all pages</p>
+        </div>
+      </div>
+      <div class="setting-card-body">
+        <div class="zoom-row">
+          <button class="zoom-btn" id="ctg-zoom-out" title="Zoom Out">−</button>
+          <div class="zoom-display-wrap">
+            <span class="zoom-display-label">Current Zoom</span>
+            <span id="ctg-zoom-display">100%</span>
+          </div>
+          <button class="zoom-btn" id="ctg-zoom-in" title="Zoom In">+</button>
+        </div>
+        <div class="zoom-reset-wrap">
+          <button class="zoom-reset-btn" id="ctg-zoom-reset">↩ Reset to 100%</button>
+        </div>
+        <p style="text-align:center; font-size:12px; color:var(--text-light); margin-top:10px;">
+          Range: 70% – 140% &nbsp;·&nbsp; Persists across all pages
+        </p>
+      </div>
+    </div>
+
+    <!-- ── QUICK PLAY ── -->
+    <div class="setting-card">
+      <div class="setting-card-header">
+        <span class="setting-card-icon">🎮</span>
+        <div>
+          <h2>Quick Play</h2>
+          <p class="setting-card-desc">Jump straight into a game</p>
+        </div>
+      </div>
+      <div class="setting-card-body">
+        <div class="games-quick">
+          <a class="quick-game-btn" href="light-catcher.html">
+            <span>💡</span>
+            Light Catcher
+          </a>
+          <a class="quick-game-btn" href="road-runner.html">
+            <span>🚗</span>
+            Road Runner
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ABOUT ── -->
+    <div class="setting-card">
+      <div class="setting-card-header">
+        <span class="setting-card-icon">ℹ️</span>
+        <div>
+          <h2>About</h2>
+          <p class="setting-card-desc">App information</p>
+        </div>
+      </div>
+      <div class="setting-card-body">
+        <div class="about-row">
+          <div class="about-item">
+            <span class="about-item-label">App Name</span>
+            <span class="about-item-val">Cognitive Training Games</span>
+          </div>
+          <div class="about-item">
+            <span class="about-item-label">Games Available</span>
+            <span class="about-item-val">2</span>
+          </div>
+          <div class="about-item">
+            <span class="about-item-label">Platform</span>
+            <span class="about-item-val">Web (All Devices)</span>
+          </div>
+          <div class="about-item">
+            <span class="about-item-label">Storage</span>
+            <span class="about-item-val">localStorage only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /ctg-zoom-wrap -->
+
+<div class="ctg-toast" id="ctg-toast"></div>
+
+<script src="shared.js"></script>
+</body>
+</html>

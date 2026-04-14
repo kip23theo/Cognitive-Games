@@ -299,8 +299,10 @@ body {
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
-  padding: 4px max(env(safe-area-inset-right),8px) 0 max(env(safe-area-inset-left),8px); /* ← was 8px 10px */
-  gap: 4px; /* ← was 8px */
+  padding: 4px max(env(safe-area-inset-right),8px) 0 max(env(safe-area-inset-left),8px);
+  gap: 4px;
+  /* Reserve space for fixed bottom controls bar */
+  padding-bottom: calc(70px + max(env(safe-area-inset-bottom), 10px));
 }
 
 .stats-bar { display: flex; gap: 5px; flex-shrink: 0; }
@@ -327,21 +329,12 @@ body {
   position: relative;
   background: #2d3748;
   min-height: 0;
-  /*
-   * ▼ KEY FIX: cap how tall the road canvas can grow.
-   *   Formula: 100dvh
-   *     minus header (~52px)
-   *     minus stats bar (~40px)
-   *     minus status msg (~22px)
-   *     minus lane buttons (~62px)
-   *     minus gaps & padding (~30px)
-   *   Adjust the last value (30px) to give more/less road height.
-   */
-  max-height: calc(100dvh - 52px - 40px - 22px - 62px - 30px);
+  /* No max-height cap — canvas fills remaining space above fixed bottom controls */
   display: flex;
+  width: 100%;
 }
 
-#roadCanvas { display: block; width: 100%; height: 100%; object-fit: fill; }
+#roadCanvas { display: block; width: 100%; height: 100%; }
 
 .collision-flash {
   position: absolute;
@@ -355,39 +348,45 @@ body {
 
 /* ── TOUCH CONTROLS ── */
 .controls-row {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-  padding-bottom: max(env(safe-area-inset-bottom), 10px); /* ← was 8px */
+  display: none; /* hidden until game starts */
+  gap: 10px;
+  /* Fixed at bottom — always visible, thumb-friendly */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px max(env(safe-area-inset-right), 12px) max(env(safe-area-inset-bottom), 10px) max(env(safe-area-inset-left), 12px);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  z-index: 100;
+  transition: background 0.3s;
 }
+.controls-row.visible { display: flex; }
 
 .lane-btn {
   flex: 1;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
   border-radius: 14px;
-  padding: 12px 10px; /* ← was 14px 10px */
-  font-size: clamp(14px, 3.8vw, 17px); /* ← was clamp(15px,4vw,18px) */
+  padding: 14px 10px;
+  font-size: clamp(15px, 4vw, 18px);
   font-weight: 700;
-  color: var(--text-light);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  box-shadow: var(--shadow-sm);
   cursor: pointer;
-  min-height: 50px; /* ← was 54px — still very finger-friendly */
+  min-height: 54px;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  transition: transform 0.1s, background 0.15s, border-color 0.15s;
+  transition: transform 0.1s, opacity 0.15s;
+  border: 2px solid transparent;
 }
-.lane-btn:active { transform: scale(0.95); }
-.lane-btn.active-left  { color: #E53E3E; background: rgba(229,62,62,0.22); box-shadow: 0 2px 16px rgba(229,62,62,0.35); border-color: #E53E3E; }
-.lane-btn.active-right { color: #3182CE; background: rgba(49,130,206,0.22); box-shadow: 0 2px 16px rgba(49,130,206,0.35); border-color: #3182CE; }
+.lane-btn:active { transform: scale(0.95); opacity: 0.8; }
+.lane-btn.active-left  { box-shadow: 0 2px 20px rgba(229,62,62,0.5); }
+.lane-btn.active-right { box-shadow: 0 2px 20px rgba(49,130,206,0.5); }
 
 /* Left button always red, right always blue */
-#btnLeft,  .btn-red  { color: #E53E3E; background: rgba(229,62,62,0.10); border-color: rgba(229,62,62,0.45); }
-#btnRight, .btn-blue { color: #3182CE; background: rgba(49,130,206,0.10); border-color: rgba(49,130,206,0.45); }
+#btnLeft,  .btn-red  { color: #fff; background: #E53E3E; border-color: #C53030; box-shadow: 0 2px 12px rgba(229,62,62,0.35); }
+#btnRight, .btn-blue { color: #fff; background: #3182CE; border-color: #2B6CB0; box-shadow: 0 2px 12px rgba(49,130,206,0.35); }
 
 .status-msg {
   font-size: clamp(12px, 3vw, 15px); /* ← was clamp(13px,3.5vw,16px) */
@@ -422,9 +421,6 @@ body {
   max-width: 480px;
   text-align: center;
   transition: background 0.3s, border-color 0.3s;
-  transform: scale(0.82);
-  transform-origin: top center;
-  margin-bottom: -12%;
 }
 
 .results-emoji { font-size: clamp(40px, 10vw, 60px); margin-bottom: 10px; line-height: 1; }
@@ -637,17 +633,6 @@ body {
 
     <div class="status-msg" id="statusMsg">Dodge the obstacles!</div>
 
-    <div class="controls-row" id="controlsRow">
-      <button class="lane-btn active-left" id="btnLeft"
-        onclick="SoundEngine.init(); onInput('left')">
-        ← Left Lane
-      </button>
-      <button class="lane-btn" id="btnRight"
-        onclick="SoundEngine.init(); onInput('right')">
-        Right Lane →
-      </button>
-    </div>
-
   </div>
 </div>
 
@@ -688,6 +673,18 @@ body {
 
 </div><!-- /ctg-zoom-wrap -->
 
+<!-- ── FIXED BOTTOM CONTROLS (shown only during gameplay) ── -->
+<div class="controls-row" id="controlsRow">
+  <button class="lane-btn btn-red active-left" id="btnLeft"
+    onclick="SoundEngine.init(); onInput('left')">
+    ← Left Lane
+  </button>
+  <button class="lane-btn btn-blue" id="btnRight"
+    onclick="SoundEngine.init(); onInput('right')">
+    Right Lane →
+  </button>
+</div>
+
 <script>
 // ─── THEME: apply immediately ───────────────────────────────────────────────
 (function() {
@@ -725,10 +722,9 @@ function applyLandscapeLayout() {
   if (isLandscape && !landscapeMode) {
     const col = document.createElement('div');
     col.id = 'rightCol'; col.className = 'right-col';
-    const stats    = document.getElementById('statsBar');
-    const status   = document.getElementById('statusMsg');
-    const controls = document.getElementById('controlsRow');
-    col.appendChild(stats); col.appendChild(status); col.appendChild(controls);
+    const stats  = document.getElementById('statsBar');
+    const status = document.getElementById('statusMsg');
+    col.appendChild(stats); col.appendChild(status);
     layout.appendChild(col);
     landscapeMode = true;
   } else if (!isLandscape && landscapeMode) {
@@ -736,13 +732,12 @@ function applyLandscapeLayout() {
     if (col) {
       while (col.firstChild) layout.insertBefore(col.firstChild, layout.firstChild);
       col.remove();
-      const stats    = document.getElementById('statsBar');
-      const road     = document.getElementById('roadWrapper');
-      const status   = document.getElementById('statusMsg');
-      const controls = document.getElementById('controlsRow');
+      const stats  = document.getElementById('statsBar');
+      const road   = document.getElementById('roadWrapper');
+      const status = document.getElementById('statusMsg');
       layout.innerHTML = '';
       layout.appendChild(stats); layout.appendChild(road);
-      layout.appendChild(status); layout.appendChild(controls);
+      layout.appendChild(status);
     }
     landscapeMode = false;
   }
@@ -756,15 +751,15 @@ window.addEventListener('orientationchange', () => setTimeout(() => { applyLands
 let ROAD_LEFT, ROAD_RIGHT, ROAD_W, LANE_W, LEFT_LANE_X, RIGHT_LANE_X;
 
 function updateLanePositions() {
-  ROAD_LEFT  = Math.round(CANVAS_W * 0.15);
-  ROAD_RIGHT = Math.round(CANVAS_W * 0.85);
+  ROAD_LEFT  = Math.round(CANVAS_W * 0.08);
+  ROAD_RIGHT = Math.round(CANVAS_W * 0.92);
   ROAD_W     = ROAD_RIGHT - ROAD_LEFT;
   LANE_W     = ROAD_W / 2;
   LEFT_LANE_X  = ROAD_LEFT + LANE_W / 2;
   RIGHT_LANE_X = ROAD_LEFT + LANE_W + LANE_W / 2;
 }
 
-const CAR_W_F = 0.11, CAR_H_F = 0.13, OBS_W_F = 0.125, OBS_H_F = 0.10;
+const CAR_W_F = 0.13, CAR_H_F = 0.17, OBS_W_F = 0.14, OBS_H_F = 0.10;
 function CAR_W() { return Math.round(CANVAS_W * CAR_W_F); }
 function CAR_H() { return Math.round(CANVAS_H * CAR_H_F); }
 function OBS_W() { return Math.round(CANVAS_W * OBS_W_F); }
@@ -853,6 +848,9 @@ function resetGame() {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  // Show bottom controls only during active game
+  const controls = document.getElementById('controlsRow');
+  if (controls) controls.classList.toggle('visible', id === 'gameScreen');
   if (id === 'gameScreen') { applyLandscapeLayout(); setTimeout(resizeCanvas, 60); }
 }
 

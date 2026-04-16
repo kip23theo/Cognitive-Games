@@ -505,7 +505,7 @@ body.ls-active #gameScreen.active { padding-bottom: 0; }
   min-height: 0;
 
   /* 🔥 THIS IS THE FIX */
-  max-height: 65vh;   /* reduce from full height */
+  max-height: 70vh;   /* reduce from full height */
 
   height: auto;
   align-self: center;
@@ -998,7 +998,7 @@ function startGame() {
         resizeCanvas(); // third pass — guarantees wrapper has final size
         G.carX        = LEFT_LANE_X;
         G.carTargetX  = LEFT_LANE_X;
-        G.carY        = CANVAS_H - Math.round(CANVAS_H * 0.18);
+        G.carY        = CANVAS_H - Math.round(CANVAS_H * 0.25);
         // Safety clamp: car must be at least 10% from bottom edge
         G.carY = Math.min(G.carY, CANVAS_H - Math.round(CANVAS_H * 0.10));
         updateHUD(); setStatus('Dodge the obstacles!', '');

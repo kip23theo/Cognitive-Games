@@ -856,9 +856,12 @@ function updateLanePositions() {
   RIGHT_LANE_X = ROAD_LEFT + LANE_W + LANE_W / 2;
 }
 
-const CAR_W_F = 0.13, CAR_H_F = 0.17, OBS_W_F = 0.14, OBS_H_F = 0.10;
+const CAR_W_F = 0.13, OBS_W_F = 0.14, OBS_H_F = 0.10;
+// CAR_H is derived from CAR_W using a fixed 2.0:1 aspect ratio (height:width)
+// so the car always looks like a proper top-down car, never squashed or stretched
+const CAR_ASPECT = 2.0;
 function CAR_W() { return Math.round(CANVAS_W * CAR_W_F); }
-function CAR_H() { return Math.round(CANVAS_H * CAR_H_F); }
+function CAR_H() { return Math.round(CAR_W() * CAR_ASPECT); }
 function OBS_W() { return Math.round(CANVAS_W * OBS_W_F); }
 function OBS_H() { return Math.round(CANVAS_H * OBS_H_F); }
 

@@ -4,18 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" id="metaViewport">
 <script>
-// Apply zoom=0.5 viewport for landscape phones ASAP before render
+// Apply viewport for landscape phones ASAP before render
 (function(){
   var meta = document.getElementById('metaViewport');
   function check() {
-    var W = window.screen.width, H = window.screen.height;
-    var landscape = W > H;
-    var phone = Math.min(W,H) <= 500;
-    if (landscape && phone) {
-      meta.content = 'width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no, viewport-fit=cover';
-    } else {
-      meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
-    }
+    // Always use scale=1 — the flex layout fills the screen correctly
+    meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
   }
   check();
   window.addEventListener('orientationchange', function(){ setTimeout(check, 150); });
@@ -489,64 +483,68 @@ body.ls-active #gameScreen.active { padding-bottom: 0; }
 }
 
 /* ══ LANDSCAPE ══ */
-@media (orientation: landscape) and (max-height: 500px) {
+@media (orientation: landscape) and (max-height: 600px) {
   /* Compact header */
   .header { min-height: 40px; padding-top: max(env(safe-area-inset-top),4px); padding-bottom: 4px; }
   .back-btn { min-height: 32px; font-size: 12px; padding: 4px 9px; }
   .level-badge { font-size: 11px; padding: 3px 9px; }
   .game-title { font-size: 15px; }
 
-  /* Game layout: road | right-col side by side */
+  /* Game layout: left-col (stats+buttons) | road canvas on the RIGHT */
   .game-layout {
     flex-direction: row;
-    padding: 5px max(env(safe-area-inset-right),6px) max(env(safe-area-inset-bottom),5px) max(env(safe-area-inset-left),6px);
-    gap: 6px;
+    padding: 5px max(env(safe-area-inset-right),8px) max(env(safe-area-inset-bottom),5px) max(env(safe-area-inset-left),8px);
+    gap: 8px;
     align-items: stretch;
   }
 
-  /* Road takes all leftover horizontal space */
+  /* Road sits on the RIGHT, takes all leftover space */
   .road-wrapper {
     flex: 1;
     border-radius: 10px;
     min-height: 0;
-    max-height: none;  /* cancel portrait cap */
+    max-height: none;
     height: 100%;
+    order: 2; /* push canvas to the right */
   }
 
-  /* Right column: stats + status + buttons stacked */
+  /* Left column: stats + status + buttons */
   .right-col {
-    width: clamp(100px, 22vw, 140px);
+    width: clamp(130px, 30vw, 190px);
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 5px;
     justify-content: space-between;
+    order: 1; /* panel on the LEFT */
   }
 
-  /* Stats stack vertically */
+  /* Stats stack vertically in left col */
   .stats-bar { flex-direction: column; gap: 4px; flex: 1; }
-  .stat-box { padding: 3px 5px; }
-  .stat-value { font-size: clamp(13px, 2.8vh, 18px); }
-  .stat-label { font-size: 8px; }
-  .status-msg { font-size: 10px; min-height: 14px; text-align: center; }
+  .stat-box { padding: 5px 8px; }
+  .stat-value { font-size: clamp(16px, 3.2vh, 22px); }
+  .stat-label { font-size: 9px; }
+  .status-msg { font-size: 11px; min-height: 14px; text-align: center; }
 
-  /* ── In landscape the buttons move INSIDE .right-col, NOT fixed ── */
+  /* Buttons inside left-col, stacked vertically */
   .controls-row {
-    position: static !important;    /* override fixed */
+    position: static !important;
     flex-direction: column !important;
     padding: 0 !important;
     background: transparent !important;
     border-top: none !important;
-    gap: 5px !important;
+    gap: 6px !important;
     width: 100%;
+    flex-shrink: 0;
   }
   .lane-btn {
-    min-height: 0;
+    min-height: 46px;
     flex: 1;
-    font-size: clamp(11px, 2.4vh, 14px);
-    padding: 0 6px;
+    font-size: clamp(13px, 2.8vh, 17px);
+    padding: 0 8px;
     border-radius: 10px;
-    gap: 3px;
+    gap: 4px;
+    font-weight: 800;
   }
 
   /* Menu landscape */
@@ -586,10 +584,7 @@ body.ls-active #gameScreen.active { padding-bottom: 0; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-/* ── LANDSCAPE ZOOM: viewport initial-scale=0.5 via JS + CSS zoom fallback ── */
-@media (orientation: landscape) and (max-height: 450px) {
-  html { zoom: 0.55; }
-}
+/* ── LANDSCAPE: layout fills screen naturally, no forced zoom needed ── */
 </style>
 </head>
 <body>
@@ -786,7 +781,7 @@ function resizeCanvas() {
 let landscapeMode = false;
 
 function isLandscapeQuery() {
-  return window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
+  return window.matchMedia('(orientation: landscape) and (max-height: 600px)').matches;
 }
 
 function applyLandscapeLayout() {
@@ -796,7 +791,7 @@ function applyLandscapeLayout() {
   if (!layout || !controls) return;
 
   if (isLandscape && !landscapeMode) {
-    // ── Enter landscape: build right-col with stats + status + buttons ──
+    // ── Enter landscape: left col = stats + status + buttons; canvas goes RIGHT ──
     document.body.classList.add('ls-active');
 
     const col = document.createElement('div');
@@ -806,9 +801,11 @@ function applyLandscapeLayout() {
     const status = document.getElementById('statusMsg');
     col.appendChild(stats);
     col.appendChild(status);
-    // Move the controls row (buttons) into the col so they're inline
-    col.appendChild(controls);
-    layout.appendChild(col);
+    col.appendChild(controls); // buttons inside left col
+
+    // Insert left col BEFORE the road wrapper so it appears on the left
+    const road = document.getElementById('roadWrapper');
+    layout.insertBefore(col, road);
 
     landscapeMode = true;
 
@@ -818,7 +815,6 @@ function applyLandscapeLayout() {
 
     const col = document.getElementById('rightCol');
     if (col) {
-      // Pull controls back to body (fixed position restored by CSS)
       document.body.appendChild(controls);
 
       const stats  = document.getElementById('statsBar');
@@ -1518,14 +1514,7 @@ wireBtn('backToMenuBtn', goToMenu);
 window.addEventListener('resize', function(){
   var meta = document.getElementById('metaViewport');
   if (!meta) return;
-  var W = window.screen.width, H = window.screen.height;
-  var landscape = W > H;
-  var phone = Math.min(W,H) <= 500;
-  if (landscape && phone) {
-    meta.content = 'width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no, viewport-fit=cover';
-  } else {
-    meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
-  }
+  meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
 });
 </script>
 </html>

@@ -753,28 +753,48 @@ function resizeCanvas() {
   const wrapper = document.getElementById('roadWrapper');
   if (!wrapper) return;
 
-  // Force a reflow so getBoundingClientRect is fresh after DOM rearrangement
+  // Force layout refresh
   wrapper.getBoundingClientRect();
 
-  const dpr  = Math.min(window.devicePixelRatio || 1, 2); // cap at 2× for perf
-  const cssW = wrapper.offsetWidth  || 360;
-  const cssH = wrapper.offsetHeight || 300;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-  // Guard: skip if the wrapper hasn't laid out yet
-  if (cssW < 10 || cssH < 10) { setTimeout(resizeCanvas, 80); return; }
+  const maxW = wrapper.offsetWidth  || 360;
+  const maxH = wrapper.offsetHeight || 300;
 
+  // Guard: wait until layout is ready
+  if (maxW < 10 || maxH < 10) {
+    setTimeout(resizeCanvas, 80);
+    return;
+  }
+
+  // 🔥 FIX: maintain aspect ratio (prevents compression)
+  const aspect = LOGICAL_H / LOGICAL_W; // 520 / 400 = 1.3
+
+  let cssW = maxW;
+  let cssH = cssW * aspect;
+
+  // If too tall, fit by height instead
+  if (cssH > maxH) {
+    cssH = maxH;
+    cssW = cssH / aspect;
+  }
+
+  // Apply resolution scaling
   CANVAS_W = Math.round(cssW * dpr);
   CANVAS_H = Math.round(cssH * dpr);
 
   const canvas = document.getElementById('roadCanvas');
-  canvas.width        = CANVAS_W;
-  canvas.height       = CANVAS_H;
+
+  canvas.width  = CANVAS_W;
+  canvas.height = CANVAS_H;
+
   canvas.style.width  = cssW + 'px';
   canvas.style.height = cssH + 'px';
 
+  // Update lanes based on new size
   updateLanePositions();
 
-  // Re-clamp car position after resize so it's never off-screen
+  // Keep car inside bounds after resize
   if (G && G.running) {
     G.carY = Math.min(G.carY, CANVAS_H - Math.round(CANVAS_H * 0.10));
     G.carX = G.carLane === 'left' ? LEFT_LANE_X : RIGHT_LANE_X;

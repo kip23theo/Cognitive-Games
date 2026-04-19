@@ -154,7 +154,7 @@ body {
 
 /* Portrait: reserve space for fixed bottom controls */
 #gameScreen.active {
-  padding-bottom: calc(78px + max(env(safe-area-inset-bottom), 0px));
+  padding-bottom: calc(100px + max(env(safe-area-inset-bottom), 0px));
 }
 /* Landscape: buttons are inline so no bottom padding needed */
 body.ls-active #gameScreen.active {
@@ -352,8 +352,8 @@ body.ls-active #gameScreen.active {
   background: #2d3748;
   min-height: 0;
   /* Portrait: cap height so canvas never hides behind fixed buttons.
-     Header ~52px + stats ~40px + status ~18px + buttons ~78px + gaps ~12px = ~200px */
-  max-height: calc(100dvh - 200px);
+     Header ~52px + stats ~40px + status ~18px + buttons ~100px + gaps ~12px = ~222px */
+  max-height: calc(100dvh - 222px);
   display: flex;
   width: 100%;
 }
@@ -1579,9 +1579,9 @@ window.addEventListener('resize', function(){
 (function() {
   var ZOOM_KEY   = 'ctg-zoom-level';
   var ZOOM_STEP  = 0.05;
-  var ZOOM_MIN   = 0.60;
+  var ZOOM_MIN   = 0.35;
   var ZOOM_MAX   = 1.20;
-  var currentZoom = parseFloat(localStorage.getItem(ZOOM_KEY) || '1');
+  var currentZoom = parseFloat(localStorage.getItem(ZOOM_KEY) || '0.75');
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 

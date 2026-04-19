@@ -1594,16 +1594,29 @@ window.addEventListener('resize', function(){
     var label = document.getElementById('zoomLabel');
     if (!wrap) return;
 
+    var isLandscape = isLandscapeQuery();
+
     if (Math.abs(currentZoom - 1) < 0.001) {
-      wrap.style.transform = '';
-      wrap.style.width     = '';
-      wrap.style.height    = '';
-    } else {
-      var pct = (1 / currentZoom * 100).toFixed(4) + '%';
+      wrap.style.transform       = '';
+      wrap.style.transformOrigin = '';
+      wrap.style.width           = '';
+      wrap.style.height          = '';
+      wrap.style.marginLeft      = '';
+    } else if (isLandscape) {
+      // Landscape: scale from top-left + margin offset to re-centre
+      var offset = Math.round((1 - currentZoom) * 50 * 100) / 100;
       wrap.style.transformOrigin = 'top left';
-      wrap.style.transform  = 'scale(' + currentZoom + ')';
-      wrap.style.width      = (100 / currentZoom).toFixed(4) + '%';
-      wrap.style.height     = (100 / currentZoom).toFixed(4) + 'vh';
+      wrap.style.transform       = 'scale(' + currentZoom + ')';
+      wrap.style.width           = (100 / currentZoom).toFixed(4) + '%';
+      wrap.style.height          = (100 / currentZoom).toFixed(4) + 'vh';
+      wrap.style.marginLeft      = offset + 'vw';
+    } else {
+      // Portrait: scale from top-centre — content stays centred, no gap
+      wrap.style.transformOrigin = 'top center';
+      wrap.style.transform       = 'scale(' + currentZoom + ')';
+      wrap.style.width           = (100 / currentZoom).toFixed(4) + '%';
+      wrap.style.height          = (100 / currentZoom).toFixed(4) + 'vh';
+      wrap.style.marginLeft      = (-((1 / currentZoom - 1) / 2 * 100)).toFixed(4) + '%';
     }
 
     if (label) label.textContent = Math.round(currentZoom * 100) + '%';
@@ -1626,9 +1639,10 @@ window.addEventListener('resize', function(){
     else         el.classList.remove('visible');
   }
 
-  // Show zoom controls only in landscape
+  // Show zoom controls only in landscape; also re-apply zoom for correct centering
   function updateZoomVisibility() {
     showZoomControls(isLandscapeQuery());
+    applyZoom(currentZoom); // re-run so portrait/landscape branch is re-evaluated
   }
 
   window.addEventListener('resize',            updateZoomVisibility);

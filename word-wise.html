@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, user-scalable=yes"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
     />
     <meta
       http-equiv="Content-Security-Policy"
@@ -81,7 +81,8 @@
 
       body {
         margin: 0;
-        min-height: 100vh;
+        height: 100dvh;
+        height: 100vh;
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background: var(--color-bg);
@@ -89,31 +90,216 @@
         font-size: 20px;
         line-height: 1.5;
         display: flex;
-        justify-content: center;
-        padding: max(12px, env(safe-area-inset-top))
-          max(12px, env(safe-area-inset-right))
-          max(12px, env(safe-area-inset-bottom))
-          max(12px, env(safe-area-inset-left));
+        flex-direction: column;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
       }
 
       .app {
         width: 100%;
-        max-width: 600px;
+        max-width: none;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
       }
 
       .panel {
-        background: var(--color-surface);
-        border-radius: 14px;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border);
-        padding: 18px;
+        background: var(--color-bg);
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        padding: 0;
       }
 
       .screen {
         display: none;
+        flex-direction: column;
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
       }
       .screen.active {
-        display: block;
+        display: flex;
+      }
+
+      .menu-screen {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: max(env(safe-area-inset-top), 8px)
+          max(env(safe-area-inset-right), 12px) 8px
+          max(env(safe-area-inset-left), 12px);
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        gap: 8px;
+        min-height: 52px;
+      }
+
+      .back-btn {
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-height: 38px;
+      }
+
+      .header-title {
+        font-size: clamp(15px, 4vw, 18px);
+        font-weight: 700;
+        text-align: center;
+        flex: 1;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .level-badge {
+        background: color-mix(in srgb, #d3a845 18%, var(--surface));
+        color: var(--color-language);
+        border-radius: 16px;
+        padding: 5px 12px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .settings-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        font-size: 16px;
+        text-decoration: none;
+        color: var(--text-light);
+      }
+
+      .menu-body {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 14px max(env(safe-area-inset-right), 14px)
+          max(env(safe-area-inset-bottom), 14px)
+          max(env(safe-area-inset-left), 14px);
+      }
+
+      .menu-hero,
+      .how-to {
+        width: 100%;
+        max-width: 480px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+      }
+
+      .menu-hero {
+        border-radius: 18px;
+        padding: 20px 16px;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+      }
+
+      .game-icon-big {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f4d06f, #e0b94f);
+        color: #6e4b00;
+        font-size: 34px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 20px rgba(224, 185, 79, 0.35);
+      }
+
+      .domain-tag {
+        display: inline-block;
+        background: color-mix(in srgb, #d3a845 18%, var(--surface));
+        color: var(--color-language);
+        border-radius: 16px;
+        padding: 3px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 8px 0;
+      }
+
+      .menu-desc {
+        color: var(--text-light);
+        font-size: clamp(13px, 3.5vw, 15px);
+        line-height: 1.5;
+      }
+
+      .how-to {
+        border-radius: 16px;
+        padding: 14px 16px;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .how-to h3 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-light);
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .how-to-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        font-size: clamp(13px, 3.5vw, 15px);
+      }
+
+      .key-badge {
+        background: var(--surface2);
+        border: 2px solid var(--border);
+        border-radius: 7px;
+        padding: 4px 10px;
+        font-weight: 700;
+        font-size: 15px;
+        min-width: 44px;
+        text-align: center;
+      }
+
+      .start-btn {
+        width: 100%;
+        max-width: 480px;
+        background: linear-gradient(135deg, #e0b94f, #c99328);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: clamp(17px, 4.5vw, 20px);
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 5px 16px rgba(201, 147, 40, 0.35);
       }
 
       .screen.prestart .game-top,
@@ -139,7 +325,7 @@
       }
 
       .game-top {
-        margin-top: 14px;
+        margin-top: 0;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
@@ -147,28 +333,41 @@
         font-weight: 600;
       }
 
+      .game-body {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        padding: 10px max(env(safe-area-inset-right), 12px)
+          max(env(safe-area-inset-bottom), 12px)
+          max(env(safe-area-inset-left), 12px);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
       .game-meta {
         text-align: center;
       }
 
       .game-area {
-        margin-top: 14px;
+        margin-top: 0;
         border-radius: 14px;
         background: var(--color-game-bg);
         border: 2px solid var(--border);
-        padding: 16px;
-        min-height: 360px;
+        padding: clamp(8px, 1.4vh, 14px);
+        min-height: 0;
+        flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        gap: 14px;
+        justify-content: flex-start;
+        gap: clamp(6px, 1vh, 12px);
         scroll-margin-top: 10px;
       }
 
       .status {
         text-align: center;
-        min-height: 42px;
-        font-size: 21px;
+        min-height: clamp(22px, 3.8vh, 36px);
+        font-size: clamp(15px, 2.6vh, 21px);
         font-weight: 500;
         color: var(--color-text-light);
       }
@@ -176,13 +375,13 @@
       .progress {
         text-align: center;
         color: var(--color-text-light);
-        font-size: 22px;
+        font-size: clamp(14px, 2.5vh, 22px);
         font-weight: 600;
       }
 
       .mode-badge {
         margin: 0 auto;
-        padding: 6px 14px;
+        padding: clamp(3px, 0.8vh, 6px) 12px;
         border-radius: 999px;
         border: 2px solid var(--highlight);
         background: color-mix(
@@ -191,7 +390,7 @@
           var(--color-surface)
         );
         color: var(--highlight);
-        font-size: 20px;
+        font-size: clamp(13px, 2.2vh, 20px);
         font-weight: 600;
         line-height: 1.2;
       }
@@ -210,24 +409,24 @@
 
       .prompt {
         text-align: center;
-        min-height: 48px;
-        font-size: 20px;
+        min-height: clamp(20px, 3.5vh, 44px);
+        font-size: clamp(14px, 2.2vh, 20px);
         font-weight: 500;
         color: var(--color-text-light);
         letter-spacing: 0.3px;
       }
 
       .prompt.question {
-        font-size: clamp(18px, 4vw, 24px);
+        font-size: clamp(16px, 2.8vh, 22px);
         font-weight: 400;
-        margin-bottom: 8px;
+        margin-bottom: 2px;
       }
 
       .prompt.answer {
-        font-size: clamp(28px, 6vw, 40px);
+        font-size: clamp(22px, 4.2vh, 36px);
         font-weight: 700;
         color: var(--color-text);
-        min-height: 60px;
+        min-height: clamp(30px, 5.2vh, 56px);
       }
 
       .prompt.answer .blank {
@@ -240,19 +439,19 @@
       .options {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 14px;
+        gap: clamp(6px, 1vh, 12px);
       }
 
       .option {
         border-radius: 14px;
         border: 4px solid var(--border);
-        min-height: 170px;
+        min-height: clamp(74px, 16vh, 142px);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 12px;
+        padding: clamp(6px, 1vh, 10px);
         background: color-mix(
           in srgb,
           var(--color-surface) 75%,
@@ -288,27 +487,27 @@
       }
 
       .option-arrow {
-        font-size: 40px;
+        font-size: clamp(20px, 3.4vh, 34px);
         line-height: 1;
         font-weight: 800;
       }
 
       .option-side {
-        margin-top: 10px;
-        min-width: 44px;
-        min-height: 44px;
+        margin-top: 4px;
+        min-width: clamp(24px, 4vh, 40px);
+        min-height: clamp(24px, 4vh, 40px);
         border-radius: 999px;
         border: 3px solid currentColor;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 22px;
+        font-size: clamp(13px, 2.2vh, 20px);
         font-weight: 800;
         line-height: 1;
       }
 
       .option-text {
-        font-size: clamp(24px, 4vw, 36px);
+        font-size: clamp(18px, 3.2vh, 30px);
         font-weight: 700;
         line-height: 1.15;
       }
@@ -352,7 +551,7 @@
       }
 
       .feedback-banner {
-        min-height: 64px;
+        min-height: clamp(30px, 5vh, 56px);
         border: 2px solid color-mix(in srgb, var(--success) 60%, var(--border));
         border-radius: 12px;
         background: color-mix(
@@ -365,8 +564,8 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 8px 12px;
-        font-size: 24px;
+        padding: 6px 10px;
+        font-size: clamp(14px, 2.6vh, 22px);
         font-weight: 700;
       }
 
@@ -383,16 +582,18 @@
       .streak-dots {
         display: flex;
         justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
+        flex-wrap: nowrap;
+        gap: clamp(4px, 0.8vh, 8px);
+        overflow: hidden;
       }
 
       .dot {
-        width: 18px;
-        height: 18px;
+        width: clamp(9px, 1.6vh, 16px);
+        height: clamp(9px, 1.6vh, 16px);
         border-radius: 50%;
         border: 2px solid var(--border);
         background: var(--color-surface);
+        flex: 0 0 auto;
       }
 
       .dot.correct {
@@ -442,18 +643,47 @@
       }
 
       .help {
-        margin-top: 8px;
+        margin-top: 2px;
         color: var(--color-text-light);
         text-align: center;
-        font-size: 20px;
+        font-size: clamp(12px, 2vh, 18px);
       }
 
       .timer-wrap {
         width: 100%;
-        height: 24px;
+        height: clamp(10px, 1.9vh, 22px);
         border-radius: 999px;
         background: color-mix(in srgb, var(--border) 65%, var(--color-game-bg));
         overflow: hidden;
+      }
+
+      @media (max-height: 760px) {
+        .directions {
+          font-size: 14px;
+          gap: 4px 8px;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .help {
+          display: none;
+        }
+      }
+
+      @media (max-height: 680px) {
+        .directions {
+          display: none;
+        }
+
+        .game-body {
+          padding-top: 8px;
+          padding-bottom: 8px;
+          gap: 6px;
+        }
+
+        .game-area {
+          border-radius: 12px;
+        }
       }
 
       .timer-wrap.calm {
@@ -488,6 +718,15 @@
       .result-title {
         text-align: center;
         margin-top: 12px;
+      }
+
+      .results-body {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 14px max(env(safe-area-inset-right), 14px)
+          max(env(safe-area-inset-bottom), 14px)
+          max(env(safe-area-inset-left), 14px);
       }
 
       .result-grid {
@@ -612,8 +851,8 @@
 
       @media (max-width: 540px) {
         .panel {
-          padding: 14px;
-          border-radius: 12px;
+          padding: 0;
+          border-radius: 0;
         }
 
         .game-area {
@@ -721,7 +960,7 @@
         }
 
         .panel {
-          padding: 12px;
+          padding: 0;
         }
 
         .game-area {
@@ -860,145 +1099,194 @@
   <body>
     <main class="app" aria-live="polite">
       <section
-        id="gameScreen"
-        class="screen active panel"
-        aria-label="Word Wise Game"
+        id="menuScreen"
+        class="screen active panel menu-screen"
+        aria-label="Word Wise Menu"
       >
-        <h2>Word Wise</h2>
-
-        <div class="game-top">
-          <div class="game-meta">Score: <span id="scoreValue">0</span></div>
-          <div class="game-meta">Round: <span id="roundValue">0</span>/15</div>
+        <div class="header">
+          <a href="index.html" class="back-btn">&larr; Back</a>
+          <span class="header-title">Word Wise</span>
+          <div class="header-actions">
+            <div class="level-badge">Language</div>
+            <a href="settings.html" class="settings-link" title="Settings"
+              >⚙️</a
+            >
+          </div>
         </div>
 
-        <div
-          id="gameArea"
-          class="game-area"
-          tabindex="-1"
-          aria-label="Gameplay Area"
-        >
-          <div id="startButtonContainer" class="start-button-container">
-            <p class="instruction">How to play</p>
-            <div class="instruction-copy" aria-label="Word Wise instructions">
-              <p class="instruction-step">
-                <strong>1.</strong>
-                <span>Read the task at the top before choosing.</span>
-              </p>
-              <p class="instruction-step">
-                <strong>2.</strong>
-                <span>Use Arrow Left or Arrow Right to make your choice.</span>
-              </p>
-              <p class="instruction-step">
-                <strong>3.</strong>
-                <span>Press once, then wait for the next word to appear.</span>
-              </p>
-              <p class="instruction-step">
-                <strong>4.</strong>
-                <span
-                  >Take your time. The game starts after you tap Start
-                  Game.</span
-                >
-              </p>
-            </div>
-            <button id="startGameBtn" class="btn-start-game" type="button">
-              START GAME
-            </button>
+        <div class="menu-body">
+          <div class="menu-hero">
+            <div class="game-icon-big">📚</div>
+            <h2>Word Wise</h2>
+            <div class="domain-tag">Language · Processing Speed</div>
+            <p class="menu-desc">
+              Choose the correct word fast across spelling, category matching,
+              and word completion rounds.
+            </p>
           </div>
 
-          <p id="phaseText" class="status">Get ready.</p>
-          <p id="progressText" class="progress"></p>
-
-          <p id="modeBadge" class="mode-badge">Spelling Check</p>
-
-          <div class="timer-wrap" aria-hidden="true">
-            <div id="timerBar" class="timer-bar"></div>
-          </div>
-
-          <p id="promptQuestion" class="prompt question">Ready?</p>
-          <p id="promptAnswer" class="prompt answer">READY?</p>
-
-          <div class="options">
-            <div id="optionLeft" class="option left">
-              <span class="option-arrow">&larr;</span>
-              <span id="optionLeftText" class="option-text">LEFT</span>
-              <span class="option-side" aria-hidden="true">L</span>
+          <div class="how-to">
+            <h3>How to Play</h3>
+            <div class="how-to-row">
+              <span class="key-badge">1</span
+              ><span
+                ><strong>Read</strong> the prompt and look at both
+                options.</span
+              >
             </div>
-            <div id="optionRight" class="option right">
-              <span class="option-arrow">&rarr;</span>
-              <span id="optionRightText" class="option-text">RIGHT</span>
-              <span class="option-side" aria-hidden="true">R</span>
+            <div class="how-to-row">
+              <span class="key-badge">2</span
+              ><span
+                ><strong>Pick</strong> the word that matches the spelling,
+                category, or missing letter.</span
+              >
+            </div>
+            <div class="how-to-row">
+              <span class="key-badge">3</span
+              ><span
+                ><strong>Answer quickly</strong> to score better and keep the
+                round going.</span
+              >
             </div>
           </div>
 
-          <p id="feedbackBanner" class="feedback-banner" aria-live="polite"></p>
-
-          <div
-            id="streakDots"
-            class="streak-dots"
-            aria-label="Recent round results"
-          >
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-            <span class="dot empty"></span>
-          </div>
-
-          <div class="directions">
-            <span class="direction-left">&larr; LEFT BUTTON (ORANGE)</span>
-            <span class="direction-right">RIGHT BUTTON (BLUE) &rarr;</span>
-          </div>
-
-          <!-- Removed non-essential stats for elderly-first design -->
-        </div>
-
-        <div class="controls">
-          <button id="backBtn" class="btn" type="button" style="display: none">
-            Back
+          <button id="menuStartBtn" class="start-btn" type="button">
+            ▶ Start Game
           </button>
         </div>
-        <p class="help">Tap START GAME to begin.</p>
+      </section>
+
+      <section id="gameScreen" class="screen panel" aria-label="Word Wise Game">
+        <div class="header">
+          <button id="backBtn" class="back-btn" type="button">
+            &larr; Back
+          </button>
+          <span class="header-title">Word Wise</span>
+          <div class="header-actions">
+            <div id="gameLevelBadge" class="level-badge">Level 1</div>
+          </div>
+        </div>
+
+        <div class="game-body">
+          <h2 class="sr-only">Word Wise</h2>
+
+          <div class="game-top">
+            <div class="game-meta">Score: <span id="scoreValue">0</span></div>
+            <div class="game-meta">
+              Round: <span id="roundValue">0</span>/15
+            </div>
+          </div>
+
+          <div
+            id="gameArea"
+            class="game-area"
+            tabindex="-1"
+            aria-label="Gameplay Area"
+          >
+            <p id="phaseText" class="status">Get ready.</p>
+            <p id="progressText" class="progress"></p>
+
+            <p id="modeBadge" class="mode-badge">Spelling Check</p>
+
+            <div class="timer-wrap" aria-hidden="true">
+              <div id="timerBar" class="timer-bar"></div>
+            </div>
+
+            <p id="promptQuestion" class="prompt question">Ready?</p>
+            <p id="promptAnswer" class="prompt answer">READY?</p>
+
+            <div class="options">
+              <div id="optionLeft" class="option left">
+                <span class="option-arrow">&larr;</span>
+                <span id="optionLeftText" class="option-text">LEFT</span>
+                <span class="option-side" aria-hidden="true">L</span>
+              </div>
+              <div id="optionRight" class="option right">
+                <span class="option-arrow">&rarr;</span>
+                <span id="optionRightText" class="option-text">RIGHT</span>
+                <span class="option-side" aria-hidden="true">R</span>
+              </div>
+            </div>
+
+            <p
+              id="feedbackBanner"
+              class="feedback-banner"
+              aria-live="polite"
+            ></p>
+
+            <div
+              id="streakDots"
+              class="streak-dots"
+              aria-label="Recent round results"
+            >
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+              <span class="dot empty"></span>
+            </div>
+
+            <div class="directions">
+              <span class="direction-left">&larr; LEFT BUTTON (ORANGE)</span>
+              <span class="direction-right">RIGHT BUTTON (BLUE) &rarr;</span>
+            </div>
+
+            <!-- Removed non-essential stats for elderly-first design -->
+          </div>
+          <p class="help">Tap START GAME to begin.</p>
+        </div>
       </section>
 
       <section id="resultScreen" class="screen panel" aria-label="Results">
-        <div class="result-icon" aria-hidden="true">★</div>
-        <h2 id="resultMessage" class="result-title">
-          Great effort! Keep practising!
-        </h2>
-        <p class="subtitle">You completed all 15 rounds</p>
-
-        <div class="result-grid" aria-label="Session stats">
-          <div class="result-card">
-            <strong id="resultScore">0</strong>
-            <span>Score</span>
-          </div>
-          <div class="result-card">
-            <strong id="resultCorrect">0</strong>
-            <span>Correct</span>
-          </div>
-          <div class="result-card">
-            <strong id="resultLevel">1</strong>
-            <span>Level</span>
+        <div class="header">
+          <button id="resultHeaderBackBtn" class="back-btn" type="button">
+            &larr; Back
+          </button>
+          <span class="header-title">Word Wise</span>
+          <div class="header-actions">
+            <div id="resultsLevelBadge" class="level-badge">Level 1</div>
           </div>
         </div>
+        <div class="results-body">
+          <div class="result-icon" aria-hidden="true">★</div>
+          <h2 id="resultMessage" class="result-title">
+            Great effort! Keep practising!
+          </h2>
+          <p class="subtitle">You completed all 15 rounds</p>
 
-        <div class="controls result-controls">
-          <button id="playAgainBtn" class="btn primary" type="button">
-            Play Again
-          </button>
-          <button id="resultBackBtn" class="btn" type="button">
-            &larr; Back to Games
-          </button>
+          <div class="result-grid" aria-label="Session stats">
+            <div class="result-card">
+              <strong id="resultScore">0</strong>
+              <span>Score</span>
+            </div>
+            <div class="result-card">
+              <strong id="resultCorrect">0</strong>
+              <span>Correct</span>
+            </div>
+            <div class="result-card">
+              <strong id="resultLevel">1</strong>
+              <span>Level</span>
+            </div>
+          </div>
+
+          <div class="controls result-controls">
+            <button id="playAgainBtn" class="btn primary" type="button">
+              Play Again
+            </button>
+            <button id="resultBackBtn" class="btn" type="button">
+              Back to Menu
+            </button>
+          </div>
         </div>
       </section>
     </main>
@@ -1566,13 +1854,16 @@
         };
 
         const ui = {
+          menuScreen: document.getElementById("menuScreen"),
           gameScreen: document.getElementById("gameScreen"),
           resultScreen: document.getElementById("resultScreen"),
+          menuStartBtn: document.getElementById("menuStartBtn"),
           playAgainBtn: document.getElementById("playAgainBtn"),
           resultBackBtn: document.getElementById("resultBackBtn"),
+          resultHeaderBackBtn: document.getElementById("resultHeaderBackBtn"),
           backBtn: document.getElementById("backBtn"),
-          startGameBtn: document.getElementById("startGameBtn"),
-          startButtonContainer: document.getElementById("startButtonContainer"),
+          gameLevelBadge: document.getElementById("gameLevelBadge"),
+          resultsLevelBadge: document.getElementById("resultsLevelBadge"),
           phaseText: document.getElementById("phaseText"),
           progressText: document.getElementById("progressText"),
           modeBadge: document.getElementById("modeBadge"),
@@ -1632,11 +1923,15 @@
         };
 
         function showScreen(name) {
+          ui.menuScreen.classList.remove("active");
           ui.gameScreen.classList.remove("active");
           ui.resultScreen.classList.remove("active");
+          if (name === "menu") {
+            ui.menuScreen.classList.add("active");
+          }
           if (name === "game") {
             ui.gameScreen.classList.add("active");
-            ui.gameArea.focus();
+            ui.gameArea.focus({ preventScroll: true });
           }
           if (name === "result") {
             ui.resultScreen.classList.add("active");
@@ -1662,6 +1957,8 @@
         function updateHeader() {
           ui.scoreValue.textContent = String(state.score);
           ui.roundValue.textContent = String(state.round);
+          ui.gameLevelBadge.textContent = "Level " + String(state.level);
+          ui.resultsLevelBadge.textContent = "Level " + String(state.level);
         }
 
         function updateModeBadge(question) {
@@ -1743,19 +2040,7 @@
         }
 
         function updateButtonVisibility() {
-          // Show START button only during awaiting-start-input phase
-          const showStartButton = state.phase === "awaiting-start-input";
-          ui.startButtonContainer.classList.toggle("show", showStartButton);
-          ui.gameScreen.classList.toggle("prestart", showStartButton);
-
-          // Show BACK button during gameplay phases
-          ui.backBtn.style.display =
-            state.phase === "awaiting-answer" ||
-            state.phase === "countdown" ||
-            state.phase === "feedback" ||
-            state.phase === "transition"
-              ? "block"
-              : "none";
+          ui.backBtn.style.display = "block";
         }
 
         function clearRoundTimers() {
@@ -2339,10 +2624,10 @@
           renderStreakDots();
           ui.optionLeftText.textContent = "";
           ui.optionRightText.textContent = "";
-          state.phase = "awaiting-start-input";
+          state.phase = "idle";
           syncLevelToRound();
           updateButtonVisibility();
-          setStatus("", "");
+          setStatus("Get ready...", "Starting soon.");
           updateHeader();
         }
 
@@ -2356,14 +2641,6 @@
         }
 
         function handleInput(direction) {
-          if (state.phase === "awaiting-start-input") {
-            // Arrow key input during start screen triggers countdown
-            if (direction === "left" || direction === "right") {
-              SoundEngine.init();
-              beginCountdown();
-            }
-            return;
-          }
           if (state.phase === "paused") {
             resumeGame();
             return;
@@ -2372,7 +2649,7 @@
         }
 
         function beginCountdown() {
-          if (state.phase !== "awaiting-start-input") {
+          if (state.phase !== "idle") {
             return;
           }
           state.phase = "countdown";
@@ -2489,12 +2766,9 @@
             return;
           }
 
-          state.phase = "awaiting-start-input";
-          setStatus(
-            "Ready to continue.",
-            "Press LEFT or RIGHT when you are ready.",
-          );
-          setPrompt("Ready to continue", "PRESS LEFT OR RIGHT");
+          state.phase = "idle";
+          setStatus("Ready to continue.", "Use Start Game from the menu.");
+          setPrompt("Ready to continue", "RETURN TO MENU");
         }
 
         function handleVisibilityPause() {
@@ -2538,8 +2812,9 @@
           });
           document.addEventListener("keydown", unlockAudio, { once: true });
 
-          ui.startGameBtn.addEventListener("click", () => {
+          ui.menuStartBtn.addEventListener("click", () => {
             SoundEngine.init();
+            startSession();
             beginCountdown();
           });
           ui.optionLeft.addEventListener("click", () => handleInput("left"));
@@ -2547,14 +2822,18 @@
           ui.playAgainBtn.addEventListener("click", () => {
             SoundEngine.init();
             startSession();
+            beginCountdown();
           });
           ui.resultBackBtn.addEventListener("click", () => {
-            window.location.href = "index.html";
+            showScreen("menu");
+          });
+          ui.resultHeaderBackBtn.addEventListener("click", () => {
+            showScreen("menu");
           });
           ui.backBtn.addEventListener("click", () => {
             clearAllTimers();
-            SoundEngine.init();
-            startSession();
+            state.phase = "idle";
+            showScreen("menu");
           });
           setupPauseEvents();
         }
@@ -2562,7 +2841,7 @@
         function init() {
           InputHandler.init();
           setupEvents();
-          startSession();
+          showScreen("menu");
         }
 
         init();

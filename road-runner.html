@@ -333,16 +333,16 @@ body.ls-active #gameScreen.active {
 
 .stat-box {
   background: var(--surface);
-  border-radius: 10px;
-  padding: 4px 6px; /* ← was 6px 6px */
+  border-radius: 8px;
+  padding: 3px 5px;
   text-align: center;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
   flex: 1;
   transition: background 0.3s, border-color 0.3s;
 }
-.stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-light); font-weight: 600; }
-.stat-value { font-size: clamp(15px, 4vw, 20px); font-weight: 700; color: var(--text); line-height: 1.2; } /* ← was clamp(18px,5vw,24px) */
+.stat-label { font-size: 8px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-light); font-weight: 600; }
+.stat-value { font-size: clamp(13px, 3.5vw, 17px); font-weight: 700; color: var(--text); line-height: 1.1; }
 
 /* ── ROAD AREA ── */
 .road-wrapper {
@@ -353,9 +353,8 @@ body.ls-active #gameScreen.active {
   position: relative;
   background: #2d3748;
   min-height: 0;
-  /* Portrait: cap height so canvas never pushes buttons off screen.
-     Header ~52px + stats ~38px + status ~18px + buttons ~80px + gaps ~16px = ~204px */
-  max-height: calc(100dvh - 204px);
+  /* Portrait: cap height — header ~52px + stats ~34px + status ~18px + buttons ~50px + gaps ~14px = ~168px */
+  max-height: calc(100dvh - 168px);
   display: flex;
   width: 100%;
 }
@@ -379,7 +378,7 @@ body.ls-active #gameScreen.active {
   /* Inline in layout — scales with zoom, always fully visible */
   position: relative;
   width: 100%;
-  padding: 8px max(env(safe-area-inset-right), 10px) max(env(safe-area-inset-bottom), 10px) max(env(safe-area-inset-left), 10px);
+  padding: 5px max(env(safe-area-inset-right), 8px) max(env(safe-area-inset-bottom), 6px) max(env(safe-area-inset-left), 8px);
   background: var(--bg);
   border-top: 1px solid var(--border);
   z-index: 100;
@@ -391,16 +390,17 @@ body.ls-active #gameScreen.active {
 
 .lane-btn {
   flex: 1;
-  border-radius: 14px;
-  padding: 14px 10px;
-  font-size: clamp(15px, 4vw, 18px);
+  border-radius: 10px;
+  padding: 7px 8px;
+  font-size: clamp(12px, 3vw, 14px);
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   cursor: pointer;
-  min-height: 54px;
+  min-height: 36px;
+  max-height: 42px;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: transform 0.1s, opacity 0.15s;
@@ -1107,9 +1107,9 @@ function startGame() {
         resizeCanvas(); // third pass — guarantees wrapper has final size
         G.carX        = LEFT_LANE_X;
         G.carTargetX  = LEFT_LANE_X;
-        G.carY        = CANVAS_H - Math.round(CANVAS_H * 0.18);
-        // Safety clamp: car must be at least 10% from bottom edge
-        G.carY = Math.min(G.carY, CANVAS_H - Math.round(CANVAS_H * 0.10));
+        G.carY        = CANVAS_H - Math.round(CANVAS_H * 0.25);
+        // Safety clamp: car must be at least 15% from bottom edge
+        G.carY = Math.min(G.carY, CANVAS_H - Math.round(CANVAS_H * 0.15));
         updateHUD(); setStatus('Dodge the obstacles!', '');
         highlightLane('left');
         G.running     = true;

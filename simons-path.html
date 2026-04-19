@@ -105,6 +105,50 @@
         flex-direction: column;
       }
 
+      #ctg-zoom-wrap {
+        height: 100dvh;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .zoom-controls {
+        position: fixed;
+        right: max(env(safe-area-inset-right), 12px);
+        bottom: max(env(safe-area-inset-bottom), 12px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 14px;
+        border: 1.5px solid var(--border);
+        background: color-mix(in srgb, var(--surface) 92%, transparent);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .zoom-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        background: var(--surface2);
+        color: var(--color-text);
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .zoom-label {
+        min-width: 58px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--color-text-light);
+      }
+
       .panel {
         background: var(--color-bg);
         border-radius: 0;
@@ -952,220 +996,244 @@
     </style>
   </head>
   <body>
-    <main class="app" aria-live="polite">
-      <section
-        id="menuScreen"
-        class="screen active panel menu-screen"
-        aria-label="Simon Path Menu"
-      >
-        <div class="header">
-          <a href="index.html" class="back-btn">&larr; Back</a>
-          <span class="header-title">Simon's Path</span>
-          <div class="header-actions">
-            <div class="level-badge">Memory</div>
-            <a href="settings.html" class="settings-link" title="Settings"
-              >⚙️</a
-            >
-          </div>
-        </div>
-
-        <div class="menu-body">
-          <div class="menu-hero">
-            <div class="game-icon-big">🧭</div>
-            <h2>Simon's Path</h2>
-            <div class="domain-tag">Memory · Sequence Recall</div>
-            <p class="menu-desc">
-              Watch the left-right sequence, then replay it in the exact same
-              order.
-            </p>
-          </div>
-
-          <div class="how-to">
-            <h3>How to Play</h3>
-            <div class="how-to-row">
-              <span class="key-badge">1</span
-              ><span
-                ><strong>Watch</strong> the full left-right pattern before you
-                move.</span
-              >
-            </div>
-            <div class="how-to-row">
-              <span class="key-badge">2</span
-              ><span
-                ><strong>Repeat</strong> the sequence in the exact same
-                order.</span
-              >
-            </div>
-            <div class="how-to-row">
-              <span class="key-badge">3</span
-              ><span
-                ><strong>Tap</strong> left or right on every step until the
-                pattern ends.</span
+    <div id="ctg-zoom-wrap">
+      <main class="app" aria-live="polite">
+        <section
+          id="menuScreen"
+          class="screen active panel menu-screen"
+          aria-label="Simon Path Menu"
+        >
+          <div class="header">
+            <a href="index.html" class="back-btn">&larr; Back</a>
+            <span class="header-title">Simon's Path</span>
+            <div class="header-actions">
+              <div class="level-badge">Memory</div>
+              <a href="settings.html" class="settings-link" title="Settings"
+                >⚙️</a
               >
             </div>
           </div>
 
-          <button id="menuStartBtn" class="start-btn" type="button">
-            ▶ Start Game
-          </button>
-        </div>
-      </section>
+          <div class="menu-body">
+            <div class="menu-hero">
+              <div class="game-icon-big">🧭</div>
+              <h2>Simon's Path</h2>
+              <div class="domain-tag">Memory · Sequence Recall</div>
+              <p class="menu-desc">
+                Watch the left-right sequence, then replay it in the exact same
+                order.
+              </p>
+            </div>
 
-      <section
-        id="gameScreen"
-        class="screen panel"
-        aria-label="Simon Path Game"
-      >
-        <div class="header">
-          <button id="gameBackBtn" class="back-btn" type="button">
-            &larr; Back
-          </button>
-          <span class="header-title">Simon's Path</span>
-          <div class="header-actions">
-            <div id="gameLevelBadge" class="level-badge">Level 1</div>
-          </div>
-        </div>
-
-        <div class="game-body">
-          <h2 class="sr-only">Simon's Path</h2>
-
-          <div class="game-top">
-            <div class="game-meta">Score: <span id="scoreValue">0</span></div>
-            <div class="game-meta">Level: <span id="levelValue">1</span></div>
-            <div class="game-meta">Length: <span id="lengthValue">2</span></div>
-          </div>
-
-          <div
-            id="gameArea"
-            class="game-area"
-            tabindex="-1"
-            aria-label="Gameplay Area"
-          >
-            <p
-              id="phaseText"
-              class="status status-info"
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              Get ready...
-            </p>
-            <p
-              id="progressText"
-              class="progress"
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              Watch and repeat the sequence.
-            </p>
-
-            <div class="pads">
-              <div
-                id="padLeft"
-                class="pad pad-left"
-                role="button"
-                tabindex="0"
-                aria-label="Choose left"
-                aria-disabled="true"
-              >
-                <span class="pad-arrow" aria-hidden="true">&larr;</span>
-                <span class="pad-side" aria-hidden="true">L</span>
+            <div class="how-to">
+              <h3>How to Play</h3>
+              <div class="how-to-row">
+                <span class="key-badge">1</span
+                ><span
+                  ><strong>Watch</strong> the full left-right pattern before you
+                  move.</span
+                >
               </div>
-              <div
-                id="padRight"
-                class="pad pad-right"
-                role="button"
-                tabindex="0"
-                aria-label="Choose right"
-                aria-disabled="true"
-              >
-                <span class="pad-arrow" aria-hidden="true">&rarr;</span>
-                <span class="pad-side" aria-hidden="true">R</span>
+              <div class="how-to-row">
+                <span class="key-badge">2</span
+                ><span
+                  ><strong>Repeat</strong> the sequence in the exact same
+                  order.</span
+                >
+              </div>
+              <div class="how-to-row">
+                <span class="key-badge">3</span
+                ><span
+                  ><strong>Tap</strong> left or right on every step until the
+                  pattern ends.</span
+                >
               </div>
             </div>
 
-            <div class="directions">
-              <span class="direction-left">&larr; LEFT BUTTON (ORANGE)</span>
-              <span class="direction-right">RIGHT BUTTON (BLUE) &rarr;</span>
-            </div>
+            <button id="menuStartBtn" class="start-btn" type="button">
+              ▶ Start Game
+            </button>
+          </div>
+        </section>
 
-            <div class="feedback-row">
-              <div>Failed sequences: <span id="failValue">0</span>/3</div>
-              <div>Correct steps: <span id="stepValue">0</span></div>
-              <div>Best streak: <span id="bestStreakValue">0</span></div>
+        <section
+          id="gameScreen"
+          class="screen panel"
+          aria-label="Simon Path Game"
+        >
+          <div class="header">
+            <button id="gameBackBtn" class="back-btn" type="button">
+              &larr; Back
+            </button>
+            <span class="header-title">Simon's Path</span>
+            <div class="header-actions">
+              <div id="gameLevelBadge" class="level-badge">Level 1</div>
+            </div>
+          </div>
+
+          <div class="game-body">
+            <h2 class="sr-only">Simon's Path</h2>
+
+            <div class="game-top">
+              <div class="game-meta">Score: <span id="scoreValue">0</span></div>
+              <div class="game-meta">Level: <span id="levelValue">1</span></div>
+              <div class="game-meta">
+                Length: <span id="lengthValue">2</span>
+              </div>
             </div>
 
             <div
-              id="pausedOverlay"
-              class="paused-overlay"
-              hidden
-              role="alert"
-              aria-live="assertive"
-              aria-atomic="true"
+              id="gameArea"
+              class="game-area"
+              tabindex="-1"
+              aria-label="Gameplay Area"
             >
-              Paused<br />
-              Return to this tab to continue.
+              <p
+                id="phaseText"
+                class="status status-info"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                Get ready...
+              </p>
+              <p
+                id="progressText"
+                class="progress"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                Watch and repeat the sequence.
+              </p>
+
+              <div class="pads">
+                <div
+                  id="padLeft"
+                  class="pad pad-left"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Choose left"
+                  aria-disabled="true"
+                >
+                  <span class="pad-arrow" aria-hidden="true">&larr;</span>
+                  <span class="pad-side" aria-hidden="true">L</span>
+                </div>
+                <div
+                  id="padRight"
+                  class="pad pad-right"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Choose right"
+                  aria-disabled="true"
+                >
+                  <span class="pad-arrow" aria-hidden="true">&rarr;</span>
+                  <span class="pad-side" aria-hidden="true">R</span>
+                </div>
+              </div>
+
+              <div class="directions">
+                <span class="direction-left">&larr; LEFT BUTTON (ORANGE)</span>
+                <span class="direction-right">RIGHT BUTTON (BLUE) &rarr;</span>
+              </div>
+
+              <div class="feedback-row">
+                <div>Failed sequences: <span id="failValue">0</span>/3</div>
+                <div>Correct steps: <span id="stepValue">0</span></div>
+                <div>Best streak: <span id="bestStreakValue">0</span></div>
+              </div>
+
+              <div
+                id="pausedOverlay"
+                class="paused-overlay"
+                hidden
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+              >
+                Paused<br />
+                Return to this tab to continue.
+              </div>
             </div>
+
+            <p class="help">
+              Input during gameplay: Arrow Left for left signal, Arrow Right for
+              right signal.
+            </p>
           </div>
+        </section>
 
-          <p class="help">
-            Input during gameplay: Arrow Left for left signal, Arrow Right for
-            right signal.
-          </p>
-        </div>
-      </section>
-
-      <section id="resultScreen" class="screen panel" aria-label="Results">
-        <div class="header">
-          <button id="resultHeaderBackBtn" class="back-btn" type="button">
-            &larr; Back
-          </button>
-          <span class="header-title">Simon's Path</span>
-          <div class="header-actions">
-            <div id="resultLevelBadge" class="level-badge">Level 1</div>
-          </div>
-        </div>
-        <div class="results-body">
-          <div class="result-icon" aria-hidden="true">★</div>
-          <h2 id="resultMessage" class="result-title">
-            Great effort! Keep practising!
-          </h2>
-          <p class="subtitle">You completed Simon's Path.</p>
-
-          <div class="result-grid" aria-label="Session stats">
-            <div class="result-card">
-              <strong id="resultScore">0</strong>
-              <span>Score</span>
-            </div>
-            <div class="result-card">
-              <strong id="resultLevel">1</strong>
-              <span>Level</span>
-            </div>
-            <div class="result-card">
-              <strong id="resultFails">0</strong>
-              <span>Failed</span>
-            </div>
-          </div>
-
-          <div class="controls result-controls">
-            <button id="playAgainBtn" class="btn primary" type="button">
-              Play Again
+        <section id="resultScreen" class="screen panel" aria-label="Results">
+          <div class="header">
+            <button id="resultHeaderBackBtn" class="back-btn" type="button">
+              &larr; Back
             </button>
-            <button id="resultBackBtn" class="btn" type="button">
-              Back to Menu
-            </button>
+            <span class="header-title">Simon's Path</span>
+            <div class="header-actions">
+              <div id="resultLevelBadge" class="level-badge">Level 1</div>
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+          <div class="results-body">
+            <div class="result-icon" aria-hidden="true">★</div>
+            <h2 id="resultMessage" class="result-title">
+              Great effort! Keep practising!
+            </h2>
+            <p class="subtitle">You completed Simon's Path.</p>
 
-    <div
-      id="srAnnounce"
-      class="sr-only"
-      aria-live="polite"
-      aria-atomic="true"
-    ></div>
+            <div class="result-grid" aria-label="Session stats">
+              <div class="result-card">
+                <strong id="resultScore">0</strong>
+                <span>Score</span>
+              </div>
+              <div class="result-card">
+                <strong id="resultLevel">1</strong>
+                <span>Level</span>
+              </div>
+              <div class="result-card">
+                <strong id="resultFails">0</strong>
+                <span>Failed</span>
+              </div>
+            </div>
+
+            <div class="controls result-controls">
+              <button id="playAgainBtn" class="btn primary" type="button">
+                Play Again
+              </button>
+              <button id="resultBackBtn" class="btn" type="button">
+                Back to Menu
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div
+        id="srAnnounce"
+        class="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      ></div>
+    </div>
+
+    <div class="zoom-controls" aria-label="Zoom controls">
+      <button
+        id="ctg-zoom-out"
+        class="zoom-btn"
+        type="button"
+        aria-label="Zoom out"
+      >
+        -
+      </button>
+      <div id="ctg-zoom-display" class="zoom-label">100%</div>
+      <button
+        id="ctg-zoom-in"
+        class="zoom-btn"
+        type="button"
+        aria-label="Zoom in"
+      >
+        +
+      </button>
+    </div>
 
     <script>
       (function () {
@@ -1382,6 +1450,23 @@
           }
         }
 
+        function goToMenu() {
+          clearTimers();
+          state.phase = "idle";
+          state.paused = false;
+          state.phaseBeforePause = "idle";
+          ui.pausedOverlay.hidden = true;
+          showScreen("menu");
+        }
+
+        function goBack() {
+          if (ui.gameScreen.classList.contains("active")) {
+            endGame();
+            return;
+          }
+          goToMenu();
+        }
+
         function focusGameArea(shouldScroll) {
           ui.gameArea.focus({ preventScroll: true });
           if (shouldScroll) {
@@ -1503,7 +1588,7 @@
           announce(main + " " + sub);
         }
 
-        function setIdleView(on) {
+        function setIdleView() {
           ui.gameArea.classList.remove("idle");
           ui.gameScreen.classList.remove("prestart");
         }
@@ -1511,7 +1596,7 @@
         function startCountdownThenRound() {
           setStatus("Get ready...", "Round starts in 3");
           state.phase = "countdown";
-          setIdleView(false);
+          setIdleView();
           SoundEngine.playTick();
 
           [2, 1].forEach((n, idx) => {
@@ -1720,6 +1805,12 @@
           setStatus("Get ready...", "Watch and repeat the sequence.");
         }
 
+        function beginNewRun() {
+          SoundEngine.init();
+          startGameSession();
+          startCountdownThenRound();
+        }
+
         function pauseGameIfNeeded() {
           if (document.hidden) {
             if (
@@ -1787,29 +1878,11 @@
             }
           });
 
-          ui.menuStartBtn.addEventListener("click", () => {
-            SoundEngine.init();
-            startGameSession();
-            startCountdownThenRound();
-          });
-
-          ui.playAgainBtn.addEventListener("click", () => {
-            SoundEngine.init();
-            startGameSession();
-            startCountdownThenRound();
-          });
-
-          ui.resultBackBtn.addEventListener("click", () => {
-            showScreen("menu");
-          });
-
-          ui.gameBackBtn.addEventListener("click", () => {
-            showScreen("menu");
-          });
-
-          ui.resultHeaderBackBtn.addEventListener("click", () => {
-            showScreen("menu");
-          });
+          wireBtn("menuStartBtn", beginNewRun);
+          wireBtn("playAgainBtn", beginNewRun);
+          wireBtn("resultBackBtn", goToMenu);
+          wireBtn("gameBackBtn", goBack);
+          wireBtn("resultHeaderBackBtn", goToMenu);
 
           document.addEventListener("visibilitychange", pauseGameIfNeeded);
           window.addEventListener("resize", () => {
@@ -1829,6 +1902,22 @@
           setupEvents();
           updateScoreboard();
           showScreen("menu");
+        }
+
+        function wireBtn(id, fn) {
+          const el = document.getElementById(id);
+          if (!el) return;
+          let fired = false;
+          function handle(event) {
+            event.preventDefault();
+            if (fired) return;
+            fired = true;
+            setTimeout(() => {
+              fired = false;
+            }, 400);
+            fn();
+          }
+          el.addEventListener("pointerdown", handle);
         }
 
         init();

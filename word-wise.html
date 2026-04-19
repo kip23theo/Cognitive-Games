@@ -105,6 +105,50 @@
         flex-direction: column;
       }
 
+      #ctg-zoom-wrap {
+        height: 100dvh;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .zoom-controls {
+        position: fixed;
+        right: max(env(safe-area-inset-right), 12px);
+        bottom: max(env(safe-area-inset-bottom), 12px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 14px;
+        border: 1.5px solid var(--border);
+        background: color-mix(in srgb, var(--surface) 92%, transparent);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .zoom-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        background: var(--surface2);
+        color: var(--color-text);
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .zoom-label {
+        min-width: 58px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--color-text-light);
+      }
+
       .panel {
         background: var(--color-bg);
         border-radius: 0;
@@ -1097,577 +1141,244 @@
     </style>
   </head>
   <body>
-    <main class="app" aria-live="polite">
-      <section
-        id="menuScreen"
-        class="screen active panel menu-screen"
-        aria-label="Word Wise Menu"
-      >
-        <div class="header">
-          <a href="index.html" class="back-btn">&larr; Back</a>
-          <span class="header-title">Word Wise</span>
-          <div class="header-actions">
-            <div class="level-badge">Language</div>
-            <a href="settings.html" class="settings-link" title="Settings"
-              >⚙️</a
-            >
-          </div>
-        </div>
-
-        <div class="menu-body">
-          <div class="menu-hero">
-            <div class="game-icon-big">📚</div>
-            <h2>Word Wise</h2>
-            <div class="domain-tag">Language · Processing Speed</div>
-            <p class="menu-desc">
-              Choose the correct word fast across spelling, category matching,
-              and word completion rounds.
-            </p>
-          </div>
-
-          <div class="how-to">
-            <h3>How to Play</h3>
-            <div class="how-to-row">
-              <span class="key-badge">1</span
-              ><span
-                ><strong>Read</strong> the prompt and look at both
-                options.</span
-              >
-            </div>
-            <div class="how-to-row">
-              <span class="key-badge">2</span
-              ><span
-                ><strong>Pick</strong> the word that matches the spelling,
-                category, or missing letter.</span
-              >
-            </div>
-            <div class="how-to-row">
-              <span class="key-badge">3</span
-              ><span
-                ><strong>Answer quickly</strong> to score better and keep the
-                round going.</span
+    <div id="ctg-zoom-wrap">
+      <main class="app" aria-live="polite">
+        <section
+          id="menuScreen"
+          class="screen active panel menu-screen"
+          aria-label="Word Wise Menu"
+        >
+          <div class="header">
+            <a href="index.html" class="back-btn">&larr; Back</a>
+            <span class="header-title">Word Wise</span>
+            <div class="header-actions">
+              <div class="level-badge">Language</div>
+              <a href="settings.html" class="settings-link" title="Settings"
+                >⚙️</a
               >
             </div>
           </div>
 
-          <button id="menuStartBtn" class="start-btn" type="button">
-            ▶ Start Game
-          </button>
-        </div>
-      </section>
-
-      <section id="gameScreen" class="screen panel" aria-label="Word Wise Game">
-        <div class="header">
-          <button id="backBtn" class="back-btn" type="button">
-            &larr; Back
-          </button>
-          <span class="header-title">Word Wise</span>
-          <div class="header-actions">
-            <div id="gameLevelBadge" class="level-badge">Level 1</div>
-          </div>
-        </div>
-
-        <div class="game-body">
-          <h2 class="sr-only">Word Wise</h2>
-
-          <div class="game-top">
-            <div class="game-meta">Score: <span id="scoreValue">0</span></div>
-            <div class="game-meta">
-              Round: <span id="roundValue">0</span>/15
-            </div>
-          </div>
-
-          <div
-            id="gameArea"
-            class="game-area"
-            tabindex="-1"
-            aria-label="Gameplay Area"
-          >
-            <p id="phaseText" class="status">Get ready.</p>
-            <p id="progressText" class="progress"></p>
-
-            <p id="modeBadge" class="mode-badge">Spelling Check</p>
-
-            <div class="timer-wrap" aria-hidden="true">
-              <div id="timerBar" class="timer-bar"></div>
+          <div class="menu-body">
+            <div class="menu-hero">
+              <div class="game-icon-big">📚</div>
+              <h2>Word Wise</h2>
+              <div class="domain-tag">Language · Processing Speed</div>
+              <p class="menu-desc">
+                Choose the correct word fast across spelling, category matching,
+                and word completion rounds.
+              </p>
             </div>
 
-            <p id="promptQuestion" class="prompt question">Ready?</p>
-            <p id="promptAnswer" class="prompt answer">READY?</p>
-
-            <div class="options">
-              <div id="optionLeft" class="option left">
-                <span class="option-arrow">&larr;</span>
-                <span id="optionLeftText" class="option-text">LEFT</span>
-                <span class="option-side" aria-hidden="true">L</span>
+            <div class="how-to">
+              <h3>How to Play</h3>
+              <div class="how-to-row">
+                <span class="key-badge">1</span
+                ><span
+                  ><strong>Read</strong> the prompt and look at both
+                  options.</span
+                >
               </div>
-              <div id="optionRight" class="option right">
-                <span class="option-arrow">&rarr;</span>
-                <span id="optionRightText" class="option-text">RIGHT</span>
-                <span class="option-side" aria-hidden="true">R</span>
+              <div class="how-to-row">
+                <span class="key-badge">2</span
+                ><span
+                  ><strong>Pick</strong> the word that matches the spelling,
+                  category, or missing letter.</span
+                >
+              </div>
+              <div class="how-to-row">
+                <span class="key-badge">3</span
+                ><span
+                  ><strong>Answer quickly</strong> to score better and keep the
+                  round going.</span
+                >
               </div>
             </div>
 
-            <p
-              id="feedbackBanner"
-              class="feedback-banner"
-              aria-live="polite"
-            ></p>
+            <button id="menuStartBtn" class="start-btn" type="button">
+              ▶ Start Game
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="gameScreen"
+          class="screen panel"
+          aria-label="Word Wise Game"
+        >
+          <div class="header">
+            <button id="backBtn" class="back-btn" type="button">
+              &larr; Back
+            </button>
+            <span class="header-title">Word Wise</span>
+            <div class="header-actions">
+              <div id="gameLevelBadge" class="level-badge">Level 1</div>
+            </div>
+          </div>
+
+          <div class="game-body">
+            <h2 class="sr-only">Word Wise</h2>
+
+            <div class="game-top">
+              <div class="game-meta">Score: <span id="scoreValue">0</span></div>
+              <div class="game-meta">
+                Round: <span id="roundValue">0</span>/15
+              </div>
+            </div>
 
             <div
-              id="streakDots"
-              class="streak-dots"
-              aria-label="Recent round results"
+              id="gameArea"
+              class="game-area"
+              tabindex="-1"
+              aria-label="Gameplay Area"
             >
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-              <span class="dot empty"></span>
-            </div>
+              <p id="phaseText" class="status">Get ready.</p>
+              <p id="progressText" class="progress"></p>
 
-            <div class="directions">
-              <span class="direction-left">&larr; LEFT BUTTON (ORANGE)</span>
-              <span class="direction-right">RIGHT BUTTON (BLUE) &rarr;</span>
-            </div>
+              <p id="modeBadge" class="mode-badge">Spelling Check</p>
 
-            <!-- Removed non-essential stats for elderly-first design -->
+              <div class="timer-wrap" aria-hidden="true">
+                <div id="timerBar" class="timer-bar"></div>
+              </div>
+
+              <p id="promptQuestion" class="prompt question">Ready?</p>
+              <p id="promptAnswer" class="prompt answer">READY?</p>
+
+              <div class="options">
+                <div id="optionLeft" class="option left">
+                  <span class="option-arrow">&larr;</span>
+                  <span id="optionLeftText" class="option-text">LEFT</span>
+                  <span class="option-side" aria-hidden="true">L</span>
+                </div>
+                <div id="optionRight" class="option right">
+                  <span class="option-arrow">&rarr;</span>
+                  <span id="optionRightText" class="option-text">RIGHT</span>
+                  <span class="option-side" aria-hidden="true">R</span>
+                </div>
+              </div>
+
+              <p
+                id="feedbackBanner"
+                class="feedback-banner"
+                aria-live="polite"
+              ></p>
+
+              <div
+                id="streakDots"
+                class="streak-dots"
+                aria-label="Recent round results"
+              >
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+                <span class="dot empty"></span>
+              </div>
+
+              <div class="directions">
+                <span class="direction-left">&larr; LEFT BUTTON (ORANGE)</span>
+                <span class="direction-right">RIGHT BUTTON (BLUE) &rarr;</span>
+              </div>
+
+              <!-- Removed non-essential stats for elderly-first design -->
+            </div>
+            <p class="help">Tap START GAME to begin.</p>
           </div>
-          <p class="help">Tap START GAME to begin.</p>
-        </div>
-      </section>
+        </section>
 
-      <section id="resultScreen" class="screen panel" aria-label="Results">
-        <div class="header">
-          <button id="resultHeaderBackBtn" class="back-btn" type="button">
-            &larr; Back
-          </button>
-          <span class="header-title">Word Wise</span>
-          <div class="header-actions">
-            <div id="resultsLevelBadge" class="level-badge">Level 1</div>
-          </div>
-        </div>
-        <div class="results-body">
-          <div class="result-icon" aria-hidden="true">★</div>
-          <h2 id="resultMessage" class="result-title">
-            Great effort! Keep practising!
-          </h2>
-          <p class="subtitle">You completed all 15 rounds</p>
-
-          <div class="result-grid" aria-label="Session stats">
-            <div class="result-card">
-              <strong id="resultScore">0</strong>
-              <span>Score</span>
-            </div>
-            <div class="result-card">
-              <strong id="resultCorrect">0</strong>
-              <span>Correct</span>
-            </div>
-            <div class="result-card">
-              <strong id="resultLevel">1</strong>
-              <span>Level</span>
-            </div>
-          </div>
-
-          <div class="controls result-controls">
-            <button id="playAgainBtn" class="btn primary" type="button">
-              Play Again
+        <section id="resultScreen" class="screen panel" aria-label="Results">
+          <div class="header">
+            <button id="resultHeaderBackBtn" class="back-btn" type="button">
+              &larr; Back
             </button>
-            <button id="resultBackBtn" class="btn" type="button">
-              Back to Menu
-            </button>
+            <span class="header-title">Word Wise</span>
+            <div class="header-actions">
+              <div id="resultsLevelBadge" class="level-badge">Level 1</div>
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+          <div class="results-body">
+            <div class="result-icon" aria-hidden="true">★</div>
+            <h2 id="resultMessage" class="result-title">
+              Great effort! Keep practising!
+            </h2>
+            <p class="subtitle">You completed all 15 rounds</p>
 
+            <div class="result-grid" aria-label="Session stats">
+              <div class="result-card">
+                <strong id="resultScore">0</strong>
+                <span>Score</span>
+              </div>
+              <div class="result-card">
+                <strong id="resultCorrect">0</strong>
+                <span>Correct</span>
+              </div>
+              <div class="result-card">
+                <strong id="resultLevel">1</strong>
+                <span>Level</span>
+              </div>
+            </div>
+
+            <div class="controls result-controls">
+              <button id="playAgainBtn" class="btn primary" type="button">
+                Play Again
+              </button>
+              <button id="resultBackBtn" class="btn" type="button">
+                Back to Menu
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="zoom-controls" aria-label="Zoom controls">
+      <button
+        id="ctg-zoom-out"
+        class="zoom-btn"
+        type="button"
+        aria-label="Zoom out"
+      >
+        -
+      </button>
+      <div id="ctg-zoom-display" class="zoom-label">100%</div>
+      <button
+        id="ctg-zoom-in"
+        class="zoom-btn"
+        type="button"
+        aria-label="Zoom in"
+      >
+        +
+      </button>
+    </div>
+
+    <script src="word-wise-data.js" onerror="void 0"></script>
     <script>
       (function () {
-        // ==================== EMBEDDED DATASET ====================
-        const SPELLING_EASY = [
-          ["RECEIVE", "RECIEVE"],
-          ["SEPARATE", "SEPERATE"],
-          ["BEAUTIFUL", "BEUTIFUL"],
-          ["FRIEND", "FREIND"],
-          ["BECAUSE", "BECOUSE"],
-          ["THROUGH", "THROGH"],
-          ["DIFFERENT", "DIFFERANT"],
-          ["AGAIN", "AGIAN"],
-          ["BUSINESS", "BUISNESS"],
-          ["ANSWER", "ANSER"],
-          ["PEOPLE", "PEAPLE"],
-          ["IMPORTANT", "IMPORTENT"],
-          ["ADDRESS", "ADRESS"],
-          ["BELIEVE", "BELEIVE"],
-          ["CHOICE", "CHOISE"],
-          ["DECISION", "DECISSION"],
-          ["EXERCISE", "EXERSIZE"],
-          ["SCHOOL", "SCHOLL"],
-        ];
-
-        const SPELLING_MEDIUM = [
-          ["ENVIRONMENT", "ENVIROMENT"],
-          ["KNOWLEDGE", "KNOWLEGE"],
-          ["LIBRARY", "LIBARY"],
-          ["MEDICINE", "MEDICIN"],
-          ["OCCASION", "OCASION"],
-          ["OPPORTUNITY", "OPERTUNITY"],
-          ["BEGINNING", "BEGINING"],
-          ["NECESSARY", "NECESARY"],
-          ["TOMORROW", "TOMMOROW"],
-          ["WHETHER", "WETHER"],
-          ["WEATHER", "WHEATHER"],
-          ["ACTUALLY", "ACTUALY"],
-          ["CALENDAR", "CALANDER"],
-          ["GRAMMAR", "GRAMMER"],
-          ["GOVERNMENT", "GOVERMENT"],
-          ["JEWELRY", "JEWELLERY"],
-          ["NOTICEABLE", "NOTICABLE"],
-          ["SURPRISE", "SUPRISE"],
-        ];
-
-        const SPELLING_HARD = [
-          ["ACCOMMODATE", "ACOMMODATE"],
-          ["ACHIEVEMENT", "ACHEIVEMENT"],
-          ["COMMITMENT", "COMITMENT"],
-          ["CONSCIENCE", "CONSCIENSE"],
-          ["CONSCIOUS", "CONCIOUS"],
-          ["DEFINITELY", "DEFINATELY"],
-          ["EMBARRASS", "EMBARASS"],
-          ["HIERARCHY", "HEIRARCHY"],
-          ["INTELLIGENCE", "INTELIGENCE"],
-          ["MISCELLANEOUS", "MISCELLANIOUS"],
-          ["PERSISTENT", "PERSISTANT"],
-          ["PRONUNCIATION", "PRONOUNCIATION"],
-          ["QUESTIONNAIRE", "QUESTIONAIRE"],
-          ["RECOMMEND", "RECOMEND"],
-          ["SUCCESSFUL", "SUCCESFUL"],
-          ["VACUUM", "VACUME"],
-          ["WEDNESDAY", "WENSDAY"],
-          ["RHYTHM", "RYTHM"],
-        ];
-
-        const SPELLING_BY_DIFFICULTY = {
-          EASY: SPELLING_EASY,
-          MEDIUM: SPELLING_MEDIUM,
-          HARD: SPELLING_HARD,
-        };
-
-        const CATEGORIES = {
-          FRUIT: [
-            "APPLE",
-            "BANANA",
-            "MANGO",
-            "ORANGE",
-            "GRAPES",
-            "PINEAPPLE",
-            "PAPAYA",
-            "GUAVA",
-            "CHERRY",
-            "PEACH",
-          ],
-          ANIMAL: [
-            "DOG",
-            "CAT",
-            "ELEPHANT",
-            "HORSE",
-            "TIGER",
-            "COW",
-            "LION",
-            "RABBIT",
-            "MONKEY",
-            "ZEBRA",
-          ],
-          VEHICLE: [
-            "CAR",
-            "BUS",
-            "TRAIN",
-            "BICYCLE",
-            "TRUCK",
-            "AUTO",
-            "SCOOTER",
-            "VAN",
-            "AIRPLANE",
-            "BOAT",
-          ],
-          COLOR: [
-            "RED",
-            "BLUE",
-            "GREEN",
-            "YELLOW",
-            "BLACK",
-            "WHITE",
-            "PURPLE",
-            "ORANGE",
-            "BROWN",
-            "PINK",
-          ],
-          FURNITURE: [
-            "CHAIR",
-            "TABLE",
-            "BED",
-            "SOFA",
-            "CUPBOARD",
-            "DESK",
-            "SHELF",
-            "STOOL",
-            "WARDROBE",
-            "DRAWER",
-          ],
-          COUNTRY: [
-            "INDIA",
-            "FRANCE",
-            "JAPAN",
-            "BRAZIL",
-            "CANADA",
-            "ITALY",
-            "GERMANY",
-            "MEXICO",
-            "SPAIN",
-            "EGYPT",
-          ],
-          BODY_PART: [
-            "HAND",
-            "LEG",
-            "EYE",
-            "EAR",
-            "NOSE",
-            "HEAD",
-            "FINGER",
-            "SHOULDER",
-            "KNEE",
-            "ELBOW",
-          ],
-          FOOD: [
-            "RICE",
-            "BREAD",
-            "MILK",
-            "EGG",
-            "CHEESE",
-            "SOUP",
-            "PASTA",
-            "SALAD",
-            "BUTTER",
-            "YOGURT",
-          ],
-          WEATHER: [
-            "RAIN",
-            "SNOW",
-            "WIND",
-            "CLOUD",
-            "SUN",
-            "STORM",
-            "FROST",
-            "THUNDER",
-            "HAIL",
-            "FOG",
-          ],
-          CLOTHING: [
-            "SHIRT",
-            "PANTS",
-            "DRESS",
-            "COAT",
-            "HAT",
-            "SHOES",
-            "SOCK",
-            "SCARF",
-            "GLOVE",
-            "BELT",
-          ],
-          SPORTS: [
-            "CRICKET",
-            "TENNIS",
-            "FOOTBALL",
-            "BADMINTON",
-            "CHESS",
-            "GOLF",
-            "SKATING",
-            "BOXING",
-            "SWIMMING",
-            "RUNNING",
-          ],
-          TOOL: [
-            "HAMMER",
-            "KNIFE",
-            "SCISSORS",
-            "SAW",
-            "SPOON",
-            "FORK",
-            "BRUSH",
-            "BROOM",
-            "SHOVEL",
-            "WRENCH",
-          ],
-        };
-
-        // Category difficulty mapping for smart pairing
-        const CATEGORY_DIFFICULTY = {
-          // EASY pairings: very different domains
-          EASY: {
-            FRUIT: ["VEHICLE", "COLOR", "TOOL"],
-            ANIMAL: ["COLOR", "FURNITURE", "CLOTHING"],
-            VEHICLE: ["FRUIT", "BODY_PART", "WEATHER"],
-            COLOR: ["ANIMAL", "COUNTRY", "SPORTS"],
-            FURNITURE: ["WEATHER", "ANIMAL", "SPORTS"],
-            COUNTRY: ["FRUIT", "CLOTHING", "TOOL"],
-            BODY_PART: ["VEHICLE", "CLOTHING", "FOOD"],
-            FOOD: ["ANIMAL", "VEHICLE", "COLOR"],
-            WEATHER: ["FURNITURE", "COUNTRY", "SPORTS"],
-            CLOTHING: ["COUNTRY", "TOOL", "FRUIT"],
-            SPORTS: ["COLOR", "FURNITURE", "FOOD"],
-            TOOL: ["COUNTRY", "WEATHER", "ANIMAL"],
-          },
-          // MEDIUM pairings: somewhat related or different
-          MEDIUM: {
-            FRUIT: ["FOOD", "VEGETABLE", "COLOR"],
-            ANIMAL: ["BODY_PART", "FOOD", "COUNTRY"],
-            VEHICLE: ["TOOL", "COUNTRY", "CLOTHING"],
-            COLOR: ["FOOD", "CLOTHING", "WEATHER"],
-            FURNITURE: ["BODY_PART", "TOOL", "COUNTRY"],
-            COUNTRY: ["ANIMAL", "COLOR", "SPORTS"],
-            BODY_PART: ["ANIMAL", "FOOD", "TOOL"],
-            FOOD: ["FRUIT", "COUNTRY", "BODY_PART"],
-            WEATHER: ["COLOR", "CLOTHING", "COUNTRY"],
-            CLOTHING: ["COLOR", "WEATHER", "FURNITURE"],
-            SPORTS: ["VEHICLE", "COUNTRY", "BODY_PART"],
-            TOOL: ["BODY_PART", "FURNITURE", "VEHICLE"],
-          },
-          // HARD pairings: closely related/confusable
-          HARD: {
-            FRUIT: ["FOOD"],
-            ANIMAL: ["BODY_PART", "FOOD"],
-            VEHICLE: ["TOOL"],
-            COLOR: ["CLOTHING"],
-            FURNITURE: ["TOOL"],
-            COUNTRY: ["ANIMAL"],
-            BODY_PART: ["ANIMAL"],
-            FOOD: ["FRUIT"],
-            WEATHER: ["COLOR"],
-            CLOTHING: ["COLOR"],
-            SPORTS: ["COUNTRY"],
-            TOOL: ["FURNITURE"],
-          },
-        };
-
-        const COMPLETION_EASY = [
-          "HOUSE",
-          "WATER",
-          "TRAIN",
-          "PLANT",
-          "LIGHT",
-          "SMILE",
-          "TABLE",
-          "PLATE",
-          "BREAD",
-          "FRUIT",
-          "MUSIC",
-          "PHONE",
-          "CLOCK",
-          "BRUSH",
-          "SHOES",
-          "CHAIR",
-          "APPLE",
-          "BOTTLE",
-          "PENCIL",
-          "WINDOW",
-        ];
-
-        const COMPLETION_MEDIUM = [
-          "SCHOOL",
-          "MARKET",
-          "GARDEN",
-          "DOCTOR",
-          "FAMILY",
-          "FRIEND",
-          "HEALTH",
-          "MOTHER",
-          "FATHER",
-          "SISTER",
-          "BROTHER",
-          "PEOPLE",
-          "CHILD",
-          "TEACHER",
-          "JOURNEY",
-          "VILLAGE",
-          "PHARMACY",
-          "ANIMAL",
-          "SCIENCE",
-          "LIBRARY",
-        ];
-
-        const COMPLETION_HARD = [
-          "MEDICINE",
-          "PRESCRIPTION",
-          "APPOINTMENT",
-          "HOSPITAL",
-          "COMMUNITY",
-          "NEIGHBOR",
-          "TELEPHONE",
-          "TELEVISION",
-          "GARDENING",
-          "KITCHEN",
-          "BREAKFAST",
-          "EXERCISE",
-          "MEMORY",
-          "WEATHER",
-          "WEEKEND",
-          "FESTIVAL",
-          "SHOPPING",
-          "GRANDCHILD",
-          "READING",
-          "WALKING",
-        ];
-
-        const COMPLETION_BY_DIFFICULTY = {
-          EASY: COMPLETION_EASY,
-          MEDIUM: COMPLETION_MEDIUM,
-          HARD: COMPLETION_HARD,
-        };
-
-        const CONFUSABLES = {
-          A: ["E", "O"],
-          E: ["A", "I", "O"],
-          I: ["E", "Y"],
-          O: ["A", "E", "U"],
-          U: ["O"],
-          C: ["K", "S"],
-          G: ["C", "J"],
-          S: ["C", "Z"],
-          Z: ["S"],
-        };
-
-        // ==================== GAME LOGIC ====================
+        const WORD_WISE_DATA = window.WORD_WISE_DATA || {};
+        const SPELLING_BY_DIFFICULTY = WORD_WISE_DATA.SPELLING_BY_DIFFICULTY;
+        const CATEGORIES = WORD_WISE_DATA.CATEGORIES;
+        const CATEGORY_DIFFICULTY = WORD_WISE_DATA.CATEGORY_DIFFICULTY;
+        const COMPLETION_BY_DIFFICULTY =
+          WORD_WISE_DATA.COMPLETION_BY_DIFFICULTY;
+        const CONFUSABLES = WORD_WISE_DATA.CONFUSABLES;
         const SPELLING = SPELLING_BY_DIFFICULTY;
         const COMPLETION = COMPLETION_BY_DIFFICULTY;
-        const TOTAL_ROUNDS = 15;
-        const DIFFICULTY_ORDER = ["EASY", "MEDIUM", "HARD"];
-
-        const LEVEL_CONFIG = [
-          { timeLimitMs: 0, mode: "spelling", difficulty: "EASY" },
-          { timeLimitMs: 0, mode: "category", difficulty: "EASY" },
-          { timeLimitMs: 10000, mode: "completion", difficulty: "EASY" },
-          { timeLimitMs: 8000, mode: "mixed", difficulty: "MEDIUM" },
-          { timeLimitMs: 7000, mode: "mixed", difficulty: "MEDIUM_HARD" },
-          { timeLimitMs: 6000, mode: "mixed", difficulty: "HARD" },
-        ];
-
-        const MODE_INSTRUCTIONS = {
-          "Spelling Check": "Choose the correct spelling.",
-          "Category Match": "Pick the word that belongs.",
-          "Word Completion": "Fill the missing letter.",
-        };
-
-        const COMPLETION_PRIORITY_LETTERS = "AEIOUCEILRST";
+        const TOTAL_ROUNDS = WORD_WISE_DATA.TOTAL_ROUNDS;
+        const DIFFICULTY_ORDER = WORD_WISE_DATA.DIFFICULTY_ORDER;
+        const LEVEL_CONFIG = WORD_WISE_DATA.LEVEL_CONFIG;
+        const MODE_INSTRUCTIONS = WORD_WISE_DATA.MODE_INSTRUCTIONS;
+        const COMPLETION_PRIORITY_LETTERS =
+          WORD_WISE_DATA.COMPLETION_PRIORITY_LETTERS;
 
         const InputHandler = {
           listeners: [],
@@ -1776,7 +1487,6 @@
               return;
             }
 
-            // Warm up audio graph for stricter mobile autoplay policies.
             const now = this.ctx.currentTime;
             const osc = this.ctx.createOscillator();
             const amp = this.ctx.createGain();
@@ -1936,6 +1646,26 @@
           if (name === "result") {
             ui.resultScreen.classList.add("active");
           }
+        }
+
+        function goToMenu() {
+          clearAllTimers();
+          if (state.inputUnsubscribe) {
+            state.inputUnsubscribe();
+            state.inputUnsubscribe = null;
+          }
+          state.phase = "idle";
+          state.paused = false;
+          state.pauseReason = "";
+          showScreen("menu");
+        }
+
+        function goBack() {
+          if (ui.gameScreen.classList.contains("active")) {
+            endGame();
+            return;
+          }
+          goToMenu();
         }
 
         function setStatus(main, sub) {
@@ -2140,8 +1870,6 @@
           return state.correctCount / state.attemptedRounds;
         }
 
-        // Difficulty label removed for elderly-first simplicity
-
         function pickUniqueItem(pool, usedSet, keyOf) {
           if (!pool || !pool.length) {
             return null;
@@ -2159,12 +1887,10 @@
           const accuracy = recentAccuracy(4);
           let target = normalizeDifficulty(baseDifficulty);
 
-          // Level 5 is "medium-hard": prefer HARD when user is stable.
           if (baseDifficulty === "MEDIUM_HARD") {
             target = accuracy >= 0.65 ? "HARD" : "MEDIUM";
           }
 
-          // Ease down by one step only when recent performance drops.
           if (accuracy < 0.45) {
             const index = Math.max(0, DIFFICULTY_ORDER.indexOf(target) - 1);
             target = DIFFICULTY_ORDER[index];
@@ -2178,7 +1904,6 @@
             return 0;
           }
 
-          // Keep base timing from spec; only relax timing when user is struggling.
           const accuracy = recentAccuracy(4);
           if (accuracy < 0.5) {
             return Math.min(12000, baseTimeLimitMs + 1200);
@@ -2214,16 +1939,13 @@
           updateAdaptiveProfile();
         }
 
-        function getDifficultyForRound(round, mode) {
-          // Sequence difficulties per sector based on round number
-          // Rounds 1-5: EASY, Rounds 6-10: MEDIUM, Rounds 11-15: HARD
+        function getDifficultyForRound(round) {
           if (round <= 5) return "EASY";
           if (round <= 10) return "MEDIUM";
           return "HARD";
         }
 
-        function buildSpellingQuestion(difficulty) {
-          // Use round-based difficulty sequencing
+        function buildSpellingQuestion() {
           const roundDifficulty = getDifficultyForRound(state.round);
           const pool =
             SPELLING[normalizeDifficulty(roundDifficulty)] ||
@@ -2273,7 +1995,6 @@
             (item) => category + ":" + item,
           );
 
-          // Use difficulty-based wrong category selection
           const wrongCategory = getWrongCategoryByDifficulty(
             category,
             state.round,
@@ -2294,8 +2015,7 @@
           };
         }
 
-        function buildCompletionQuestion(difficulty) {
-          // Use round-based difficulty sequencing
+        function buildCompletionQuestion() {
           const roundDifficulty = getDifficultyForRound(state.round);
           const pool =
             COMPLETION[normalizeDifficulty(roundDifficulty)] ||
@@ -2316,12 +2036,10 @@
           const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
           let wrongLetter = correctLetter;
 
-          // Try to pick a plausible confusable first
           const confusables = CONFUSABLES[correctLetter];
           if (confusables && confusables.length > 0) {
             wrongLetter = confusables[randomInt(confusables.length)];
           } else {
-            // Fall back to random letter if no confusables defined
             while (wrongLetter === correctLetter) {
               wrongLetter = alphabet[randomInt(alphabet.length)];
             }
@@ -2631,6 +2349,12 @@
           updateHeader();
         }
 
+        function beginNewRun() {
+          SoundEngine.init();
+          startSession();
+          beginCountdown();
+        }
+
         function startSession() {
           showScreen("game");
           resetSession();
@@ -2812,29 +2536,13 @@
           });
           document.addEventListener("keydown", unlockAudio, { once: true });
 
-          ui.menuStartBtn.addEventListener("click", () => {
-            SoundEngine.init();
-            startSession();
-            beginCountdown();
-          });
           ui.optionLeft.addEventListener("click", () => handleInput("left"));
           ui.optionRight.addEventListener("click", () => handleInput("right"));
-          ui.playAgainBtn.addEventListener("click", () => {
-            SoundEngine.init();
-            startSession();
-            beginCountdown();
-          });
-          ui.resultBackBtn.addEventListener("click", () => {
-            showScreen("menu");
-          });
-          ui.resultHeaderBackBtn.addEventListener("click", () => {
-            showScreen("menu");
-          });
-          ui.backBtn.addEventListener("click", () => {
-            clearAllTimers();
-            state.phase = "idle";
-            showScreen("menu");
-          });
+          wireBtn("menuStartBtn", beginNewRun);
+          wireBtn("playAgainBtn", beginNewRun);
+          wireBtn("resultBackBtn", goToMenu);
+          wireBtn("resultHeaderBackBtn", goToMenu);
+          wireBtn("backBtn", goBack);
           setupPauseEvents();
         }
 
@@ -2842,6 +2550,22 @@
           InputHandler.init();
           setupEvents();
           showScreen("menu");
+        }
+
+        function wireBtn(id, fn) {
+          const el = document.getElementById(id);
+          if (!el) return;
+          let fired = false;
+          function handle(event) {
+            event.preventDefault();
+            if (fired) return;
+            fired = true;
+            setTimeout(() => {
+              fired = false;
+            }, 400);
+            fn();
+          }
+          el.addEventListener("pointerdown", handle);
         }
 
         init();

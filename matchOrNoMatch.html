@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Match Game</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #dfeeff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* pushes the game content to fill remaining height and centres it */
+    .page-body {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* ── Header + Back button (matches sorterGame.html exactly) ── */
+    :root {
+      --surface:  #ffffff;
+      --surface2: #f0ede8;
+      --text:     #2d3436;
+      --border:   #e0dbd5;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: max(env(safe-area-inset-top), 8px)
+               max(env(safe-area-inset-right), 12px) 8px
+               max(env(safe-area-inset-left), 12px);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      min-height: 52px;
+    }
+
+    .back-btn {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 38px;
+    }
+
+    .header-title {
+      font-size: clamp(15px, 4vw, 18px);
+      font-weight: 700;
+      text-align: center;
+      flex: 1;
+    }
+
+    /* mirrors back-btn width to keep title centred */
+    .header-spacer {
+      min-width: 70px;
+    }
+
+    /* ── Score / Level row ── */
+    .top {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 8px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* ── Rule hint ── */
+    #ruleHint {
+      font-size: 12px;
+      color: #555;
+      min-height: 18px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Game panels ── */
+    .game {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+      margin-bottom: 16px;
+      /* no fixed height — let shapes dictate it */
+      min-height: 130px;
+    }
+
+    .panel {
+      width: 130px;
+      /* REMOVED fixed height — was 120px, caused overflow */
+      min-height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+    }
+
+    /* shape grid */
+    .shape-grid {
+      display: grid;
+      justify-content: center;
+      align-content: center;
+      justify-items: center;
+      align-items: center;
+    }
+
+    /* ── Buttons ── */
+    .btns {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+    }
+
+    .btns button {
+      width: 120px;
+      height: 42px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .match   { background: #e57373; }
+    .nomatch { background: #57bdf5; }
+    .match:active   { filter: brightness(0.9); }
+    .nomatch:active { filter: brightness(0.9); }
+
+    /* ── Feedback ── */
+    #msg {
+      height: 30px;
+      margin-top: 18px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Full-width header outside the container -->
+<div class="header">
+  <a href="index.html" class="back-btn">&larr; Back</a>
+  <span class="header-title">Match Game</span>
+  <div class="header-spacer"></div>
+</div>
+
+<div class="page-body">
+<div class="container">
+
+  <div class="top">
+    <div>Score: <span id="score">0</span></div>
+    <div>Level: <span id="level">1</span></div>
+  </div>
+
+  <div id="ruleHint">Compare only the shapes and choose MATCH or NO MATCH</div>
+
+  <div class="game">
+    <div class="panel" id="left"></div>
+    <div class="panel" id="right"></div>
+  </div>
+
+  <div class="btns">
+    <button class="match"   onclick="answer(true)">MATCH</button>
+    <button class="nomatch" onclick="answer(false)">NO MATCH</button>
+  </div>
+
+  <div id="msg"></div>
+
+</div>
+</div>
+
+<script>
+/* ───────────────────────── Sound ───────────────────────── */
+let audioCtx = null;
+
+function ensureAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  // Resume if suspended (required after page visibility change or iOS quirk)
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+
+function beep(type) {
+  try {
+    ensureAudio();
+    const osc  = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = type === "good" ? 650 : 180;
+    gain.gain.value = 0.08;
+    osc.start();
+    setTimeout(() => { try { osc.stop(); } catch(e){} }, 120);
+  } catch(e) { /* audio not available */ }
+}
+
+/* Level-up jingle: three ascending tones */
+function beepLevelUp() {
+  try {
+    ensureAudio();
+    const freqs = [500, 630, 800];
+    freqs.forEach((f, i) => {
+      setTimeout(() => {
+        const osc  = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = f;
+        gain.gain.value = 0.07;
+        osc.start();
+        setTimeout(() => { try { osc.stop(); } catch(e){} }, 110);
+      }, i * 120);
+    });
+  } catch(e) {}
+}
+
+/* ───────────────────────── State ───────────────────────── */
+let score        = 0;
+let level        = 1;
+let correctCount = 0;
+let wrong        = 0;
+let isMatch      = false;
+
+const shapes = ["circle", "triangle"];
+const colors = ["#E17055","#6C5CE7","#00B894","#FDCB6E"];
+
+const leftPanel  = document.getElementById("left");
+const rightPanel = document.getElementById("right");
+const msg        = document.getElementById("msg");
+
+/* ───────────────────────── Shape factory ───────────────── */
+function shapeSize() {
+  if (level >= 5) return 28;
+  if (level >= 3) return 48;
+  return 60;
+}
+
+function makeShape(s, c) {
+  const d    = document.createElement("div");
+  const size = shapeSize();
+
+  if (s === "circle") {
+    d.style.cssText = `
+      width:${size}px; height:${size}px;
+      border-radius:50%; background:${c};
+      flex-shrink:0;
+    `;
+  } else {
+    // triangle via borders — height = size, half-width = size/2
+    const half = Math.round(size / 2);
+    d.style.cssText = `
+      width:0; height:0;
+      border-left:${half}px solid transparent;
+      border-right:${half}px solid transparent;
+      border-bottom:${size}px solid ${c};
+      flex-shrink:0;
+    `;
+  }
+  return d;
+}
+
+/* ───────────────────────── Match logic ─────────────────── */
+function checkMatch(p1, p2) {
+  if (level <= 2) {
+    return p1[0].s === p2[0].s;
+  }
+  return JSON.stringify(p1) === JSON.stringify(p2);
+}
+
+/* Guarantee the "no match" variant actually differs */
+function buildNoMatch(base) {
+  const maxTries = 40;
+  for (let i = 0; i < maxTries; i++) {
+    const candidate = base.map(() => ({
+      s: shapes[Math.floor(Math.random() * shapes.length)],
+      c: colors[Math.floor(Math.random() * colors.length)]
+    }));
+    if (JSON.stringify(candidate) !== JSON.stringify(base)) {
+      // For level ≤ 2 we only care about shape
+      if (level <= 2 && candidate[0].s !== base[0].s) return candidate;
+      if (level >= 3 && JSON.stringify(candidate) !== JSON.stringify(base)) return candidate;
+    }
+  }
+  // Fallback: flip the shape of the first item
+  const fallback = JSON.parse(JSON.stringify(base));
+  fallback[0].s = shapes.find(x => x !== base[0].s);
+  return fallback;
+}
+
+/* ───────────────────────── New round ───────────────────── */
+function newRound() {
+  let base  = [];
+  let other = [];
+
+  if (level <= 2) {
+    const s  = shapes[Math.floor(Math.random() * shapes.length)];
+    const c1 = colors[Math.floor(Math.random() * colors.length)];
+    let   c2 = colors[Math.floor(Math.random() * colors.length)];
+    while (c1 === c2) c2 = colors[Math.floor(Math.random() * colors.length)];
+
+    base = [{ s, c: c1 }];
+    other = Math.random() > 0.5
+      ? [{ s, c: c2 }]                                // match (same shape, diff color)
+      : [{ s: shapes.find(x => x !== s), c: c2 }];   // no match
+  } else {
+    const count = level <= 4 ? 2 : 4;
+    for (let i = 0; i < count; i++) {
+      base.push({
+        s: shapes[Math.floor(Math.random() * shapes.length)],
+        c: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+
+    other = Math.random() > 0.5
+      ? JSON.parse(JSON.stringify(base))   // exact match
+      : buildNoMatch(base);                // guaranteed no-match
+  }
+
+  isMatch = checkMatch(base, other);
+  render(leftPanel, base);
+  render(rightPanel, other);
+  updateRule();
+}
+
+/* ───────────────────────── Render ──────────────────────── */
+function render(pan, p) {
+  pan.innerHTML = "";
+  const g = document.createElement("div");
+  g.className = "shape-grid";
+
+  if (level >= 5) {
+    // 2-column grid keeps 4 shapes in a compact square
+    g.style.gridTemplateColumns = "1fr 1fr";
+    g.style.gap = "8px";
+  } else if (level >= 3) {
+    g.style.gap = "10px";
+  } else {
+    g.style.gap = "0";
+  }
+
+  p.forEach(x => g.appendChild(makeShape(x.s, x.c)));
+  pan.appendChild(g);
+}
+
+/* ───────────────────────── Answer ──────────────────────── */
+function answer(user) {
+  // Unlock audio on first real interaction
+  ensureAudio();
+
+  const prevLevel = level;
+
+  if (user === isMatch) {
+    score += 2;
+    correctCount++;
+    beep("good");
+    msg.innerText  = "Correct ✅";
+    msg.style.color = "green";
+  } else {
+    wrong++;
+    beep("bad");
+    msg.innerText  = "Wrong ❌";
+    msg.style.color = "red";
+  }
+
+  document.getElementById("score").innerText = score;
+
+  if (correctCount >= 15) {
+    level++;
+    correctCount = 0;
+    document.getElementById("level").innerText = level;
+    beepLevelUp();
+  }
+
+  if (wrong >= 5) {
+    gameOver();
+    return;
+  }
+
+  setTimeout(() => {
+    msg.innerText = "";
+    newRound();
+  }, 350);
+}
+
+/* ───────────────────────── Rule hint ───────────────────── */
+function updateRule() {
+  let text = "";
+  if (level <= 2)      text = "Compare only the shapes — MATCH or NO MATCH";
+  else if (level <= 4) text = "Compare shapes AND colors — MATCH or NO MATCH";
+  else                 text = "Compare the full pattern — MATCH or NO MATCH";
+  document.getElementById("ruleHint").innerText = text;
+}
+
+/* ───────────────────────── Game over ───────────────────── */
+function gameOver() {
+  document.body.innerHTML = `
+    <div style="text-align:center; padding:40px 20px; font-family:Arial,sans-serif;">
+      <h2 style="font-size:32px;">Game Over 🎮</h2>
+      <h3 style="font-size:24px;">Score: ${score}</h3>
+      <h3 style="font-size:20px; color:#555;">Level reached: ${level}</h3>
+      <button onclick="location.reload()"
+        style="padding:12px 24px; border:none; border-radius:8px;
+               background:#6c5ce7; color:white; font-size:18px; font-weight:700; cursor:pointer;">
+        Play Again
+      </button>
+    </div>
+  `;
+}
+
+/* ───────────────────────── Init ────────────────────────── */
+newRound();
+</script>
+
+</body>
+</html>

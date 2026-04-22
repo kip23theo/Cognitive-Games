@@ -24,7 +24,8 @@
   --text-light: #9a9590;
   --border: #333333;
   --accent: #ff7a5a;
-  --accent-soft: rgba(255,122,90,0.15);
+  --left: #ff7a5a;
+  --right: #4dabf7;
 }
 body {
   margin: 0;
@@ -353,13 +354,17 @@ function showPattern() {
     let dir = pattern[i];
     display.innerText = dir === "L" ? "LEFT" : "RIGHT";
 
-    display.style.background = dir === "L" ? "#ffe5df" : "#e3f2ff";
-    display.style.transform = "scale(1.05)";
+   display.style.background =
+  dir === "L"
+    ? "var(--accent-soft)"
+    : "rgba(116,185,255,0.2)";
 
-    setTimeout(() => {
-      display.style.background = "#FFFFFF";
-      display.style.transform = "scale(1)";
-    }, 400);
+display.style.transform = "scale(1.05)";
+
+setTimeout(() => {
+  display.style.background = "var(--surface)";
+  display.style.transform = "scale(1)";
+}, 400);
 
     i++;
 

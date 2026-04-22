@@ -16,7 +16,15 @@
   --accent-soft: rgba(225,112,85,0.12);
   --shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
-
+[data-theme="dark"] {
+  --bg: #141414;
+  --surface: #1f1f1f;
+  --text: #f0ede8;
+  --text-light: #9a9590;
+  --border: #333333;
+  --accent: #ff7a5a;
+  --accent-soft: rgba(255,122,90,0.15);
+}
 body {
   margin: 0;
   font-family: "Segoe UI", Arial;
@@ -440,6 +448,6 @@ document.addEventListener("keydown",e=>{
   window.history.back();
 }
 </script>
-
+<script src="shared.js"></script>
 </body>
 </html>

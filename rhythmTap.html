@@ -17,7 +17,15 @@
   --right: #0984E3;
   --shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
-
+[data-theme="dark"] {
+  --bg: #141414;
+  --surface: #1f1f1f;
+  --text: #f0ede8;
+  --text-light: #9a9590;
+  --border: #333333;
+  --accent: #ff7a5a;
+  --accent-soft: rgba(255,122,90,0.15);
+}
 body {
   margin: 0;
   font-family: system-ui;
@@ -416,6 +424,6 @@ function startApp() {
 document.getElementById("leftBtn").onclick = () => handleInput("L");
 document.getElementById("rightBtn").onclick = () => handleInput("R");
 </script>
-
+<script src="shared.js"></script>
 </body>
 </html>

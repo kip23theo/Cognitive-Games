@@ -257,6 +257,11 @@ body {
 
 <script>
 let ctx, enabled=false;
+  const welcomeScreen = document.getElementById("welcomeScreen");
+const gameScreen = document.getElementById("gameScreen");
+const resultScreen = document.getElementById("resultScreen");
+const countdown = document.getElementById("countdown");
+const gameArea = document.getElementById("gameArea");
 
 function initSound(){
   if(enabled) return;
@@ -446,14 +451,38 @@ function restartGame(){
 }
 
 
- function goBack(){
+function goBack(){
+  // stop running intervals
   clearInterval(gameInt);
   clearInterval(spawnInt);
 
+  // remove all balloons
+  balloons.forEach(b => {
+    clearInterval(b.interval);
+    if (b.el) b.el.remove();
+  });
+  balloons = [];
+
+  // reset values
+  score = 0;
+  missed = 0;
+  caught = 0;
+  time = 120;
+  reactionTimes = [];
+
+  document.getElementById("score").textContent = 0;
+  document.getElementById("caught").textContent = 0;
+  document.getElementById("missed").textContent = 0;
+  document.getElementById("time").textContent = 120;
+
+  gameArea.innerHTML = '<div id="escapeLine"></div>';
+
+  // hide everything
   gameScreen.style.display = "none";
   resultScreen.style.display = "none";
   countdown.style.display = "none";
 
+  // show welcome screen
   welcomeScreen.style.display = "flex";
 }
 </script>

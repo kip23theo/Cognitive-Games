@@ -46,7 +46,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .card {
@@ -300,7 +302,17 @@ body {
   font-weight: bold;
   cursor: pointer;
 }
- yle>
+  .menu-body {
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
+}
+  @media (max-width: 480px) {
+  .menu-body {
+    padding: 14px;
+  }
+}
+ </style>
 </head>
 
 <body>

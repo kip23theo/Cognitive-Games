@@ -331,8 +331,7 @@ currentScreen = "game";
 function updateGame(){
   time--;
   document.getElementById("time").textContent=time;
-
-  if(time<=0 || missed>=10) endGame();
+  if(time<=0) endGame();
 }
 
 function getAgeRange(age){

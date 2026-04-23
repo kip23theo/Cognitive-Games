@@ -446,8 +446,15 @@ function restartGame(){
 }
 
 
-  function goBack(){
-  window.history.back();
+ function goBack(){
+  clearInterval(gameInt);
+  clearInterval(spawnInt);
+
+  gameScreen.style.display = "none";
+  resultScreen.style.display = "none";
+  countdown.style.display = "none";
+
+  welcomeScreen.style.display = "flex";
 }
 </script>
 <script src="shared.js"></script>

@@ -257,6 +257,7 @@ body {
 
 <script>
 let ctx, enabled=false;
+  let currentScreen = "welcome"; 
   const welcomeScreen = document.getElementById("welcomeScreen");
 const gameScreen = document.getElementById("gameScreen");
 const resultScreen = document.getElementById("resultScreen");
@@ -291,7 +292,7 @@ function startCountdown(){
   if(!age){ alert("Enter age"); return; }
 
   userAge = parseInt(age);
-
+currentScreen = "countdown";
   welcomeScreen.style.display="none";
   countdown.style.display="flex";
 
@@ -317,7 +318,7 @@ let reactionTimes=[];
 
 function startGame(){
   gameScreen.style.display="block";
-
+currentScreen = "game";
   document.addEventListener("keydown", e => {
     if(e.key === "ArrowLeft") handleInput("left");
     if(e.key === "ArrowRight") handleInput("right");
@@ -403,7 +404,7 @@ function endGame(){
   clearInterval(gameInt);
   clearInterval(spawnInt);
   gameOver();
-
+currentScreen = "result";
   gameScreen.style.display="none";
   resultScreen.style.display="flex";
 
@@ -450,40 +451,43 @@ function restartGame(){
   spawnBalloons();
 }
 
-
 function goBack(){
-  // stop running intervals
-  clearInterval(gameInt);
-  clearInterval(spawnInt);
 
-  // remove all balloons
-  balloons.forEach(b => {
-    clearInterval(b.interval);
-    if (b.el) b.el.remove();
-  });
-  balloons = [];
+  if(currentScreen !== "welcome"){
 
-  // reset values
-  score = 0;
-  missed = 0;
-  caught = 0;
-  time = 120;
-  reactionTimes = [];
+    clearInterval(gameInt);
+    clearInterval(spawnInt);
 
-  document.getElementById("score").textContent = 0;
-  document.getElementById("caught").textContent = 0;
-  document.getElementById("missed").textContent = 0;
-  document.getElementById("time").textContent = 120;
+    balloons.forEach(b => {
+      clearInterval(b.interval);
+      if (b.el) b.el.remove();
+    });
+    balloons = [];
 
-  gameArea.innerHTML = '<div id="escapeLine"></div>';
+    // reset values
+    score = 0;
+    missed = 0;
+    caught = 0;
+    time = 120;
+    reactionTimes = [];
 
-  // hide everything
-  gameScreen.style.display = "none";
-  resultScreen.style.display = "none";
-  countdown.style.display = "none";
+    document.getElementById("score").textContent = 0;
+    document.getElementById("caught").textContent = 0;
+    document.getElementById("missed").textContent = 0;
+    document.getElementById("time").textContent = 120;
 
-  // show welcome screen
-  welcomeScreen.style.display = "flex";
+    gameArea.innerHTML = '<div id="escapeLine"></div>';
+
+    gameScreen.style.display = "none";
+    resultScreen.style.display = "none";
+    countdown.style.display = "none";
+    welcomeScreen.style.display = "flex";
+
+    currentScreen = "welcome";
+  }
+  else {
+    window.history.back();
+  }
 }
 </script>
 <script src="shared.js"></script>

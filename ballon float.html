@@ -213,14 +213,55 @@ body {
 <body>
 <button id="backBtn" onclick="goBack()">← Back</button>
 <!-- WELCOME -->
-<div id="welcomeScreen">
-  <div class="welcome-card">
-    <h1>🎈 Balloon Float</h1>
-    <p>Catch balloons before they cross the line</p>
+<div id="welcomeScreen" class="screen active panel menu-screen">
 
+  <div class="header">
+    <button id="backBtn" class="back-btn" onclick="goBack()">← Back</button>
+    <span class="header-title">Balloon Float</span>
+    <div class="header-actions">
+      <div class="level-badge">Reaction</div>
+    </div>
+  </div>
+
+  <div class="menu-body">
+
+    <div class="menu-hero">
+      <div class="game-icon-big">🎈</div>
+      <h2>Balloon Float</h2>
+      <div class="domain-tag">Reaction · Speed</div>
+      <p class="menu-desc">
+        Catch the balloons before they cross the escape line using quick reactions.
+      </p>
+    </div>
+
+    <!-- ✅ INSTRUCTIONS -->
+    <div class="how-to">
+      <h3>How to Play</h3>
+
+      <div class="how-to-row">
+        <span class="key-badge">1</span>
+        <span><strong>Watch</strong> where the balloon appears (left or right).</span>
+      </div>
+
+      <div class="how-to-row">
+        <span class="key-badge">2</span>
+        <span><strong>Press</strong> LEFT or RIGHT arrow based on its position.</span>
+      </div>
+
+      <div class="how-to-row">
+        <span class="key-badge">3</span>
+        <span><strong>You get only ONE chance</strong> per balloon — no second try.</span>
+      </div>
+      
+    </div>
+
+    <!-- AGE INPUT -->
     <input id="ageInput" type="number" placeholder="Enter age">
 
-    <button class="start-btn" onclick="initSound(); startCountdown()">Start Game</button>
+    <button class="start-btn" onclick="initSound(); startCountdown()">
+      ▶ Start Game
+    </button>
+
   </div>
 </div>
 

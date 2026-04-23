@@ -312,10 +312,15 @@ let reactionTimes=[];
 
 function startGame(){
   gameScreen.style.display="block";
+
+  document.addEventListener("keydown", e => {
+    if(e.key === "ArrowLeft") handleInput("left");
+    if(e.key === "ArrowRight") handleInput("right");
+  });
+
   gameInt=setInterval(updateGame,1000);
   spawnBalloons();
 }
-
 function updateGame(){
   time--;
   document.getElementById("time").textContent=time;
@@ -440,10 +445,7 @@ function restartGame(){
   spawnBalloons();
 }
 
-document.addEventListener("keydown",e=>{
-  if(e.key==="ArrowLeft") handleInput("left");
-  if(e.key==="ArrowRight") handleInput("right");
-});
+
   function goBack(){
   window.history.back();
 }

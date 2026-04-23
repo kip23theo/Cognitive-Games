@@ -207,6 +207,96 @@ body {
   box-shadow: var(--shadow);
   z-index: 1000;
 }
+  .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.back-btn {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+}
+
+.menu-hero {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  text-align: center;
+}
+
+.game-icon-big {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.domain-tag {
+  margin: 8px 0;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.menu-desc {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.how-to {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.how-to h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.how-to-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.key-badge {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -258,9 +348,9 @@ body {
     <!-- AGE INPUT -->
     <input id="ageInput" type="number" placeholder="Enter age">
 
-    <button class="start-btn" onclick="initSound(); startCountdown()">
-      ▶ Start Game
-    </button>
+   <button id="menuStartBtn" class="start-btn">
+  ▶ Start Game
+</button>
 
   </div>
 </div>
@@ -483,7 +573,7 @@ function restartGame(){
   document.getElementById("score").textContent = 0;
   document.getElementById("caught").textContent = 0;
   document.getElementById("missed").textContent = 0;
-  document.getElementById("time").textContent = 120;
+  document.getElementById("time").textContent = 60;
 
   gameArea.innerHTML = '<div id="escapeLine"></div>';
 
@@ -532,6 +622,10 @@ function goBack(){
     window.history.back();
   }
 }
+  document.getElementById("menuStartBtn").addEventListener("click", () => {
+  initSound();
+  startCountdown();
+});
 </script>
 <script src="shared.js"></script>
 </body>

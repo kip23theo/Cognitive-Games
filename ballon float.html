@@ -315,7 +315,8 @@ function startCountdown(){
 let score=0, missed=0, caught=0, time=120;
 let balloons=[], spawnInt, gameInt;
 let reactionTimes=[];
-
+let inputLocked = false;   
+  
 function startGame(){
   gameScreen.style.display="block";
 currentScreen = "game";
@@ -373,19 +374,21 @@ function moveBalloon(obj){
 }
 
 function handleInput(side){
+  if(inputLocked) return;   
   if(side==='left') playLeft();
   else playRight();
-
-  let list=balloons.filter(b=>b.side===side);
-  if(!list.length) return;
-
-  let lowest=list.reduce((a,b)=>a.pos<b.pos?a:b);
-  clearInterval(lowest.interval);
-
-  let reactionTime = Date.now() - lowest.startTime;
+  if(!balloons.length) return;
+  let target = balloons.reduce((a,b)=>a.pos > b.pos ? a : b);
+  inputLocked = true;   
+  clearInterval(target.interval);
+  let reactionTime = Date.now() - target.startTime;
   reactionTimes.push(reactionTime);
-
-  removeBalloon(lowest,true);
+  if(target.side === side){
+    removeBalloon(target, true);
+  } else {
+    removeBalloon(target, false);
+  }
+  inputLocked = false;  
 }
 
 function removeBalloon(obj,isCaught){

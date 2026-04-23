@@ -184,29 +184,180 @@ body {
   box-shadow: var(--shadow);
   z-index: 1000;
 }
+  /* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.back-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.header-title {
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.level-badge {
+  background: rgba(225,112,85,0.15);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.settings-link {
+  text-decoration: none;
+  font-size: 16px;
+}
+
+/* BODY */
+.menu-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+/* HERO */
+.menu-hero {
+  width: 100%;
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.game-icon-big {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.domain-tag {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.menu-desc {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* HOW TO */
+.how-to {
+  width: 100%;
+  background: var(--surface);
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.how-to h3 {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.how-to-row {
+  display: flex;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.key-badge {
+  background: var(--bg);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+/* START BUTTON */
+.start-btn {
+  width: 100%;
+  height: 55px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #6c5ce7, #4d3dbb);
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
 </style>
 </head>
 
 <body>
 <button id="backBtn" onclick="goBack()">← Back</button>
 <!-- WELCOME -->
-<div id="welcome">
-  <div class="card">
-    <h1>🎵 Rhythm Tap</h1>
+<div id="welcome" class="menu-screen">
 
-    <p><b>About the Game:</b><br>
-    This game helps improve memory and coordination.</p>
+  <div class="header">
+    <a href="#" class="back-btn" onclick="goBack()">← Back</a>
+    <span class="header-title">Rhythm Tap</span>
+    <div class="header-actions">
+      <div class="level-badge">Memory</div>
+      <a href="#" class="settings-link">⚙️</a>
+    </div>
+  </div>
 
-    <p><b>How to Play:</b><br>
-    1. Watch the directions on the screen.<br>
-    2. Remember the pattern carefully.<br>
-    3. Repeat it using LEFT and RIGHT.<br>
-    4. The pattern gets longer each round.</p>
+  <div class="menu-body">
 
-    <p>Take your time and enjoy the rhythm.</p>
+    <div class="menu-hero">
+      <div class="game-icon-big">🎵</div>
+      <h2>Rhythm Tap</h2>
+      <div class="domain-tag">Memory · Pattern Recall</div>
+      <p class="menu-desc">
+        Watch the rhythm pattern and repeat it correctly to level up.
+      </p>
+    </div>
 
-    <button style="margin-top:20px;height:60px;font-size:20px;border-radius:12px;border:none;background:#2D3436;color:#fff;"
-      onclick="startApp()">Start Game</button>
+    <div class="how-to">
+      <h3>How to Play</h3>
+
+      <div class="how-to-row">
+        <span class="key-badge">1</span>
+        <span><strong>Watch</strong> the pattern shown on screen.</span>
+      </div>
+
+      <div class="how-to-row">
+        <span class="key-badge">2</span>
+        <span><strong>Remember</strong> the sequence carefully.</span>
+      </div>
+
+      <div class="how-to-row">
+        <span class="key-badge">3</span>
+        <span><strong>Repeat</strong> using LEFT and RIGHT switches.</span>
+      </div>
+
+      <!-- ✅ NEW LIFE INSTRUCTION -->
+      <div class="how-to-row">
+        <span class="key-badge">4</span>
+        <span><strong>Lives:</strong> You have limited attempts. Game ends after multiple mistakes.</span>
+      </div>
+
+    </div>
+
+    <button class="start-btn" onclick="startApp()">
+      ▶ Start Game
+    </button>
+
   </div>
 </div>
 
@@ -419,15 +570,14 @@ function startApp() {
   document.getElementById("welcome").style.display = "none";
   document.getElementById("game").style.display = "block";
 
-  InputHandler.init();
-  InputHandler.subscribe(handleInput);
-
   started = true;
   countdownStart();
 }
-
 document.getElementById("leftBtn").onclick = () => handleInput("L");
 document.getElementById("rightBtn").onclick = () => handleInput("R");
+  // ✅ ENABLE KEYBOARD GLOBALLY
+InputHandler.init();
+InputHandler.subscribe(handleInput);
 </script>
 <script src="shared.js"></script>
 </body>

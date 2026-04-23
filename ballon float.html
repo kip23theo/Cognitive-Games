@@ -257,8 +257,8 @@ body {
 
 <script>
 let ctx, enabled=false;
-  let currentScreen = "welcome"; 
-  const welcomeScreen = document.getElementById("welcomeScreen");
+let currentScreen = "welcome"; 
+const welcomeScreen = document.getElementById("welcomeScreen");
 const gameScreen = document.getElementById("gameScreen");
 const resultScreen = document.getElementById("resultScreen");
 const countdown = document.getElementById("countdown");
@@ -288,11 +288,11 @@ function gameOver(){ play(300); }
 let userAge=0;
 
 function startCountdown(){
+  currentScreen = "countdown";
   let age = document.getElementById("ageInput").value;
   if(!age){ alert("Enter age"); return; }
 
   userAge = parseInt(age);
-currentScreen = "countdown";
   welcomeScreen.style.display="none";
   countdown.style.display="flex";
 
@@ -401,10 +401,10 @@ function removeBalloon(obj,isCaught){
 }
 
 function endGame(){
+  currentScreen = "result";
   clearInterval(gameInt);
   clearInterval(spawnInt);
   gameOver();
-currentScreen = "result";
   gameScreen.style.display="none";
   resultScreen.style.display="flex";
 

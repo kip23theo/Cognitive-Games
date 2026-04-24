@@ -12,6 +12,7 @@
   --text: #2d3436;
   --border: #e0dbd5;
 }
+
 [data-theme="dark"] {
   --bg: #141414;
   --surface: #1f1f1f;
@@ -21,6 +22,7 @@
   --accent: #ff7a5a;
   --accent-soft: rgba(255,122,90,0.15);
 }
+
 body {
   margin: 0;
   font-family: Arial;
@@ -46,8 +48,8 @@ body {
   box-sizing: border-box;
 }
 
-#backBtn {
-  display: none;
+#backBtn,
+#menuBackBtn {
   position: absolute;
   left: 16px;
   background: none;
@@ -61,7 +63,11 @@ body {
   transition: background 0.15s;
 }
 
-#backBtn:hover {
+#backBtn     { display: none; }
+#menuBackBtn { display: block; }
+
+#backBtn:hover,
+#menuBackBtn:hover {
   background: #eee9ff;
 }
 
@@ -161,20 +167,18 @@ body {
   z-index: -1;
 }
 
-.c1  { width:70px; height:70px; border-radius:50%; background:#e8bcbc; top:40px; left:30px; }
-.s1  { width:65px; height:65px; background:#bcd6e8; top:180px; left:25px; }
-.t1  { width:0; height:0; border-left:30px solid transparent; border-right:30px solid transparent; border-bottom:55px solid #bfe3cd; bottom:120px; left:40px; }
+.c1    { width:70px; height:70px; border-radius:50%; background:#e8bcbc; top:40px; left:30px; }
+.s1    { width:65px; height:65px; background:#bcd6e8; top:180px; left:25px; }
+.t1    { width:0; height:0; border-left:30px solid transparent; border-right:30px solid transparent; border-bottom:55px solid #bfe3cd; bottom:120px; left:40px; }
 .star1 { font-size:45px; color:#e6d8a8; bottom:40px; left:60px; }
-.c2  { width:70px; height:70px; border-radius:50%; background:#d9bce8; top:60px; right:30px; }
-.s2  { width:65px; height:65px; background:#cddff5; top:220px; right:25px; }
-.t2  { width:0; height:0; border-left:28px solid transparent; border-right:28px solid transparent; border-bottom:50px solid #cde3bf; bottom:140px; right:35px; }
+.c2    { width:70px; height:70px; border-radius:50%; background:#d9bce8; top:60px; right:30px; }
+.s2    { width:65px; height:65px; background:#cddff5; top:220px; right:25px; }
+.t2    { width:0; height:0; border-left:28px solid transparent; border-right:28px solid transparent; border-bottom:50px solid #cde3bf; bottom:140px; right:35px; }
 .star2 { font-size:50px; color:#e8ddb0; bottom:60px; right:70px; }
 .midL  { width:60px; height:60px; background:#e2c9f2; left:120px; top:250px; }
 .midR  { width:0; height:0; border-left:25px solid transparent; border-right:25px solid transparent; border-bottom:45px solid #c9f2dc; right:120px; top:300px; }
 
-#bgShapes {
-  display: none;
-}
+#bgShapes { display: none; }
 
 #game {
   display: none;
@@ -213,19 +217,73 @@ canvas {
   font-weight: bold;
 }
 
-.container {
-  margin-top: 80px;
-}
-
 .left    { background: #c96f6f; }
 .right   { background: #6f9cc9; }
 .restart { background: #888888; }
+
+/* ── Dark mode overrides ─────────────────────────────────────────────────────*/
+[data-theme="dark"] body {
+  background: #141414;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .header {
+  background: #1f1f1f;
+  border-bottom-color: #333;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] #backBtn,
+[data-theme="dark"] #menuBackBtn {
+  color: #a89cf7;
+}
+
+[data-theme="dark"] #backBtn:hover,
+[data-theme="dark"] #menuBackBtn:hover {
+  background: rgba(168,156,247,0.15);
+}
+
+[data-theme="dark"] .menu-hero,
+[data-theme="dark"] .how-to {
+  background: #1f1f1f;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .menu-hero h2,
+[data-theme="dark"] .how-to h3 {
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .menu-desc {
+  color: #9a9590;
+}
+
+[data-theme="dark"] .domain-tag {
+  background: rgba(108,92,231,0.2);
+  color: #a89cf7;
+}
+
+[data-theme="dark"] .key-badge {
+  background: #2a2a2a;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .top,
+[data-theme="dark"] #rule,
+[data-theme="dark"] #result,
+[data-theme="dark"] #finalScore {
+  color: #f0ede8;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
+  <!-- Menu page: goes back to hub/previous page -->
+  <button id="menuBackBtn" onclick="window.history.back()">← Back</button>
+  <!-- Game page: goes back to menu screen -->
   <button id="backBtn" onclick="goBack()">← Back</button>
   Sorter Game
 </div>
@@ -293,11 +351,13 @@ canvas {
 
 <script>
 // ── DOM refs ──────────────────────────────────────────────────────────────────
-const canvas      = document.getElementById("canvas");
-const ctx         = canvas.getContext("2d");
-const ruleEl      = document.getElementById("rule");
-const resultEl    = document.getElementById("result");
-const finalScoreEl= document.getElementById("finalScore");
+const canvas       = document.getElementById("canvas");
+const ctx          = canvas.getContext("2d");
+const ruleEl       = document.getElementById("rule");
+const resultEl     = document.getElementById("result");
+const finalScoreEl = document.getElementById("finalScore");
+const menuBackBtn  = document.getElementById("menuBackBtn");
+const backBtn      = document.getElementById("backBtn");
 
 // ── Sound ─────────────────────────────────────────────────────────────────────
 const Sound = {
@@ -344,9 +404,10 @@ document.getElementById("startBtn").onclick = () => {
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("game").style.display       = "flex";
   document.getElementById("bgShapes").style.display   = "block";
-  document.getElementById("backBtn").style.display    = "block";
+  menuBackBtn.style.display = "none";
+  backBtn.style.display     = "block";
   restart();
-  canvas.focus(); // critical: must be after restart() so element is visible
+  canvas.focus();
 };
 
 function goBack() {
@@ -354,7 +415,8 @@ function goBack() {
   document.getElementById("menuScreen").style.display = "flex";
   document.getElementById("game").style.display       = "none";
   document.getElementById("bgShapes").style.display   = "none";
-  document.getElementById("backBtn").style.display    = "none";
+  menuBackBtn.style.display = "block";
+  backBtn.style.display     = "none";
 }
 
 // ── Core game ─────────────────────────────────────────────────────────────────
@@ -383,7 +445,7 @@ function newRound() {
   document.getElementById("level").innerText = level;
   document.getElementById("score").innerText = score;
 
-  canvas.focus(); // keep canvas focused so keyboard always works
+  canvas.focus();
 }
 
 function draw(shape, color) {
@@ -436,7 +498,7 @@ function check(choice) {
     setTimeout(newRound, 700);
   } else {
     gameOver = true;
-    resultEl.innerText    = "Game Over";
+    resultEl.innerText     = "Game Over";
     finalScoreEl.innerText = "Score: " + score;
     Sound.wrong();
   }
@@ -461,6 +523,7 @@ canvas.addEventListener("keydown", function(e) {
   }
 }, { passive: false });
 </script>
+
 <script src="shared.js"></script>
 </body>
 </html>

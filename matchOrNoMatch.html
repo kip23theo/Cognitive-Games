@@ -557,15 +557,29 @@ function showGameOver() {
   document.getElementById("gameOverScreen").style.display = "flex";
   document.getElementById("finalScore").innerText         = score;
 }
-// ── Keyboard — attached to canvas, not window ─────────────────────────────────
-canvas.addEventListener("keydown", function(e) {
-  if (gameOver) return;
+// ── Keyboard Controls ─────────────────────────────────────────────
+document.addEventListener("keydown", function(e) {
+
+  // stop arrow keys scrolling page
   if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
     e.preventDefault();
-    e.stopPropagation();
-    check(e.key === "ArrowLeft" ? "L" : "R");
   }
-}, { passive: false });
+
+  // only allow when game screen is active
+  const gameVisible = document.getElementById("game").style.display === "flex";
+  if (!gameVisible) return;
+
+  // LEFT arrow or A → MATCH
+  if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+    answer(true);
+  }
+
+  // RIGHT arrow or D → NO MATCH
+  if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+    answer(false);
+  }
+
+});
   
 </script>
 

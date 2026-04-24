@@ -281,9 +281,9 @@ canvas {
 <body>
 
 <div class="header">
-  <!-- Menu page: navigates to hub -->
-  <button id="menuBackBtn" onclick="window.location.href='index.html'">← Back</button>
-  <!-- Game page: returns to menu screen -->
+  <!-- Menu page: goes back to hub/previous page -->
+  <button id="menuBackBtn" onclick="window.history.back()">← Back</button>
+  <!-- Game page: goes back to menu screen -->
   <button id="backBtn" onclick="goBack()">← Back</button>
   Sorter Game
 </div>

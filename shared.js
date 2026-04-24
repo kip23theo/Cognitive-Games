@@ -1,95 +1,529 @@
-// ── COGNITIVE TRAINING GAMES · Shared Theme + Zoom ──
-(function () {
-  'use strict';
-  var THEME_KEY = 'ctg-theme';
-  var ZOOM_KEY  = 'ctg-zoom';
-  var MIN_ZOOM  = 0.7;
-  var MAX_ZOOM  = 1.4;
-  var STEP      = 0.1;
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sorter Game</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  function applyTheme(t) {
-    document.documentElement.setAttribute('data-theme', t);
-    localStorage.setItem(THEME_KEY, t);
-    document.querySelectorAll('[data-theme-btn]').forEach(function(b) {
-      b.classList.toggle('setting-active', b.dataset.themeBtn === t);
-    });
+<style>
+:root {
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --text: #2d3436;
+  --border: #e0dbd5;
+}
+
+[data-theme="dark"] {
+  --bg: #141414;
+  --surface: #1f1f1f;
+  --text: #f0ede8;
+  --text-light: #9a9590;
+  --border: #333333;
+  --accent: #ff7a5a;
+  --accent-soft: rgba(255,122,90,0.15);
+}
+
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f8f6f3;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 12px;
+  background: #fff;
+  border-bottom: 1px solid #e0dbd5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#backBtn,
+#menuBackBtn {
+  position: absolute;
+  left: 16px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #6c5ce7;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+#backBtn     { display: none; }
+#menuBackBtn { display: block; }
+
+#backBtn:hover,
+#menuBackBtn:hover {
+  background: #eee9ff;
+}
+
+.menu-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.menu-hero {
+  width: 90%;
+  max-width: 420px;
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+}
+
+.game-icon-big {
+  width: 70px;
+  height: 70px;
+  margin: auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5ce7, #4d3dbb);
+  color: white;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 15px rgba(108,92,231,0.4);
+}
+
+.domain-tag {
+  background: #eee9ff;
+  color: #6c5ce7;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+.menu-desc {
+  color: #636e72;
+  font-size: 14px;
+}
+
+.how-to {
+  width: 90%;
+  max-width: 420px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.how-to-row {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.key-badge {
+  background: #f3f0ea;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: bold;
+}
+
+.start-btn {
+  width: 90%;
+  max-width: 420px;
+  background: linear-gradient(135deg, #6c5ce7, #4d3dbb);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 6px 18px rgba(108,92,231,0.4);
+  cursor: pointer;
+}
+
+.shape {
+  position: fixed;
+  opacity: 0.28;
+  z-index: -1;
+}
+
+.c1    { width:70px; height:70px; border-radius:50%; background:#e8bcbc; top:40px; left:30px; }
+.s1    { width:65px; height:65px; background:#bcd6e8; top:180px; left:25px; }
+.t1    { width:0; height:0; border-left:30px solid transparent; border-right:30px solid transparent; border-bottom:55px solid #bfe3cd; bottom:120px; left:40px; }
+.star1 { font-size:45px; color:#e6d8a8; bottom:40px; left:60px; }
+.c2    { width:70px; height:70px; border-radius:50%; background:#d9bce8; top:60px; right:30px; }
+.s2    { width:65px; height:65px; background:#cddff5; top:220px; right:25px; }
+.t2    { width:0; height:0; border-left:28px solid transparent; border-right:28px solid transparent; border-bottom:50px solid #cde3bf; bottom:140px; right:35px; }
+.star2 { font-size:50px; color:#e8ddb0; bottom:60px; right:70px; }
+.midL  { width:60px; height:60px; background:#e2c9f2; left:120px; top:250px; }
+.midR  { width:0; height:0; border-left:25px solid transparent; border-right:25px solid transparent; border-bottom:45px solid #c9f2dc; right:120px; top:300px; }
+
+#bgShapes { display: none; }
+
+#game {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 50px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+canvas {
+  background: transparent;
+  outline: none;
+}
+
+.btns button {
+  width: 80px;
+  height: 40px;
+  margin: 10px;
+  border: none;
+  border-radius: 6px;
+  color: #f1f1f1;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.top {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.left    { background: #c96f6f; }
+.right   { background: #6f9cc9; }
+.restart { background: #888888; }
+
+/* ── Dark mode overrides ─────────────────────────────────────────────────────*/
+[data-theme="dark"] body {
+  background: #141414;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .header {
+  background: #1f1f1f;
+  border-bottom-color: #333;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] #backBtn,
+[data-theme="dark"] #menuBackBtn {
+  color: #a89cf7;
+}
+
+[data-theme="dark"] #backBtn:hover,
+[data-theme="dark"] #menuBackBtn:hover {
+  background: rgba(168,156,247,0.15);
+}
+
+[data-theme="dark"] .menu-hero,
+[data-theme="dark"] .how-to {
+  background: #1f1f1f;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .menu-hero h2,
+[data-theme="dark"] .how-to h3 {
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .menu-desc {
+  color: #9a9590;
+}
+
+[data-theme="dark"] .domain-tag {
+  background: rgba(108,92,231,0.2);
+  color: #a89cf7;
+}
+
+[data-theme="dark"] .key-badge {
+  background: #2a2a2a;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .top,
+[data-theme="dark"] #rule,
+[data-theme="dark"] #result,
+[data-theme="dark"] #finalScore {
+  color: #f0ede8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <!-- Menu page: goes back to hub/previous page -->
+  <button id="menuBackBtn" onclick="window.history.back()">← Back</button>
+  <!-- Game page: goes back to menu screen -->
+  <button id="backBtn" onclick="goBack()">← Back</button>
+  Sorter Game
+</div>
+
+<div id="menuScreen" class="menu-screen">
+  <div class="menu-hero">
+    <div class="game-icon-big">🎮</div>
+    <h2>Sorter Game</h2>
+    <div class="domain-tag">Memory · Sorting</div>
+    <p class="menu-desc">Observe the rule and make the right move.</p>
+  </div>
+
+  <div class="how-to">
+    <h3>How to Play</h3>
+    <div class="how-to-row">
+      <span class="key-badge">1</span>
+      <span>Observe the rule carefully</span>
+    </div>
+    <div class="how-to-row">
+      <span class="key-badge">2</span>
+      <span>Identify the shape or color</span>
+    </div>
+    <div class="how-to-row">
+      <span class="key-badge">3</span>
+      <span>Select the correct side</span>
+    </div>
+  </div>
+
+  <button id="startBtn" class="start-btn">▶ Start Game</button>
+</div>
+
+<div id="bgShapes">
+  <div class="shape c1"></div>
+  <div class="shape s1"></div>
+  <div class="shape t1"></div>
+  <div class="shape star1">★</div>
+  <div class="shape c2"></div>
+  <div class="shape s2"></div>
+  <div class="shape t2"></div>
+  <div class="shape star2">★</div>
+  <div class="shape midL"></div>
+  <div class="shape midR"></div>
+</div>
+
+<div class="top">
+  <div>Level: <span id="level">1</span></div>
+  <div>Score: <span id="score">0</span></div>
+</div>
+
+<div id="game">
+  <div id="top"></div>
+  <div id="rule"></div>
+
+  <canvas id="canvas" width="200" height="200" tabindex="0"></canvas>
+
+  <div class="btns">
+    <button class="left"    onclick="check('L')">LEFT</button>
+    <button class="right"   onclick="check('R')">RIGHT</button>
+    <button class="restart" onclick="restart()">RESTART</button>
+  </div>
+
+  <div id="result"></div>
+  <div id="finalScore"></div>
+</div>
+
+<script>
+// ── DOM refs ──────────────────────────────────────────────────────────────────
+const canvas       = document.getElementById("canvas");
+const ctx          = canvas.getContext("2d");
+const ruleEl       = document.getElementById("rule");
+const resultEl     = document.getElementById("result");
+const finalScoreEl = document.getElementById("finalScore");
+const menuBackBtn  = document.getElementById("menuBackBtn");
+const backBtn      = document.getElementById("backBtn");
+
+// ── Sound ─────────────────────────────────────────────────────────────────────
+const Sound = {
+  ctx: null,
+  init() {
+    const A = window.AudioContext || window.webkitAudioContext;
+    if (!this.ctx) this.ctx = new A();
+  },
+  tone(f, t) {
+    this.init();
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    o.frequency.value = f;
+    g.gain.value = 0.05;
+    o.connect(g);
+    g.connect(this.ctx.destination);
+    o.start();
+    o.stop(this.ctx.currentTime + t);
+  },
+  correct() {
+    this.tone(500, 0.08);
+    setTimeout(() => this.tone(650, 0.08), 80);
+    setTimeout(() => this.tone(800, 0.08), 160);
+  },
+  wrong() {
+    this.tone(220, 0.2);
   }
-  function getTheme() { return localStorage.getItem(THEME_KEY) || 'light'; }
+};
 
-  function clamp(v) { return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, parseFloat(v) || 1)); }
+// ── Game state ────────────────────────────────────────────────────────────────
+const shapes = ["circle", "square", "triangle", "star"];
+const colors = {
+  red:    "#c96f6f",
+  blue:   "#6f9cc9",
+  green:  "#6fb089",
+  yellow: "#d4c06a"
+};
 
-  function isGamePage() {
-    return getComputedStyle(document.body).overflow === 'hidden';
+let score, level, gameOver;
+let ruleType, ruleValue, ruleSide, current;
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+document.getElementById("startBtn").onclick = () => {
+  document.getElementById("menuScreen").style.display = "none";
+  document.getElementById("game").style.display       = "flex";
+  document.getElementById("bgShapes").style.display   = "block";
+  menuBackBtn.style.display = "none";
+  backBtn.style.display     = "block";
+  restart();
+  canvas.focus();
+};
+
+function goBack() {
+  gameOver = true;
+  document.getElementById("menuScreen").style.display = "flex";
+  document.getElementById("game").style.display       = "none";
+  document.getElementById("bgShapes").style.display   = "none";
+  menuBackBtn.style.display = "block";
+  backBtn.style.display     = "none";
+}
+
+// ── Core game ─────────────────────────────────────────────────────────────────
+function newRound() {
+  if (gameOver) return;
+
+  ruleType = level === 1 ? "color"
+           : level === 2 ? "shape"
+           : (Math.random() < 0.5 ? "color" : "shape");
+
+  ruleSide = Math.random() < 0.5 ? "LEFT" : "RIGHT";
+
+  const shape = shapes[Math.floor(Math.random() * shapes.length)];
+  const keys  = Object.keys(colors);
+  const color = keys[Math.floor(Math.random() * keys.length)];
+
+  current   = { shape, color };
+  ruleValue = ruleType === "color" ? color : shape;
+
+  draw(shape, colors[color]);
+
+  ruleEl.innerText = ruleType === "color"
+    ? "If color is " + ruleValue + " → " + ruleSide
+    : "If shape is " + ruleValue + " → " + ruleSide;
+
+  document.getElementById("level").innerText = level;
+  document.getElementById("score").innerText = score;
+
+  canvas.focus();
+}
+
+function draw(shape, color) {
+  ctx.clearRect(0, 0, 200, 200);
+  ctx.fillStyle = color;
+
+  if (shape === "circle") {
+    ctx.beginPath();
+    ctx.arc(100, 100, 50, 0, Math.PI * 2);
+    ctx.fill();
   }
-
-  function applyZoom(z) {
-    z = clamp(z);
-    localStorage.setItem(ZOOM_KEY, z);
-    var w = document.getElementById('ctg-zoom-wrap');
-    if (w) {
-      if (Math.abs(z - 1) < 0.001) {
-        // No zoom — reset everything cleanly
-        w.style.transform = '';
-        w.style.transformOrigin = '';
-        w.style.width = '';
-        w.style.marginLeft = '';
-        w.style.marginBottom = '';
-      } else {
-        // Scale from top-left, then shift right by 50% of the difference
-        // so content stays horizontally centred at any zoom level
-        var offset = Math.round((1 - z) * 50 * 100) / 100;
-        w.style.transformOrigin = 'top left';
-        w.style.transform = 'scale(' + z + ') translateX(0)';
-        w.style.width = Math.round(10000 / z) / 100 + '%';
-        w.style.marginLeft = offset + 'vw';
-        if (isGamePage()) {
-          w.style.marginBottom = '';
-        } else {
-          w.style.marginBottom = Math.round((z - 1) * 100) + 'px';
-        }
-      }
-    }
-    updateZoomUI(z);
-    return z;
+  if (shape === "square") {
+    ctx.fillRect(50, 50, 100, 100);
   }
-  function getZoom() { return clamp(localStorage.getItem(ZOOM_KEY) || 1); }
-
-  function updateZoomUI(z) {
-    var d = document.getElementById('ctg-zoom-display');
-    if (d) d.textContent = Math.round(z * 100) + '%';
-    var out = document.getElementById('ctg-zoom-out');
-    var inp = document.getElementById('ctg-zoom-in');
-    if (out) out.disabled = z <= MIN_ZOOM;
-    if (inp) inp.disabled = z >= MAX_ZOOM;
+  if (shape === "triangle") {
+    ctx.beginPath();
+    ctx.moveTo(100, 40);
+    ctx.lineTo(40, 160);
+    ctx.lineTo(160, 160);
+    ctx.fill();
   }
-
-  function toast(msg) {
-    var t = document.getElementById('ctg-toast');
-    if (!t) return;
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(t._t);
-    t._t = setTimeout(function() { t.classList.remove('show'); }, 1800);
+  if (shape === "star") {
+    ctx.font = "70px Arial";
+    ctx.fillText("★", 60, 140);
   }
+}
 
-  function init() {
-    applyTheme(getTheme());
-    applyZoom(getZoom());
-    document.querySelectorAll('[data-theme-btn]').forEach(function(b) {
-      b.addEventListener('click', function() {
-        applyTheme(b.dataset.themeBtn);
-        toast(b.dataset.themeBtn === 'dark' ? '🌙 Dark mode on' : '☀️ Light mode on');
-      });
-    });
-    var zin  = document.getElementById('ctg-zoom-in');
-    var zout = document.getElementById('ctg-zoom-out');
-    var zrst = document.getElementById('ctg-zoom-reset');
-    if (zin)  zin.addEventListener('click',  function() { applyZoom(getZoom() + STEP); toast('🔍 Zoomed in'); });
-    if (zout) zout.addEventListener('click', function() { applyZoom(getZoom() - STEP); toast('🔍 Zoomed out'); });
-    if (zrst) zrst.addEventListener('click', function() { applyZoom(1); toast('↩️ Zoom reset'); });
+function check(choice) {
+  if (gameOver) return;
+
+  const match = ruleType === "color"
+    ? current.color === ruleValue
+    : current.shape === ruleValue;
+
+  const correct = ruleSide === "LEFT"
+    ? (match && choice === "L") || (!match && choice === "R")
+    : (match && choice === "R") || (!match && choice === "L");
+
+  if (correct) {
+    score++;
+    resultEl.innerText = "Correct 😊";
+    Sound.correct();
+
+    if (score === 5)  level = 2;
+    if (score === 10) level = 3;
+
+    document.getElementById("score").innerText = score;
+    document.getElementById("level").innerText = level;
+
+    setTimeout(newRound, 700);
+  } else {
+    gameOver = true;
+    resultEl.innerText     = "Game Over";
+    finalScoreEl.innerText = "Score: " + score;
+    Sound.wrong();
   }
+}
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-  window.CTG = { applyTheme: applyTheme, applyZoom: applyZoom, getTheme: getTheme, getZoom: getZoom };
-})();
+function restart() {
+  score    = 0;
+  level    = 1;
+  gameOver = false;
+  resultEl.innerText     = "";
+  finalScoreEl.innerText = "";
+  newRound();
+}
+
+// ── Keyboard — attached to canvas, not window ─────────────────────────────────
+canvas.addEventListener("keydown", function(e) {
+  if (gameOver) return;
+  if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+    e.preventDefault();
+    e.stopPropagation();
+    check(e.key === "ArrowLeft" ? "L" : "R");
+  }
+}, { passive: false });
+</script>
+
+<script src="shared.js"></script>
+</body>
+</html>

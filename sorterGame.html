@@ -163,7 +163,7 @@ body {
 
 .shape {
   position: fixed;
-  opacity: 0.28;
+  opacity: 0.08;
   z-index: -1;
 }
 
@@ -226,7 +226,10 @@ canvas {
   background: #141414;
   color: #f0ede8;
 }
-
+  [data-theme="dark"].shape{
+    opacity:0.05;
+    filter:blur(3px) grayscale(40%);
+  }
 [data-theme="dark"] .header {
   background: #1f1f1f;
   border-bottom-color: #333;

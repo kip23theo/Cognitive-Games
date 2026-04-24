@@ -389,8 +389,34 @@ body {
 </div>
 
 <script>
+ 
   function goBack(){
-  window.history.back();
+
+  if(currentScreen !== "welcome"){
+
+    // stop game
+    started = false;
+    playing = false;
+
+    pattern = [];
+    user = [];
+    level = 1;
+    score = 0;
+
+    document.getElementById("score").innerText = 0;
+    document.getElementById("level").innerText = 1;
+
+    retryBtn.style.display = "none";
+
+    // switch screens
+    document.getElementById("game").style.display = "none";
+    document.getElementById("welcome").style.display = "flex";
+
+    currentScreen = "welcome";
+  }
+  else {
+    window.location.href = "index.html";
+  }
 }
 const InputHandler = {
   listeners: [],
@@ -446,7 +472,7 @@ function tone(freq, duration=0.12) {
 const soundLeft = () => tone(300);
 const soundRight = () => tone(700);
 const rhythmTick = () => tone(500, 0.05);
-
+let currentScreen = "welcome";
 let pattern = [];
 let user = [];
 let level = 1;
@@ -548,12 +574,15 @@ function handleInput(input) {
   let i = user.length - 1;
 
   if (user[i] !== pattern[i]) {
-    display.innerText = "❌";
-    msg.innerText = "Game Over";
-    retryBtn.style.display = "block";
-    started = false;
-    playing = false;
-    return;
+   display.innerText = "❌";
+msg.innerText = "Game Over";
+retryBtn.style.display = "block";
+started = false;
+playing = false;
+
+currentScreen = "result"; 
+
+return;
   }
 
   if (user.length === pattern.length) { 
@@ -565,6 +594,7 @@ function handleInput(input) {
 }
 
 function resetGame() {
+  currentScreen = "game"; 
   started = true;
   countdownStart();
 }
@@ -572,6 +602,8 @@ function resetGame() {
 function startApp() {
   document.getElementById("welcome").style.display = "none";
   document.getElementById("game").style.display = "block";
+
+  currentScreen = "game"; 
 
   started = true;
   countdownStart();

@@ -369,7 +369,6 @@ canvas {
 <div id="game">
   <div id="top"></div>
   <div id="rule"></div>
-  <div id="timer"></div>
 
   <canvas id="canvas" width="200" height="200" tabindex="0"></canvas>
 
@@ -431,7 +430,6 @@ const colors = {
 
 let score, level, gameOver;
 let ruleType, ruleValue, ruleSide, current;
-  let delay=700;
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 document.getElementById("startBtn").onclick = () => {
@@ -549,22 +547,16 @@ setTimeout(() => resultEl.classList.remove("pop"), 200);
 }
  if (score === 5)  level = 2;
 else if (score === 10) level = 3;
-else if (score === 15) { level = 4; delay = 600; }
-else if (score === 20) { level = 5; delay = 500; }
-else if (score === 25) { level = 6; delay = 400; }
-else if (score === 30) { level = 7; delay = 300; }  
+else if (score === 15) level = 4; 
+else if (score === 20)  level = 5; 
+else if (score === 25)  level = 6; 
+else if (score === 30)  level = 7;   
 
     document.getElementById("score").innerText = score;
     document.getElementById("level").innerText = level;
     
-    if (level >= 4) {
-  document.getElementById("timer").innerText =
-    "Time: " + (delay / 1000).toFixed(1) + " sec";
-} else {
-  document.getElementById("timer").innerText = "";
-}
 
-    setTimeout(newRound, delay);
+    setTimeout(newRound, 700);
   } else {
     gameOver = true;
     resultEl.innerText     = "Game Over";
@@ -576,7 +568,6 @@ else if (score === 30) { level = 7; delay = 300; }
 function restart() {
   score    = 0;
   level    = 1;
-  delay=700;
   gameOver = false;
   resultEl.innerText     = "";
   finalScoreEl.innerText = "";

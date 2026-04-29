@@ -479,7 +479,7 @@ let level = 1;
 let score = 0;
 let playing = false;
 let started = false;
-
+let patternInterval;
 const display = document.getElementById("display");
 const msg = document.getElementById("msg");
 const retryBtn = document.getElementById("retryBtn");
@@ -528,7 +528,8 @@ function showPattern() {
   let i = 0;
   playing = false;
 
-  let interval = setInterval(() => {
+  clearInterval(patternInterval);
+patternInterval = setInterval(() => {
     rhythmTick();
 
     let dir = pattern[i];
@@ -549,7 +550,7 @@ setTimeout(() => {
     i++;
 
     if (i >= pattern.length) {
-      clearInterval(interval);
+     clearInterval(patternInterval);
       setTimeout(() => {
         display.innerText = "YOUR TURN";
         msg.innerText = "Repeat the pattern";
@@ -589,7 +590,8 @@ return;
     score++;
     document.getElementById("score").innerText = score;
     level++;
-    setTimeout(nextLevel, 800);
+  playing = false;
+setTimeout(nextLevel, 800);
   }
 }
 

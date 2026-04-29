@@ -600,10 +600,10 @@ let ruleType, ruleValue, ruleSide, current;
 // ── Navigation ────────────────────────────────────────────────────────────────
 document.getElementById("startBtn").onclick = () => {
   document.getElementById("menuScreen").style.display = "none";
-  document.getElementById("tutorial").style.display = "flex"; // 👈 show tutorial first
+  document.getElementById("tutorialFull").classList.remove("hidden");
 };
   function startGameAfterTutorial() {
-  document.getElementById("tutorial").style.display = "none";
+  document.getElementById("tutorialFull").classList.add("hidden");
   document.getElementById("game").style.display = "flex";
   document.getElementById("bgShapes").style.display = "block";
 

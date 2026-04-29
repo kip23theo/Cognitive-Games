@@ -379,7 +379,7 @@ let correctCount = 0;
 let wrongCount   = 0;
 let isMatch      = false;
 let round = 0;
- const maxRounds=20; 
+ const maxRounds=30; 
   
 const shapes = ["circle", "triangle"];
 const colors = ["#E17055", "#6C5CE7", "#00B894", "#FDCB6E"];
@@ -478,6 +478,10 @@ function checkMatch(p1, p2) {
 // ── Round generation ──────────────────────────────────────────────────────────
 function newRound() {
   round++;
+  
+ level = Math.ceil(round / 5);
+document.getElementById("level").innerText = level; 
+  
   let base = [], other = [];
 
   if (level <= 2) {
@@ -537,12 +541,6 @@ function answer(user) {
   }
 
   document.getElementById("score").innerText = score;
-
-  if (correctCount >= 15) {
-    level++;
-    correctCount = 0;
-    document.getElementById("level").innerText = level;
-  }
 
   if (wrongCount >= 5) {
     setTimeout(showGameOver, 400);

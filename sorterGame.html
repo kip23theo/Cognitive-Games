@@ -225,8 +225,14 @@ canvas {
   text-align: center;
 } 
  #result {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
+  margin-top: 20px;
+  transition: transform 0.2s;
+}
+
+.pop {
+  transform: scale(1.2);
 }
 
 #finalScore {
@@ -524,6 +530,9 @@ function check(choice) {
   if (correct) {
     score++;
     resultEl.innerText = "Correct 😊";
+
+resultEl.classList.add("pop");
+setTimeout(() => resultEl.classList.remove("pop"), 200);
     Sound.correct();
 
     if (score === 5)  level = 2;

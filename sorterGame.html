@@ -465,8 +465,6 @@ function newRound() {
   const shape = shapes[Math.floor(Math.random() * shapes.length)];
   const keys  = Object.keys(colors);
   const color = keys[Math.floor(Math.random() * keys.length)];
-
-  resultE1.innerText="";
   
   current   = { shape, color };
   ruleValue = ruleType === "color" ? color : shape;

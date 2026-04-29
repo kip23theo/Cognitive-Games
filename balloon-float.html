@@ -419,6 +419,10 @@ function initSound(){
 }
 
 function play(freq){
+
+  // 🔴 CHECK SOUND SETTING
+  if (localStorage.getItem("soundEnabled") !== "true") return;
+
   let o=ctx.createOscillator(), g=ctx.createGain();
   o.frequency.value=freq;
   g.gain.value=0.25;

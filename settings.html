@@ -458,26 +458,81 @@ body {
         </div>
       </div>
     </div>
-<!-- ── STATS ── -->
+<!-- ── GAME STATS ── -->
 <div class="setting-card">
   <div class="setting-card-header">
     <span class="setting-card-icon">📊</span>
     <div>
-      <h2>Your Stats</h2>
-      <p class="setting-card-desc">Your performance summary</p>
+      <h2>Game Stats</h2>
+      <p class="setting-card-desc">Your performance across all games</p>
     </div>
   </div>
+
   <div class="setting-card-body">
     <div class="about-row">
 
+      <!-- 🎈 Balloon Float -->
       <div class="about-item">
-        <span class="about-item-label">Best Reaction Time</span>
-        <span class="about-item-val" id="bestReaction">—</span>
+        <span class="about-item-label">Balloon Float</span>
+        <span class="about-item-val">
+          <span id="bfScore">—</span> | <span id="bfReaction">—</span>
+        </span>
       </div>
 
+      <!-- 💡 Light Catcher -->
       <div class="about-item">
-        <span class="about-item-label">Highest Score</span>
-        <span class="about-item-val" id="highScore">—</span>
+        <span class="about-item-label">Light Catcher</span>
+        <span class="about-item-val">
+          <span id="lcScore">—</span> | <span id="lcReaction">—</span>
+        </span>
+      </div>
+
+      <!-- 🚗 Road Runner -->
+      <div class="about-item">
+        <span class="about-item-label">Road Runner</span>
+        <span class="about-item-val">
+          <span id="rrScore">—</span> | <span id="rrReaction">—</span>
+        </span>
+      </div>
+
+      <!-- 🧠 Simon’s Path -->
+      <div class="about-item">
+        <span class="about-item-label">Simon’s Path</span>
+        <span class="about-item-val">
+          <span id="spScore">—</span> | <span id="spReaction">—</span>
+        </span>
+      </div>
+
+      <!-- 🔤 Word Wise -->
+      <div class="about-item">
+        <span class="about-item-label">Word Wise</span>
+        <span class="about-item-val">
+          <span id="wwScore">—</span> | <span id="wwReaction">—</span>
+        </span>
+      </div>
+
+      <!-- 🧩 Sorter Game -->
+      <div class="about-item">
+        <span class="about-item-label">Sorter Game</span>
+        <span class="about-item-val">
+          <span id="sgScore">—</span> | <span id="sgReaction">—</span>
+        </span>
+      </div>
+
+      <!-- ❓ Match or No Match -->
+      <div class="about-item">
+        <span class="about-item-label">Match or No Match</span>
+        <span class="about-item-val">
+          <span id="mnmScore">—</span> | <span id="mnmReaction">—</span>
+        </span>
+      </div>
+
+      <!-- 🥁 Rhythm Tap -->
+      <div class="about-item">
+        <span class="about-item-label">Rhythm Tap</span>
+        <span class="about-item-val">
+          <span id="rtScore">—</span> | <span id="rtReaction">—</span>
+        </span>
       </div>
 
     </div>
@@ -519,14 +574,34 @@ body {
 
 <div class="ctg-toast" id="ctg-toast"></div>
 <script>
-  const bestReaction = localStorage.getItem("bestReaction");
-  const highScore = localStorage.getItem("highScore");
+function loadGameStats(){
 
-  document.getElementById("bestReaction").textContent =
-    bestReaction ? (bestReaction / 1000).toFixed(2) + "s" : "—";
+  const games = [
+    ["bf","Balloon Float"],
+    ["lc","Light Catcher"],
+    ["rr","Road Runner"],
+    ["sp","Simons Path"],
+    ["ww","Word Wise"],
+    ["sg","Sorter Game"],
+    ["mnm","Match No Match"],
+    ["rt","Rhythm Tap"]
+  ];
 
-  document.getElementById("highScore").textContent =
-    highScore ? highScore : "—";
+  games.forEach(([key]) => {
+
+    let score = localStorage.getItem(key + "_highScore");
+    let reaction = localStorage.getItem(key + "_bestReaction");
+
+    document.getElementById(key+"Score").textContent =
+      score ? score : "—";
+
+    document.getElementById(key+"Reaction").textContent =
+      reaction ? (reaction/1000).toFixed(2)+"s" : "—";
+
+  });
+}
+
+loadGameStats();
 </script>
 <script src="shared.js"></script>
 </body>

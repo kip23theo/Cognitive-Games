@@ -455,9 +455,18 @@ function goBack() {
 function newRound() {
   if (gameOver) return;
 resultEl.textContent="";
-  ruleType = level === 1 ? "color"
-           : level === 2 ? "shape"
-           : (Math.random() < 0.5 ? "color" : "shape");
+ ruleType =
+  level === 1 ? "color" :        // Level 1 (your same)
+  level === 2 ? "shape" :        // Level 2 (your same)
+  level === 3 ? (Math.random() < 0.5 ? "color" : "shape") :  // Level 3 (your same)
+
+  // ✅ NEW LEVELS (added only)
+  level === 4 ? (Math.random() < 0.5 ? "color" : "shape") :
+  level === 5 ? (Math.random() < 0.5 ? "color" : "shape") :
+  level === 6 ? (Math.random() < 0.5 ? "color" : "shape") :
+  level >= 7 ? (Math.random() < 0.5 ? "color" : "shape") :
+
+  "color"; // fallback 
 
   ruleSide = Math.random() < 0.5 ? "LEFT" : "RIGHT";
 

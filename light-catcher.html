@@ -761,10 +761,15 @@ body {
         <div class="stat-label">Round</div>
         <div class="stat-value" id="roundDisplay">0/20</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-label">Best</div>
-        <div class="stat-value" id="bestDisplay">—</div>
-      </div>
+     <div class="stat-box">
+  <div class="stat-label">Best Time</div>
+  <div class="stat-value" id="bestDisplay">—</div>
+</div>
+
+<div class="stat-box">
+  <div class="stat-label">High Score</div>
+  <div class="stat-value" id="highScoreDisplay">0</div>
+</div>
     </div>
 
     <div class="time-bar-wrap" id="timeBarWrap">
@@ -957,7 +962,7 @@ const LEVELS = [
 const MAX_ROUNDS = 20, MAX_MISSES = 3, ROUNDS_PER_LEVEL = 5;
 
 let state = {};
-
+let highScore = localStorage.getItem("lightCatcherHighScore") || 0;
 function resetState() {
   state = {
     score: 0, level: 1, round: 0, misses: 0, correct: 0,
@@ -1123,6 +1128,7 @@ function updateStats() {
   document.getElementById('scoreDisplay').textContent = state.score;
   document.getElementById('roundDisplay').textContent = state.round + '/' + MAX_ROUNDS;
   document.getElementById('bestDisplay').textContent  = state.bestReaction ? (state.bestReaction / 1000).toFixed(2) + 's' : '—';
+  document.getElementById('highScoreDisplay').textContent = highScore;
 }
 function updateMissDots() {
   for (let i = 0; i < 3; i++) {
@@ -1163,7 +1169,18 @@ function showResults() {
   document.getElementById('finalRounds').textContent    = state.round;
   document.getElementById('finalCorrect').textContent   = state.correct;
   document.getElementById('finalBest').textContent      = state.bestReaction ? (state.bestReaction / 1000).toFixed(2) + 's' : '—';
-  document.getElementById('resultsLevelBadge').textContent = 'Level ' + state.level;
+  document.getElementById('finalScore').textContent = state.score;
+  document.getElementById('finalBest').textContent =
+  state.bestReaction ? (state.bestReaction / 1000).toFixed(2) + 's' : '—';
+
+// NEW
+document.getElementById('resultsMsg').textContent += 
+  " | High Score: " + highScore;
+  document.getElementById('resultsLevelBadge').textContent = 'Level ' + state.level;  
+if (state.score > highScore) {
+  highScore = state.score;
+  localStorage.setItem("lightCatcherHighScore", highScore);
+}
   showScreen('resultsScreen');
 }
 

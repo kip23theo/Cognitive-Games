@@ -326,22 +326,34 @@ canvas {
   text-align: center;
   margin-bottom: 20px;
 }
-
 .cards {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  height: 420px;
+  margin: auto;
+  overflow: hidden;
 }
-
-.card {
+ .card {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 100%; /* hidden right */
   background: var(--surface2);
   padding: 20px;
   border-radius: 16px;
-  width: 260px;
   text-align: center;
+  transition: all 0.4s ease;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
+.card.active {
+  left: 0; /* visible */
+}
+
+.card.prev {
+  left: -100%; /* slide left */
+} 
 .step {
   font-size: 12px;
   opacity: 0.7;
@@ -601,6 +613,7 @@ let ruleType, ruleValue, ruleSide, current;
 document.getElementById("startBtn").onclick = () => {
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("tutorialFull").classList.remove("hidden");
+  showSlide(0);
 };
   function startGameAfterTutorial() {
   document.getElementById("tutorialFull").classList.add("hidden");
@@ -758,10 +771,6 @@ canvas.addEventListener("keydown", function(e) {
   
   window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
-function nextFullSlide() {
-  const container = document.querySelector(".cards");
-  container.scrollBy({ left: 280, behavior: "smooth" });
-}
 
 function startGameFull() {
   document.getElementById("tutorialFull").classList.add("hidden");
@@ -775,6 +784,28 @@ function startGameFull() {
 
   restart();
 }  
+let currentSlide = 0;
+const slides = document.querySelectorAll(".card");
+
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.remove("active", "prev");
+
+    if (i === index) {
+      slide.classList.add("active");
+    } else if (i < index) {
+      slide.classList.add("prev");
+    }
+  });
+}
+
+function nextFullSlide() {
+  if (currentSlide < slides.length - 1) {
+    currentSlide++;
+    showSlide(currentSlide);
+  }
+}
+  showSlide(0);
 </script>
 
 <script src="shared.js"></script>

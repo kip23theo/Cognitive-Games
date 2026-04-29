@@ -435,7 +435,22 @@ body {
         </p>
       </div>
     </div>
+<!-- ── SOUND ── -->
+<div class="setting-card">
+  <div class="setting-card-header">
+    <span class="setting-card-icon">🔊</span>
+    <div>
+      <h2>Sound</h2>
+      <p class="setting-card-desc">Turn game sounds on or off</p>
+    </div>
+  </div>
 
+  <div class="setting-card-body">
+    <button id="soundToggle" class="zoom-reset-btn">
+      Sound: ON
+    </button>
+  </div>
+</div>
     <!-- ── QUICK PLAY ── -->
     <div class="setting-card">
       <div class="setting-card-header">
@@ -602,6 +617,24 @@ function loadGameStats(){
 }
 
 loadGameStats();
+  
+const soundBtn = document.getElementById("soundToggle");
+
+let soundEnabled = localStorage.getItem("soundEnabled");
+
+if (soundEnabled === null) {
+  localStorage.setItem("soundEnabled", "true");
+  soundEnabled = "true";
+}
+
+soundBtn.textContent = "Sound: " + (soundEnabled === "true" ? "ON" : "OFF");
+
+soundBtn.addEventListener("click", () => {
+  let current = localStorage.getItem("soundEnabled") === "true";
+  localStorage.setItem("soundEnabled", (!current).toString());
+
+  soundBtn.textContent = "Sound: " + (!current ? "ON" : "OFF");
+});
 </script>
 <script src="shared.js"></script>
 </body>

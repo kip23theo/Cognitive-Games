@@ -378,7 +378,9 @@ let level        = 1;
 let correctCount = 0;
 let wrongCount   = 0;
 let isMatch      = false;
-
+let round = 0;
+ const maxRounds=20; 
+  
 const shapes = ["circle", "triangle"];
 const colors = ["#E17055", "#6C5CE7", "#00B894", "#FDCB6E"];
 
@@ -434,6 +436,7 @@ function resetState() {
   level        = 1;
   correctCount = 0;
   wrongCount   = 0;
+  round        =0;
   msgEl.innerText = "";
   document.getElementById("score").innerText = 0;
   document.getElementById("level").innerText = 1;
@@ -474,6 +477,7 @@ function checkMatch(p1, p2) {
 
 // ── Round generation ──────────────────────────────────────────────────────────
 function newRound() {
+  round++;
   let base = [], other = [];
 
   if (level <= 2) {
@@ -544,7 +548,10 @@ function answer(user) {
     setTimeout(showGameOver, 400);
     return;
   }
-
+  if (round >= maxRounds) {
+  setTimeout(showFinalResult, 400);
+  return;
+}
   setTimeout(() => {
     msgEl.innerText = "";
     newRound();
@@ -556,6 +563,14 @@ function showGameOver() {
   document.getElementById("game").style.display           = "none";
   document.getElementById("gameOverScreen").style.display = "flex";
   document.getElementById("finalScore").innerText         = score;
+}
+  function showFinalResult() {
+  document.getElementById("game").style.display = "none";
+  document.getElementById("gameOverScreen").style.display = "flex";
+
+  document.querySelector("#gameOverScreen h2").innerText = "Game Finished 🎉";
+  document.getElementById("finalScore").innerText =
+  score + " | Accuracy: " + Math.round((score / (maxRounds * 2)) * 100) + "%";
 }
 // ── Keyboard Controls ─────────────────────────────────────────────
 document.addEventListener("keydown", function(e) {

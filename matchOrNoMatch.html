@@ -479,7 +479,7 @@ function checkMatch(p1, p2) {
 function newRound() {
   round++;
   
- level = Math.ceil(round / 5);
+ level = Math.floor((round-1) / 5)+1;
 document.getElementById("level").innerText = level; 
   
   let base = [], other = [];

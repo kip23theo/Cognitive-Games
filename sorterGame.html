@@ -455,7 +455,7 @@ function goBack() {
 // ── Core game ─────────────────────────────────────────────────────────────────
 function newRound() {
   if (gameOver) return;
-
+resultE1.textContent="";
   ruleType = level === 1 ? "color"
            : level === 2 ? "shape"
            : (Math.random() < 0.5 ? "color" : "shape");

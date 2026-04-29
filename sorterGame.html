@@ -181,31 +181,36 @@ body {
 #game {
   display: none;
   width: 100%;
-  min-height: 100vh;
+  height: calc(100vh-60px);
   flex-direction: column;
   align-items: center;
+  justify-content:space-between;
   text-align: center;
-  padding: 50px;
+  padding: 10px;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 canvas {
-  background: transparent;
-  outline: none;
+  width:80vw;
+  height:80vw;
+  max-width:320px;
+  max-height:320px;
+  display:block;
+  margin:0 auto;
+}
+.btns {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
 .btns button {
-  width: 80px;
-  height: 40px;
-  margin: 10px;
-  border: none;
-  border-radius: 6px;
-  color: #f1f1f1;
-  font-weight: bold;
-  cursor: pointer;
+  flex: 1;
+  max-width: 120px;
+  height: 50px;
+  border-radius: 12px;
+  font-size: 16px;
 }
-
 .top {
   width: 100%;
   max-width: 300px;
@@ -447,29 +452,39 @@ function newRound() {
 
   canvas.focus();
 }
-
+function resizeCanvas() {
+  const size = Math.min(window.innerWidth * 0.8, 320);
+  canvas.width = size;
+  canvas.height = size;
+}
 function draw(shape, color) {
-  ctx.clearRect(0, 0, 200, 200);
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = color;
 
   if (shape === "circle") {
     ctx.beginPath();
-    ctx.arc(100, 100, 50, 0, Math.PI * 2);
+    ctx.arc(w/2, h/2, w/4, 0, Math.PI * 2);
     ctx.fill();
   }
+
   if (shape === "square") {
-    ctx.fillRect(50, 50, 100, 100);
+    ctx.fillRect(w*0.25, h*0.25, w*0.5, h*0.5);
   }
+
   if (shape === "triangle") {
     ctx.beginPath();
-    ctx.moveTo(100, 40);
-    ctx.lineTo(40, 160);
-    ctx.lineTo(160, 160);
+    ctx.moveTo(w/2, h*0.2);
+    ctx.lineTo(w*0.2, h*0.8);
+    ctx.lineTo(w*0.8, h*0.8);
     ctx.fill();
   }
+
   if (shape === "star") {
-    ctx.font = "70px Arial";
-    ctx.fillText("★", 60, 140);
+    ctx.font = (w * 0.5) + "px Arial";
+    ctx.fillText("★", w*0.25, h*0.7);
   }
 }
 
@@ -522,6 +537,10 @@ canvas.addEventListener("keydown", function(e) {
     check(e.key === "ArrowLeft" ? "L" : "R");
   }
 }, { passive: false });
+  
+  window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+  
 </script>
 
 <script src="shared.js"></script>

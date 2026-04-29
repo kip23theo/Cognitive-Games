@@ -454,7 +454,6 @@ function goBack() {
 
 // ── Core game ─────────────────────────────────────────────────────────────────
 function newRound() {
-  resultE1.innerText="";
   if (gameOver) return;
 
   ruleType = level === 1 ? "color"
@@ -467,6 +466,8 @@ function newRound() {
   const keys  = Object.keys(colors);
   const color = keys[Math.floor(Math.random() * keys.length)];
 
+  resultE1.innerText="";
+  
   current   = { shape, color };
   ruleValue = ruleType === "color" ? color : shape;
 

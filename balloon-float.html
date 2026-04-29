@@ -461,10 +461,7 @@ let inputLocked = false;
 function startGame(){
   gameScreen.style.display="block";
 currentScreen = "game";
-  document.addEventListener("keydown", e => {
-    if(e.key === "ArrowLeft") handleInput("left");
-    if(e.key === "ArrowRight") handleInput("right");
-  });
+ 
 
   gameInt=setInterval(updateGame,1000);
   spawnBalloons();
@@ -573,6 +570,10 @@ function endGame(){
 }
 
 function restartGame(){
+  balloons.forEach(b => {
+  clearInterval(b.interval);
+  if (b.el) b.el.remove();
+});
   score = 0;
   missed = 0;
   caught = 0;
@@ -586,7 +587,7 @@ function restartGame(){
   document.getElementById("time").textContent = 60;
 
   gameArea.innerHTML = '<div id="escapeLine"></div>';
-
+  escapeLine = document.getElementById("escapeLine");
   resultScreen.style.display = "none";
   gameScreen.style.display = "block";
 
@@ -620,7 +621,7 @@ function goBack(){
     document.getElementById("time").textContent = 120;
 
     gameArea.innerHTML = '<div id="escapeLine"></div>';
-
+    escapeLine = document.getElementById("escapeLine");
     gameScreen.style.display = "none";
     resultScreen.style.display = "none";
     countdown.style.display = "none";
@@ -635,6 +636,10 @@ function goBack(){
   document.getElementById("menuStartBtn").addEventListener("click", () => {
   initSound();
   startCountdown();
+});
+  document.addEventListener("keydown", e => {
+  if(e.key === "ArrowLeft") handleInput("left");
+  if(e.key === "ArrowRight") handleInput("right");
 });
 </script>
 <script src="shared.js"></script>

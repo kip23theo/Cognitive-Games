@@ -329,30 +329,49 @@ canvas {
 .cards {
   position: relative;
   width: 100%;
-  height: 80vh;
-  margin: auto;
+  height: 100vh; /* full screen */
   overflow: hidden;
 }
- .card {
+
+.card {
   position: absolute;
   width: 100%;
+  height: 100%;
   top: 0;
-  left: 100%; /* hidden right */
-  display:flex;
-   flex-direction:column;
-   justify-content:center;
-   align-items:center;
-   padding:20px;
-   text-align:center;
+  left: 100%; /* hidden */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* center vertical */
+  align-items: center;      /* center horizontal */
+
+  text-align: center;
+  padding: 20px;
+  background: #ffffff;
+  transition: all 0.4s ease;
 }
 
 .card.active {
-  left: 0; /* visible */
+  left: 0;
+}
+ .card h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
 }
 
-.card.prev {
-  left: -100%; /* slide left */
+.card p {
+  font-size: 18px;
+}
+  .shape{
+    font-size:90px;
+    margin:20px 0;
+  }
+
+.rule-text {
+  font-size: 22px;
+  font-weight: bold;
 } 
+  
 .step {
   font-size: 12px;
   opacity: 0.7;
@@ -387,24 +406,23 @@ canvas {
   font-size: 60px;
   margin: 10px 0;
 }
-
-.btn-demo button {
-  margin: 5px;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-}
-
 .left {
-  background: #c96f6f;
+  background: #e74c3c;   /* RED */
   color: white;
 }
 
 .right {
-  background: #6f9cc9;
+  background: #3498db;   /* BLUE */
   color: white;
 }
 
+button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+}
 .green-text {
   color: green;
   font-weight: bold;

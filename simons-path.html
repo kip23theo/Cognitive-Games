@@ -1244,24 +1244,32 @@
         const SoundEngine = {
           ctx: null,
 
-          init() {
-            if (!this.ctx) {
-              const Ctx = window.AudioContext || window.webkitAudioContext;
-              this.ctx = Ctx ? new Ctx() : null;
-            }
-            this.ensureRunning();
-          },
+        init() {
 
+  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
+  if (!soundEnabled) return;
+
+  if (!this.ctx) {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    this.ctx = Ctx ? new Ctx() : null;
+  }
+  this.ensureRunning();
+},
           ensureRunning() {
             if (this.ctx && this.ctx.state === "suspended") {
               this.ctx.resume().catch(() => {});
             }
           },
 
-          tone(freq, duration, type, gain) {
-            if (!this.ctx) {
-              return;
-            }
+        tone(freq, duration, type, gain) {
+
+  // 🔊 CONNECT TO SETTINGS PAGE
+  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
+  if (!soundEnabled) return;
+
+  if (!this.ctx) {
+    return;
+  }
             this.ensureRunning();
             const now = this.ctx.currentTime + 0.01;
             const osc = this.ctx.createOscillator();

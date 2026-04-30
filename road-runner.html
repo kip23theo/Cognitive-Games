@@ -924,8 +924,19 @@ function OBS_H() { return Math.round(CANVAS_H * OBS_H_F); }
 // ─── SOUND ENGINE ───────────────────────────────────────────────────────────
 const SoundEngine = {
   ctx: null,
-  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
-  _play(f1, f2, dur, type='sine', vol=0.25) {
+  init() {
+  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
+  if (!soundEnabled) return;
+
+  if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+},
+ _play(f1, f2, dur, type='sine', vol=0.25) {
+
+  // 🔊 CONNECT TO SETTINGS PAGE
+  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
+  if (!soundEnabled) return;
+
+  if (!this.ctx) return;
     if (!this.ctx) return;
     try {
       const o = this.ctx.createOscillator(), g = this.ctx.createGain();

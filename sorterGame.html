@@ -395,10 +395,15 @@ const backBtn      = document.getElementById("backBtn");
 // ── Sound ───────────────────────────────────────────────
   const Sound = {
   ctx: null,
-    
+
   isOn() {
-  return localStorage.getItem("soundEnabled") === "true";
-}
+  const val = localStorage.getItem("soundEnabled");
+
+  // If setting not found → default ON
+  if (val === null) return true;
+
+  return val === "true";
+}  
   
 
   init() {

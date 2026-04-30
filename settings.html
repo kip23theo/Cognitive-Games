@@ -485,6 +485,12 @@ body {
 
   <div class="setting-card-body">
     <div class="about-row">
+      <div class="about-item">
+  <span class="about-item-label">Overall Average</span>
+  <span class="about-item-val">
+    <span id="avgScore">—</span> | <span id="avgReaction">—</span>
+  </span>
+</div>
 
       <!-- 🎈 Balloon Float -->
       <div class="about-item">
@@ -601,11 +607,24 @@ function loadGameStats(){
     ["mnm","Match No Match"],
     ["rt","Rhythm Tap"]
   ];
-
+let totalScore = 0;
+let totalReaction = 0;
+let countScore = 0;
+let countReaction = 0;
   games.forEach(([key]) => {
 
-    let score = localStorage.getItem(key + "_highScore");
-    let reaction = localStorage.getItem(key + "_bestReaction");
+   let score = parseInt(localStorage.getItem(key + "_highScore"));
+let reaction = parseInt(localStorage.getItem(key + "_bestReaction"));
+
+if (!isNaN(score)) {
+  totalScore += score;
+  countScore++;
+}
+
+if (!isNaN(reaction)) {
+  totalReaction += reaction;
+  countReaction++;
+}
 
     document.getElementById(key+"Score").textContent =
       score ? score : "—";
@@ -614,6 +633,15 @@ function loadGameStats(){
       reaction ? (reaction/1000).toFixed(2)+"s" : "—";
 
   });
+  });
+
+let avgScore = countScore ? Math.round(totalScore / countScore) : "—";
+let avgReaction = countReaction ? (totalReaction / countReaction / 1000).toFixed(2) + "s" : "—";
+
+// display (you must create these elements in HTML)
+document.getElementById("avgScore").textContent = avgScore;
+document.getElementById("avgReaction").textContent = avgReaction;
+}
 }
 
 loadGameStats();

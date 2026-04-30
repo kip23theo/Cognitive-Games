@@ -1366,11 +1366,14 @@
         };
 
         const SoundEngine = {
+          enabled: true,
           ctx: null,
           masterGain: null,
           masterVolume: 2.8,
 
           init() {
+            const saved = localStorage.getItem("soundEnabled");
+this.enabled = saved !== "false";
             if (!this.ctx) {
               const Ctx = window.AudioContext || window.webkitAudioContext;
               this.ctx = Ctx ? new Ctx() : null;
@@ -1390,9 +1393,9 @@
           },
 
           tone(freq, duration, type, peakGain, attack, decay, sustainLevel) {
-            if (!this.ctx) {
-              return;
-            }
+           if (!this.ctx || !this.enabled) {
+  return;
+}
             this.ensureRunning();
             const now = this.ctx.currentTime + 0.01;
             const osc = this.ctx.createOscillator();

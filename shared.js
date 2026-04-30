@@ -91,5 +91,42 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+  // ── SOUND SYSTEM ─────────────────────────────────────────────
+
+// set default
+if (!localStorage.getItem("sound")) {
+  localStorage.setItem("sound", "on");
+}
+
+let audioCtx;
+
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioCtx;
+}
+
+function playSound(type) {
+  // stop if sound OFF
+  if (localStorage.getItem("sound") === "off") return;
+
+  const ctx = getAudioCtx();
+
+  const osc  = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.frequency.value = type === "good" ? 650 : 180;
+  gain.gain.value = 0.08;
+
+  osc.start();
+  setTimeout(() => osc.stop(), 120);
+}
+
+// expose globally
+window.playSound = playSound;
   window.CTG = { applyTheme: applyTheme, applyZoom: applyZoom, getTheme: getTheme, getZoom: getZoom };
 })();

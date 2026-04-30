@@ -596,56 +596,6 @@ body {
 <div class="ctg-toast" id="ctg-toast"></div>
 <script>
 function loadGameStats(){
-
-  const games = [
-    ["bf","Balloon Float"],
-    ["lc","Light Catcher"],
-    ["rr","Road Runner"],
-    ["sp","Simons Path"],
-    ["ww","Word Wise"],
-    ["sg","Sorter Game"],
-    ["mnm","Match No Match"],
-    ["rt","Rhythm Tap"]
-  ];
-let totalScore = 0;
-let totalReaction = 0;
-let countScore = 0;
-let countReaction = 0;
-  games.forEach(([key]) => {
-
-   let score = parseInt(localStorage.getItem(key + "_highScore"));
-let reaction = parseInt(localStorage.getItem(key + "_bestReaction"));
-
-if (!isNaN(score)) {
-  totalScore += score;
-  countScore++;
-}
-
-if (!isNaN(reaction)) {
-  totalReaction += reaction;
-  countReaction++;
-}
-
-    document.getElementById(key+"Score").textContent =
-      score ? score : "—";
-
-    document.getElementById(key+"Reaction").textContent =
-      reaction ? (reaction/1000).toFixed(2)+"s" : "—";
-
-  });
-  });
-
-let avgScore = countScore ? Math.round(totalScore / countScore) : "—";
-let avgReaction = countReaction ? (totalReaction / countReaction / 1000).toFixed(2) + "s" : "—";
-
-// display (you must create these elements in HTML)
-document.getElementById("avgScore").textContent = avgScore;
-document.getElementById("avgReaction").textContent = avgReaction;
-}
-}
-
-function loadGameStats(){
-
   const games = [
     ["bf","Balloon Float"],
     ["lc","Light Catcher"],
@@ -693,6 +643,29 @@ function loadGameStats(){
   document.getElementById("avgScore").textContent = avgScore;
   document.getElementById("avgReaction").textContent = avgReaction;
 }
+  loadGameStats();
+  const soundBtn = document.getElementById("soundToggle");
+
+let soundEnabled = localStorage.getItem("soundEnabled");
+
+// default = ON
+if (soundEnabled === null) {
+  localStorage.setItem("soundEnabled", "true");
+  soundEnabled = "true";
+}
+
+// update button text on load
+soundBtn.textContent = "Sound: " + (soundEnabled === "true" ? "ON" : "OFF");
+
+// toggle on click
+soundBtn.addEventListener("click", () => {
+  let current = localStorage.getItem("soundEnabled") === "true";
+  let newValue = (!current).toString();
+
+  localStorage.setItem("soundEnabled", newValue);
+
+  soundBtn.textContent = "Sound: " + (newValue === "true" ? "ON" : "OFF");
+});
 </script>
 <script src="shared.js"></script>
 </body>

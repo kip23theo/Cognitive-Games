@@ -392,20 +392,6 @@ const msgEl         = document.getElementById("msg");
 const menuBackBtn   = document.getElementById("menuBackBtn");
 const gameBackBtn   = document.getElementById("gameBackBtn");
 
-// ── Audio ─────────────────────────────────────────────────────────────────────
-let audioCtx = null;
-
-function beep(type) {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc  = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.frequency.value = type === "good" ? 650 : 180;
-  gain.gain.value = 0.08;
-  osc.start();
-  setTimeout(() => osc.stop(), 120);
-}
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 function startGame() {
@@ -530,12 +516,12 @@ function answer(user) {
   if (user === isMatch) {
     score += 2;
     correctCount++;
-    beep("good");
+   playSound("good");
     msgEl.style.color   = "green";
     msgEl.innerText     = "Correct ✅";
   } else {
     wrongCount++;
-    beep("bad");
+    playSound("bad");
     msgEl.style.color = "red";
     msgEl.innerText   = "Wrong ❌";
     document.getElementById("wrong").innerText = wrongCount;
@@ -596,7 +582,12 @@ document.addEventListener("keydown", function(e) {
 });
   
 </script>
-
+<script>
+function toggleSound() {
+  const current = localStorage.getItem("sound") !== "off";
+  localStorage.setItem("sound", current ? "off" : "on");
+}
+</script>
 <script src="shared.js"></script>
 </body>
 </html>

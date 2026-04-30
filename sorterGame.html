@@ -395,10 +395,13 @@ const backBtn      = document.getElementById("backBtn");
 // ── Sound ───────────────────────────────────────────────────────────────
   const Sound = {
   ctx: null,
-
+    
   isOn() {
-    return localStorage.getItem("sound") !== "false";
-  },
+  const val = localStorage.getItem("sound");
+
+  // Accept different formats from settings
+  return !(val === "false" || val === "0" || val === "off" || val === null);
+}  
 
   init() {
     if (!this.isOn()) return;

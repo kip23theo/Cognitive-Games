@@ -94,8 +94,8 @@
   // ── SOUND SYSTEM ─────────────────────────────────────────────
 
 // set default
-if (!localStorage.getItem("sound")) {
-  localStorage.setItem("sound", "on");
+if (!localStorage.getItem("soundEnabled")) {
+  localStorage.setItem("soundEnabled", "true");
 }
 
 let audioCtx;
@@ -109,7 +109,7 @@ function getAudioCtx() {
 
 function playSound(type) {
   // stop if sound OFF
-  if (localStorage.getItem("sound") === "off") return;
+ if (localStorage.getItem("soundEnabled") !== "true") return;
 
   const ctx = getAudioCtx();
 

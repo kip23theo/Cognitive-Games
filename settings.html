@@ -644,25 +644,55 @@ document.getElementById("avgReaction").textContent = avgReaction;
 }
 }
 
-loadGameStats();
-  
-const soundBtn = document.getElementById("soundToggle");
+function loadGameStats(){
 
-let soundEnabled = localStorage.getItem("soundEnabled");
+  const games = [
+    ["bf","Balloon Float"],
+    ["lc","Light Catcher"],
+    ["rr","Road Runner"],
+    ["sp","Simons Path"],
+    ["ww","Word Wise"],
+    ["sg","Sorter Game"],
+    ["mnm","Match No Match"],
+    ["rt","Rhythm Tap"]
+  ];
 
-if (soundEnabled === null) {
-  localStorage.setItem("soundEnabled", "true");
-  soundEnabled = "true";
+  let totalScore = 0;
+  let totalReaction = 0;
+  let countScore = 0;
+  let countReaction = 0;
+
+  games.forEach(([key]) => {
+
+    let score = parseInt(localStorage.getItem(key + "_highScore"));
+    let reaction = parseInt(localStorage.getItem(key + "_bestReaction"));
+
+    if (!isNaN(score)) {
+      totalScore += score;
+      countScore++;
+    }
+
+    if (!isNaN(reaction)) {
+      totalReaction += reaction;
+      countReaction++;
+    }
+
+    document.getElementById(key+"Score").textContent =
+      !isNaN(score) ? score : "—";
+
+    document.getElementById(key+"Reaction").textContent =
+      !isNaN(reaction) ? (reaction/1000).toFixed(2)+"s" : "—";
+
+  });
+
+  let avgScore = countScore ? Math.round(totalScore / countScore) : "—";
+  let avgReaction = countReaction
+    ? (totalReaction / countReaction / 1000).toFixed(2) + "s"
+    : "—";
+
+  document.getElementById("avgScore").textContent = avgScore;
+  document.getElementById("avgReaction").textContent = avgReaction;
 }
-
-soundBtn.textContent = "Sound: " + (soundEnabled === "true" ? "ON" : "OFF");
-
-soundBtn.addEventListener("click", () => {
-  let current = localStorage.getItem("soundEnabled") === "true";
-  localStorage.setItem("soundEnabled", (!current).toString());
-
-  soundBtn.textContent = "Sound: " + (!current ? "ON" : "OFF");
-});
 </script>
 <script src="shared.js"></script>
 </body>

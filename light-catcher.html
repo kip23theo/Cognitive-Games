@@ -899,9 +899,17 @@ window.addEventListener('orientationchange', () => setTimeout(applyLandscapeLayo
 // ─── SOUND ENGINE ─────────────────────────────────────────────────────────────
 const SoundEngine = {
   ctx: null,
-  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+  init() { 
+  if (!this.ctx) {
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (this.ctx.state === "suspended") {
+    this.ctx.resume();
+  }
+},
   _play(f1, f2, dur, type='sine', vol=0.28) {
-    if (!this.ctx) return;
+  if (localStorage.getItem("soundEnabled") !== "true") return; // ADD THIS
+  if (!this.ctx) return;
     try {
       const o = this.ctx.createOscillator(), g = this.ctx.createGain();
       o.connect(g); g.connect(this.ctx.destination);
@@ -962,7 +970,7 @@ const LEVELS = [
 const MAX_ROUNDS = 20, MAX_MISSES = 3, ROUNDS_PER_LEVEL = 5;
 
 let state = {};
-let highScore = localStorage.getItem("lightCatcherHighScore") || 0;
+let highScore = Number(localStorage.getItem("lightCatcherHighScore")) || 0;
 function resetState() {
   state = {
     score: 0, level: 1, round: 0, misses: 0, correct: 0,
@@ -1058,6 +1066,7 @@ function showLight() {
 }
 
 function handlePanelTap(dir) {
+  if (!state.waitingForInput) return; // ADD THIS
   SoundEngine.init();
   InputHandler.emit(dir);
 }
@@ -1169,18 +1178,16 @@ function showResults() {
   document.getElementById('finalRounds').textContent    = state.round;
   document.getElementById('finalCorrect').textContent   = state.correct;
   document.getElementById('finalBest').textContent      = state.bestReaction ? (state.bestReaction / 1000).toFixed(2) + 's' : '—';
-  document.getElementById('finalScore').textContent = state.score;
-  document.getElementById('finalBest').textContent =
-  state.bestReaction ? (state.bestReaction / 1000).toFixed(2) + 's' : '—';
 
 // NEW
-document.getElementById('resultsMsg').textContent += 
-  " | High Score: " + highScore;
-  document.getElementById('resultsLevelBadge').textContent = 'Level ' + state.level;  
 if (state.score > highScore) {
   highScore = state.score;
   localStorage.setItem("lightCatcherHighScore", highScore);
+  document.getElementById('resultsMsg').textContent += " 🎉 New High Score!";
 }
+
+document.getElementById('resultsMsg').textContent += 
+  " | High Score: " + highScore;
   showScreen('resultsScreen');
 }
 

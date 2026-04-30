@@ -373,8 +373,10 @@ body {
 </div>
 
 <script>
-  // ── SOUND SYSTEM (CONNECTED TO SETTINGS) ─────────────────────
-const Sound = {
+  if (localStorage.getItem("soundEnabled") === null) {
+  localStorage.setItem("soundEnabled", "true");
+}
+  const Sound = {
   ctx: null,
 
   isOn() {

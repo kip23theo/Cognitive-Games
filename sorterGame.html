@@ -395,12 +395,11 @@ const backBtn      = document.getElementById("backBtn");
 // ── Sound ───────────────────────────────────────────────
   const Sound = {
   ctx: null,
-
-  // Check sound setting (supports different formats)
+    
   isOn() {
-    const val = localStorage.getItem("sound");
-    return !(val === "false" || val === "0" || val === "off");
-  },
+  return localStorage.getItem("soundEnabled") === "true";
+}
+  
 
   init() {
     if (!this.isOn()) return;
@@ -476,6 +475,7 @@ let ruleType, ruleValue, ruleSide, current;
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 document.getElementById("startBtn").onclick = () => {
+  sound.init();
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("game").style.display ="flex";
   document.getElementById("bgShapes").style.display="block";

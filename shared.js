@@ -94,7 +94,7 @@
   // ── SOUND SYSTEM ─────────────────────────────────────────────
 
 // set default
-if (!localStorage.getItem("soundEnabled")) {
+if (localStorage.getItem("soundEnabled") === null) {
   localStorage.setItem("soundEnabled", "true");
 }
 

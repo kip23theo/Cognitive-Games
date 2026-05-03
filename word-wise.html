@@ -2071,7 +2071,7 @@ this.enabled = saved !== "false";
         function startTimerIfNeeded() {
           const config = currentConfig();
           clearRoundTimers();
-          const useActiveTimer = state.level >= 1 && config.timeLimitMs > 0;
+          const useActiveTimer = config.timeLimitMs > 0;
           if (!useActiveTimer) {
             setTimerCalmMode(true);
             return;

@@ -580,27 +580,35 @@ function loadGameStats(){
   document.getElementById("avgReaction").textContent = avgReaction;
 }
   loadGameStats();
+ document.addEventListener("DOMContentLoaded", () => {
+
   const soundBtn = document.getElementById("soundToggle");
 
-let soundEnabled = localStorage.getItem("soundEnabled");
+  if (!soundBtn) {
+    console.error("Sound button not found");
+    return;
+  }
 
-// default = ON
-if (soundEnabled === null) {
-  localStorage.setItem("soundEnabled", "true");
-  soundEnabled = "true";
-}
+  if (localStorage.getItem("soundEnabled") === null) {
+    localStorage.setItem("soundEnabled", "true");
+  }
 
-// update button text on load
-soundBtn.textContent = "Sound: " + (soundEnabled === "true" ? "ON" : "OFF");
+  function updateUI() {
+    const isOn = localStorage.getItem("soundEnabled") === "true";
+    soundBtn.textContent = "Sound: " + (isOn ? "ON" : "OFF");
+  }
 
-// toggle on click
-soundBtn.addEventListener("click", () => {
-  let current = localStorage.getItem("soundEnabled") === "true";
-  let newValue = (!current).toString();
+  updateUI();
 
-  localStorage.setItem("soundEnabled", newValue);
+  soundBtn.addEventListener("click", () => {
+    console.log("CLICK DETECTED");
 
-  soundBtn.textContent = "Sound: " + (newValue === "true" ? "ON" : "OFF");
+    const current = localStorage.getItem("soundEnabled") === "true";
+    localStorage.setItem("soundEnabled", (!current).toString());
+
+    updateUI();
+  });
+
 });
 </script>
 <script src="shared.js"></script>

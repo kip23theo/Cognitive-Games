@@ -444,9 +444,9 @@
           and spatial awareness — right in your browser.
         </p>
         <div class="hero-cta">
-          <a href="light-catcher.html" class="btn-hero btn-hero-primary"
-            >▶ Play Now</a
-          >
+          <button class="btn-hero btn-hero-primary" onclick="openGame('lightCatcher')">
+  ▶ Play Now
+</button>
           <a href="settings.html" class="btn-hero btn-hero-secondary"
             >⚙️ Settings</a
           >
@@ -477,7 +477,7 @@
       <p class="section-label">All Games</p>
       <section class="games-section">
         <div class="games-list">
-          <a class="game-card" href="light-catcher.html">
+         <div class="game-card" onclick="openGame('lightCatcher')">
             <div class="game-icon">💡</div>
             <div class="game-info">
               <div class="game-name">Light Catcher</div>
@@ -487,7 +487,7 @@
               </div>
             </div>
             <div class="game-arrow">›</div>
-          </a>
+          </div>
 
           <a class="game-card game-card-blue" href="road-runner.html">
             <div class="game-icon">🚗</div>
@@ -606,11 +606,42 @@
         <a href="settings.html">Settings</a> &nbsp;·&nbsp; Built for sharper
         minds
       </footer>
+     <div id="gameContainer" style="display:none;"></div>
     </div>
     <!-- /ctg-zoom-wrap -->
 
     <div class="ctg-toast" id="ctg-toast"></div>
 
     <script src="shared.js"></script>
+   <script>
+function openGame(game) {
+  document.querySelector('.hero').style.display = 'none';
+  document.querySelector('.stats-strip').style.display = 'none';
+  document.querySelector('.games-section').style.display = 'none';
+  document.querySelector('.how-section').style.display = 'none';
+  document.querySelector('footer').style.display = 'none';
+
+  const container = document.getElementById('gameContainer');
+  container.style.display = 'block';
+
+  if (game === 'lightCatcher') {
+    container.innerHTML = document.getElementById('lightCatcherGame').innerHTML;
+    initLightCatcher();
+  }
+}
+
+function goHome() {
+  document.querySelector('.hero').style.display = 'block';
+  document.querySelector('.stats-strip').style.display = 'flex';
+  document.querySelector('.games-section').style.display = 'block';
+  document.querySelector('.how-section').style.display = 'block';
+  document.querySelector('footer').style.display = 'block';
+
+  document.getElementById('gameContainer').style.display = 'none';
+}
+</script>
+   <div id="lightCatcherGame" style="display:none;">
+  <!-- PASTE GAME HTML HERE -->
+</div>
   </body>
 </html>

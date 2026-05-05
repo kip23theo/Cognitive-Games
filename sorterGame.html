@@ -366,9 +366,6 @@ const resultEl     = document.getElementById("result");
 const finalScoreEl = document.getElementById("finalScore");    
 const menuBackBtn  = document.getElementById("menuBackBtn");    
 const backBtn      = document.getElementById("backBtn");    // ── Sound ─────────────────────────────────────────────────────────────────────
-if (localStorage.getItem("soundEnabled") === null) {
-localStorage.setItem("soundEnabled", "true");
-}
 const Sound = {
 ctx: null,
 
@@ -599,4 +596,4 @@ resizeCanvas();
 
 </script>  <script src="shared.js"></script>  </body>
 
-</html>
+</html>  In this code

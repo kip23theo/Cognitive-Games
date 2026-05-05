@@ -968,11 +968,11 @@
           aria-label="Simon Path Menu"
         >
           <div class="header">
-            <a href="index.html" class="back-btn">&larr; Back</a>
+            <a onclick="parent.goBack(); return false;" href="#" class="back-btn">&larr; Back</a>
             <span class="header-title">Simon's Path</span>
             <div class="header-actions">
               <div class="level-badge">Memory</div>
-              <a href="settings.html" class="settings-link" title="Settings"
+              <a onclick="parent.openSettings(); return false;" href="#" class="settings-link" title="Settings"
                 >⚙️</a
               >
             </div>
@@ -1240,34 +1240,31 @@
             this.listeners = [];
           },
         };
+        function isSoundEnabled() {
+    return localStorage.getItem('ctg-sound') !== 'off';
+  }
 
         const SoundEngine = {
           ctx: null,
 
-        init() {
-
-  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
-  if (!soundEnabled) return;
+          init() {
+  if (!isSoundEnabled()) return;
 
   if (!this.ctx) {
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    this.ctx = Ctx ? new Ctx() : null;
-  }
-  this.ensureRunning();
-},
+              const Ctx = window.AudioContext || window.webkitAudioContext;
+              this.ctx = Ctx ? new Ctx() : null;
+            }
+            this.ensureRunning();
+          },
+
           ensureRunning() {
             if (this.ctx && this.ctx.state === "suspended") {
               this.ctx.resume().catch(() => {});
             }
           },
 
-        tone(freq, duration, type, gain) {
-
-  // 🔊 CONNECT TO SETTINGS PAGE
-  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
-  if (!soundEnabled) return;
-
-  if (!this.ctx) {
+          tone(freq, duration, type, gain) {
+  if (!this.ctx || !isSoundEnabled()) {
     return;
   }
             this.ensureRunning();
@@ -1416,7 +1413,7 @@
             endGame();
             return;
           }
-          goToMenu();
+          parent.goBack();
         }
 
         function focusGameArea(shouldScroll) {

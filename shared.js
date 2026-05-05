@@ -1,4 +1,7 @@
 // ── COGNITIVE TRAINING GAMES · Shared Theme + Zoom ──
+function isSoundOn() {
+  return localStorage.getItem("ctg-sound") !== "off";
+}
 (function () {
   'use strict';
   var THEME_KEY = 'ctg-theme';
@@ -91,42 +94,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
-  // ── SOUND SYSTEM ─────────────────────────────────────────────
-
-// set default
-if (localStorage.getItem("soundEnabled") === null) {
-  localStorage.setItem("soundEnabled", "true");
-}
-
-let audioCtx;
-
-function getAudioCtx() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  return audioCtx;
-}
-
-function playSound(type) {
-  // stop if sound OFF
- if (localStorage.getItem("soundEnabled") !== "true") return;
-
-  const ctx = getAudioCtx();
-
-  const osc  = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.frequency.value = type === "good" ? 650 : 180;
-  gain.gain.value = 0.08;
-
-  osc.start();
-  setTimeout(() => osc.stop(), 120);
-}
-
-// expose globally
-window.playSound = playSound;
   window.CTG = { applyTheme: applyTheme, applyZoom: applyZoom, getTheme: getTheme, getZoom: getZoom };
 })();

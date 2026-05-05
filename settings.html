@@ -356,7 +356,7 @@ body {
 
   <div class="header">
     <div class="header-inner">
-      <a href="index.html" class="back-btn">
+      <a onclick="parent.goBack(); return false;" href="#" class="back-btn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
       </a>
@@ -444,11 +444,46 @@ body {
       <p class="setting-card-desc">Turn game sounds on or off</p>
     </div>
   </div>
+  <div class="setting-card-body">
+
+    <div class="theme-row">
+      <button class="theme-btn setting-active" id="soundOnBtn">
+        🔊 Sound ON
+      </button>
+
+      <button class="theme-btn" id="soundOffBtn">
+        🔇 Sound OFF
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- ── DIFFICULTY ── -->
+<div class="setting-card">
+  <div class="setting-card-header">
+    <span class="setting-card-icon">🎯</span>
+    <div>
+      <h2>Difficulty</h2>
+      <p class="setting-card-desc">Choose game difficulty level</p>
+    </div>
+  </div>
 
   <div class="setting-card-body">
-    <button id="soundToggle" class="zoom-reset-btn">
-      Sound: ON
-    </button>
+    <div class="theme-row">
+
+      <button class="theme-btn setting-active" id="diffEasy">
+        🟢 Easy
+      </button>
+
+      <button class="theme-btn" id="diffMedium">
+        🟡 Medium
+      </button>
+
+      <button class="theme-btn" id="diffHard">
+        🔴 Hard
+      </button>
+
+    </div>
   </div>
 </div>
     <!-- ── QUICK PLAY ── -->
@@ -462,38 +497,17 @@ body {
       </div>
       <div class="setting-card-body">
         <div class="games-quick">
-          <a class="quick-game-btn" href="light-catcher.html">
+          <a class="quick-game-btn" onclick="parent.loadGame('light-catcher'); return false;" href="#">
             <span>💡</span>
             Light Catcher
           </a>
-          <a class="quick-game-btn" href="road-runner.html">
+          <a class="quick-game-btn" onclick="parent.loadGame('road-runner'); return false;" href="#">
             <span>🚗</span>
             Road Runner
           </a>
         </div>
       </div>
     </div>
-<!-- ── GAME STATS ── -->
-<div class="setting-card">
-  <div class="setting-card-header">
-    <span class="setting-card-icon">📊</span>
-    <div>
-      <h2>Game Stats</h2>
-      <p class="setting-card-desc">Your performance across all games</p>
-    </div>
-  </div>
-
- <div class="setting-card-body">
-  <div class="about-row">
-    <div class="about-item">
-      <span class="about-item-label">Overall Average</span>
-      <span class="about-item-val">
-        <span id="avgScore">—</span> | <span id="avgReaction">—</span>
-      </span>
-    </div>
-  </div>
-</div>
-</div>
 
     <!-- ── ABOUT ── -->
     <div class="setting-card">
@@ -530,87 +544,70 @@ body {
 </div><!-- /ctg-zoom-wrap -->
 
 <div class="ctg-toast" id="ctg-toast"></div>
-<script>
-function loadGameStats(){
-  const games = [
-    ["bf","Balloon Float"],
-    ["lc","Light Catcher"],
-    ["rr","Road Runner"],
-    ["sp","Simons Path"],
-    ["ww","Word Wise"],
-    ["sg","Sorter Game"],
-    ["mnm","Match No Match"],
-    ["rt","Rhythm Tap"]
-  ];
 
-  let totalScore = 0;
-  let totalReaction = 0;
-  let countScore = 0;
-  let countReaction = 0;
-
-  games.forEach(([key]) => {
-
-    let score = parseInt(localStorage.getItem(key + "_highScore"));
-    let reaction = parseInt(localStorage.getItem(key + "_bestReaction"));
-
-    if (!isNaN(score)) {
-      totalScore += score;
-      countScore++;
-    }
-
-    if (!isNaN(reaction)) {
-      totalReaction += reaction;
-      countReaction++;
-    }
-
-    document.getElementById(key+"Score").textContent =
-      !isNaN(score) ? score : "—";
-
-    document.getElementById(key+"Reaction").textContent =
-      !isNaN(reaction) ? (reaction/1000).toFixed(2)+"s" : "—";
-
-  });
-
-  let avgScore = countScore ? Math.round(totalScore / countScore) : "—";
-  let avgReaction = countReaction
-    ? (totalReaction / countReaction / 1000).toFixed(2) + "s"
-    : "—";
-
-  document.getElementById("avgScore").textContent = avgScore;
-  document.getElementById("avgReaction").textContent = avgReaction;
-}
-  loadGameStats();
- document.addEventListener("DOMContentLoaded", () => {
-
-  const soundBtn = document.getElementById("soundToggle");
-
-  if (!soundBtn) {
-    console.error("Sound button not found");
-    return;
-  }
-
-  if (localStorage.getItem("soundEnabled") === null) {
-    localStorage.setItem("soundEnabled", "true");
-  }
-
-  function updateUI() {
-    const isOn = localStorage.getItem("soundEnabled") === "true";
-    soundBtn.textContent = "Sound: " + (isOn ? "ON" : "OFF");
-  }
-
-  updateUI();
-
-  soundBtn.addEventListener("click", () => {
-    console.log("CLICK DETECTED");
-
-    const current = localStorage.getItem("soundEnabled") === "true";
-    localStorage.setItem("soundEnabled", (!current).toString());
-
-    updateUI();
-  });
-
-});
-</script>
 <script src="shared.js"></script>
+<script>
+const SOUND_KEY = "ctg-sound";
+
+// load saved setting
+function loadSoundSetting() {
+  const sound = localStorage.getItem(SOUND_KEY) ?? "on";
+
+  const onBtn  = document.getElementById("soundOnBtn");
+  const offBtn = document.getElementById("soundOffBtn");
+
+  if (sound === "on") {
+    onBtn.classList.add("setting-active");
+    offBtn.classList.remove("setting-active");
+  } else {
+    offBtn.classList.add("setting-active");
+    onBtn.classList.remove("setting-active");
+  }
+}
+
+// set sound
+function setSound(val) {
+  localStorage.setItem(SOUND_KEY, val);
+  loadSoundSetting();
+}
+
+// button clicks
+document.getElementById("soundOnBtn").onclick  = () => setSound("on");
+document.getElementById("soundOffBtn").onclick = () => setSound("off");
+
+// run on load
+loadSoundSetting();
+
+const DIFF_KEY = "ctg-difficulty";
+
+// load saved difficulty
+function loadDifficulty() {
+  const diff = localStorage.getItem(DIFF_KEY) || "easy";
+
+  const easy   = document.getElementById("diffEasy");
+  const medium = document.getElementById("diffMedium");
+  const hard   = document.getElementById("diffHard");
+
+  [easy, medium, hard].forEach(btn => btn.classList.remove("setting-active"));
+
+  if (diff === "easy") easy.classList.add("setting-active");
+  if (diff === "medium") medium.classList.add("setting-active");
+  if (diff === "hard") hard.classList.add("setting-active");
+}
+
+// set difficulty
+function setDifficulty(level) {
+  localStorage.setItem(DIFF_KEY, level);
+  loadDifficulty();
+}
+
+// button events
+document.getElementById("diffEasy").onclick   = () => setDifficulty("easy");
+document.getElementById("diffMedium").onclick = () => setDifficulty("medium");
+document.getElementById("diffHard").onclick   = () => setDifficulty("hard");
+
+// init
+loadDifficulty();
+</script>
 </body>
 </html>

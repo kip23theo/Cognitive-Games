@@ -189,18 +189,19 @@ body {
 }
 
 .top-bar {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  justify-content: center;
   width: 100%;
   max-width: 420px;
   margin-bottom: 14px;
   font-size: 14px;
 }
 .top-bar span {
+  display: flex;
+  flex-direction: column;
   background: #fff;
-  padding: 10px 12px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.08);
   text-align: center;
@@ -354,10 +355,10 @@ body {
 <div id="game">
 
   <div class="top-bar">
-  <span>Score<br><span id="score">0</span></span>
-  <span>High<br><span id="highScore">0</span></span>
-  <span>Level<br><span id="level">1</span></span>
-  <span>Wrong<br><span id="wrong">0</span>/5</span>
+  <span>Score <b id="score">0</b></span>
+  <span>High <b id="highScore">0</b></span>
+  <span>Level <b id="level">1</b></span>
+  <span>Wrong <b id="wrong">0</b>/5</span>
 </div>
 
   <div id="ruleHint"></div>

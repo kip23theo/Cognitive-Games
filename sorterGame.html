@@ -373,17 +373,35 @@ const finalScoreEl = document.getElementById("finalScore");
 const menuBackBtn  = document.getElementById("menuBackBtn");  
 const backBtn      = document.getElementById("backBtn");  
   
-// ── Sound ─────────────────────────────────────────────────────────────────────
-  if (localStorage.getItem("soundEnabled") === null) {
+// ── SOUND SYSTEM ─────────────────────────────────────────
+
+// Set default (first time only)
+if (localStorage.getItem("soundEnabled") === null) {
   localStorage.setItem("soundEnabled", "true");
 }
-  const Sound = {
+
+const Sound = {
   ctx: null,
 
+  // Check if sound is ON
   isOn() {
-    const val = localStorage.getItem("soundEnabled") === "true";
+    const val = localStorage.getItem("soundEnabled");
+
+    // If OFF → completely stop audio system
+    if (val === "false") {
+      if (this.ctx) {
+        try {
+          this.ctx.close();
+        } catch (e) {}
+        this.ctx = null;
+      }
+      return false;
+    }
+
+    return true;
   },
 
+  // Initialize AudioContext safely
   init() {
     if (!this.isOn()) return;
 
@@ -391,43 +409,55 @@ const backBtn      = document.getElementById("backBtn");
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;
 
-      if (!this.ctx) {
+      // Create new context if missing or closed
+      if (!this.ctx || this.ctx.state === "closed") {
         this.ctx = new AudioCtx();
       }
 
+      // Resume if suspended (mobile fix)
       if (this.ctx.state === "suspended") {
-        this.ctx.resume();
+        this.ctx.resume().catch(() => {});
       }
 
     } catch (e) {}
   },
 
+  // Play tone
   tone(freq, time) {
     if (!this.isOn()) return;
 
     this.init();
     if (!this.ctx) return;
 
-    const o = this.ctx.createOscillator();
-    const g = this.ctx.createGain();
+    try {
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
 
-    o.frequency.value = freq;
-    g.gain.value = 0.05;
+      o.frequency.value = freq;
+      g.gain.value = 0.05;
 
-    o.connect(g);
-    g.connect(this.ctx.destination);
+      o.connect(g);
+      g.connect(this.ctx.destination);
 
-    o.start();
-    o.stop(this.ctx.currentTime + time);
+      o.start();
+      o.stop(this.ctx.currentTime + time);
+
+    } catch (e) {}
   },
 
+  // Correct sound (happy)
   correct() {
+    if (!this.isOn()) return;
+
     this.tone(500, 0.08);
     setTimeout(() => this.tone(700, 0.08), 80);
     setTimeout(() => this.tone(900, 0.08), 160);
   },
 
+  // Wrong sound (low)
   wrong() {
+    if (!this.isOn()) return;
+
     this.tone(200, 0.25);
   }
 };

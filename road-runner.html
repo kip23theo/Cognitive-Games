@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" id="metaViewport">
 <script>
-// Apply viewport for landscape phones ASAP before render
+// Apply viewport for landscape phones ASAP befozre render
 (function(){
   var meta = document.getElementById('metaViewport');
   function check() {
@@ -678,19 +678,19 @@ body {
 }
 </style>
 </head>
-<body>
+<body tabindex="0">
 <div id="ctg-zoom-wrap" style="height:100dvh;height:100vh;display:flex;flex-direction:column;overflow:hidden;">
 
 <!-- ── HEADER (persistent) ── -->
 <div class="header">
-  <a href="index.html" class="back-btn">
+  <a onclick="parent.goBack(); return false;" href="#" class="back-btn">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     Back
   </a>
   <span class="game-title">Road Runner</span>
   <div class="header-actions">
     <div class="level-badge" id="levelBadge">Level 1</div>
-    <a href="settings.html" class="settings-link" title="Settings">⚙️</a>
+    <a onclick="parent.openSettings(); return false;" href="#" class="settings-link" title="Settings">⚙️</a>
   </div>
 </div>
 
@@ -920,24 +920,18 @@ function CAR_W() { return Math.round(CANVAS_W * CAR_W_F); }
 function CAR_H() { return Math.round(CANVAS_H * CAR_H_F); }
 function OBS_W() { return Math.round(CANVAS_W * OBS_W_F); }
 function OBS_H() { return Math.round(CANVAS_H * OBS_H_F); }
+function isSoundEnabled() {
+  return localStorage.getItem('ctg-sound') !== 'off';
+}
 
 // ─── SOUND ENGINE ───────────────────────────────────────────────────────────
 const SoundEngine = {
   ctx: null,
-  init() {
-  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
-  if (!soundEnabled) return;
-
-  if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-},
- _play(f1, f2, dur, type='sine', vol=0.25) {
-
-  // 🔊 CONNECT TO SETTINGS PAGE
-  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
-  if (!soundEnabled) return;
-
-  if (!this.ctx) return;
-    if (!this.ctx) return;
+  init() { 
+     if (!isSoundEnabled()) return;
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+  _play(f1, f2, dur, type='sine', vol=0.25) {
+    if (!this.ctx || !isSoundEnabled()) return;
     try {
       const o = this.ctx.createOscillator(), g = this.ctx.createGain();
       o.connect(g); g.connect(this.ctx.destination);
@@ -986,7 +980,7 @@ const InputHandler = {
 };
 
 // ─── LEVELS ─────────────────────────────────────────────────────────────────
-const LEVELS = [
+const BASE_LEVELS = [
   { speed: 2.0, spawnInterval: 4000 },
   { speed: 2.8, spawnInterval: 3500 },
   { speed: 3.6, spawnInterval: 3000 },
@@ -994,6 +988,11 @@ const LEVELS = [
   { speed: 5.2, spawnInterval: 2000 },
   { speed: 6.0, spawnInterval: 1800 },
 ];
+
+let LEVELS = JSON.parse(JSON.stringify(BASE_LEVELS));
+function getDifficulty() {
+  return localStorage.getItem("ctg-difficulty") || "medium";
+}
 
 // ─── GAME STATE ─────────────────────────────────────────────────────────────
 let G = {};
@@ -1027,7 +1026,7 @@ function showScreen(id) {
 function goBack() {
   SoundEngine.init(); stopGame();
   if (document.getElementById('gameScreen').classList.contains('active')) showResults();
-  else goToMenu();
+  else parent.goBack();
 }
 
 function goToMenu() {
@@ -1055,7 +1054,34 @@ function startCountdown() {
 
 // ─── GAME ───────────────────────────────────────────────────────────────────
 function startGame() {
-  resetGame(); showScreen('gameScreen');
+  resetGame(); 
+  LEVELS = JSON.parse(JSON.stringify(BASE_LEVELS)); // reset each game
+  const difficulty = getDifficulty(); // ✅ ADD HERE
+
+  // ✅ APPLY DIFFICULTY
+  if (difficulty === "easy") {
+    LEVELS.forEach(l => {
+      l.speed *= 0.8;          // slower speed
+      l.spawnInterval += 800;  // fewer obstacles
+    });
+  } 
+  else if (difficulty === "hard") {
+    LEVELS.forEach(l => {
+      l.speed *= 1.2;          // faster speed
+      l.spawnInterval -= 400;  // more obstacles
+    });
+  }
+  // medium = default
+
+  showScreen('gameScreen');
+  setTimeout(() => {
+  window.focus(); // ensure browser/iframe is active
+
+  const gameScreen = document.getElementById('gameScreen');
+  if (gameScreen) gameScreen.focus(); // focus game area
+
+  document.body.focus(); // fallback focus
+}, 50);
   function beginAfterSettle() {
     resizeCanvas();
     requestAnimationFrame(() => {
@@ -1509,6 +1535,14 @@ document.addEventListener('visibilitychange', () => {
 
 // ─── INIT ───────────────────────────────────────────────────────────────────
 InputHandler.init();
+function unlockInput() {
+  window.focus();
+  document.body.focus();
+  document.removeEventListener('click', unlockInput);
+}
+
+document.addEventListener('click', unlockInput);
+
 resetGame();
 updateLanePositions();
 </script>
@@ -1528,7 +1562,7 @@ function wireBtn(id, fn) {
 }
 wireBtn('startBtn',     startCountdown);
 wireBtn('playAgainBtn', startCountdown);
-wireBtn('backToMenuBtn', goToMenu);
+wireBtn('backToMenuBtn', () => parent.goBack());
 </script>
 <script src="shared.js" onerror="void 0"></script>
 <script>

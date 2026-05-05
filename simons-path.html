@@ -402,6 +402,7 @@
         flex-direction: column;
         gap: 10px;
       }
+     
 
       .game-meta {
         text-align: center;
@@ -412,19 +413,21 @@
       }
 
       .game-area {
-        margin-top: 14px;
-        border-radius: 14px;
-        background: var(--color-game-bg);
-        border: 2px solid var(--border);
-        padding: 16px;
-        min-height: 360px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 14px;
-        position: relative;
-        scroll-margin-top: 10px;
-      }
+  margin-top: 14px;
+  border-radius: 14px;
+  background: var(--color-game-bg);
+  border: 2px solid var(--border);
+  padding: 16px;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  position: relative;
+  scroll-margin-top: 10px;
+
+  overflow-y: auto; 
+}
 
       .status {
         text-align: center;
@@ -568,7 +571,14 @@
         text-align: center;
         color: var(--color-text-light);
       }
-
+.game-meta,
+.status,
+.progress,
+.feedback-row {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+}
       .pad-left {
         border-color: var(--left-border);
         border-style: solid;
@@ -928,6 +938,31 @@
           font-size: 18px;
           text-align: center;
         }
+
+        .game-area {
+  overflow: hidden; /* prevents content spilling */
+}
+
+.pad {
+  min-height: 80px;   /* reduce from 104px */
+  padding: 6px;
+}
+
+.pad-arrow {
+  font-size: 32px; /* reduce from 44px */
+}
+
+.status {
+  font-size: 18px;
+}
+
+.progress {
+  font-size: 16px;
+}
+
+.feedback-row {
+  font-size: 14px;
+}
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1913,7 +1948,7 @@ window.zoomOut = function () {
 function applyZoom() {
   const game = document.getElementById("ctg-zoom-wrap");
   game.style.transform = `scale(${currentZoom})`;
-  game.style.transformOrigin = "top left";
+  game.style.transformOrigin = "bottom right";
 }
         init();
       })();

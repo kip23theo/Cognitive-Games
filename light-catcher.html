@@ -670,14 +670,14 @@ body {
 <!-- ══ MENU SCREEN ══ -->
 <div class="screen active" id="menuScreen">
   <div class="header">
-   <button class="back-btn" onclick="goHome()">
+    <a onclick="parent.goBack(); return false;" href="#" class="back-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       Back
     </a>
     <span class="header-title">Light Catcher</span>
     <div class="header-actions">
       <div class="level-badge" id="menuLevelBadge">Level 1</div>
-      <a href="settings.html" class="settings-link" title="Settings">⚙️</a>
+      <a onclick="parent.openSettings(); return false;" href="#" class="settings-link" title="Settings">⚙️</a>
     </div>
   </div>
 
@@ -722,7 +722,7 @@ body {
 <!-- ══ COUNTDOWN SCREEN ══ -->
 <div class="screen" id="countdownScreen">
   <div class="header">
-    <button class="back-btn" onclick="goToMenu()">
+    <button class="back-btn" onclick="parent.goBack()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       Back
     </button>
@@ -739,9 +739,9 @@ body {
 </div>
 
 <!-- ══ GAME SCREEN ══ -->
-<div class="screen" id="gameScreen">
+<div class="screen" id="gameScreen" tabindex="0">
   <div class="header">
-    <button class="back-btn" onclick="goBack()">
+    <button class="back-btn" onclick="parent.goBack()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       Back
     </button>
@@ -761,15 +761,10 @@ body {
         <div class="stat-label">Round</div>
         <div class="stat-value" id="roundDisplay">0/20</div>
       </div>
-     <div class="stat-box">
-  <div class="stat-label">Best Time</div>
-  <div class="stat-value" id="bestDisplay">—</div>
-</div>
-
-<div class="stat-box">
-  <div class="stat-label">High Score</div>
-  <div class="stat-value" id="highScoreDisplay">0</div>
-</div>
+      <div class="stat-box">
+        <div class="stat-label">Best</div>
+        <div class="stat-value" id="bestDisplay">—</div>
+      </div>
     </div>
 
     <div class="time-bar-wrap" id="timeBarWrap">
@@ -809,7 +804,7 @@ body {
 <!-- ══ RESULTS SCREEN ══ -->
 <div class="screen" id="resultsScreen">
   <div class="header">
-    <button class="back-btn" onclick="goToMenu()">
+    <button class="back-btn" onclick="parent.goBack()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       Back
     </button>
@@ -895,32 +890,34 @@ function applyLandscapeLayout() {
 
 window.addEventListener('resize', applyLandscapeLayout);
 window.addEventListener('orientationchange', () => setTimeout(applyLandscapeLayout, 100));
+function isSoundOn() {
+  return localStorage.getItem('ctg-sound') !== 'off';
+}
 
 // ─── SOUND ENGINE ─────────────────────────────────────────────────────────────
 const SoundEngine = {
   ctx: null,
-  init() { 
-  if (!this.ctx) {
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (this.ctx.state === "suspended") {
-    this.ctx.resume();
-  }
-},
+  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
   _play(f1, f2, dur, type='sine', vol=0.28) {
-  if (localStorage.getItem("soundEnabled") !== "true") return; // ADD THIS
+  if (!isSoundOn()) return;   // ⬅️ THIS LINE IS THE KEY
   if (!this.ctx) return;
-    try {
-      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-      o.connect(g); g.connect(this.ctx.destination);
-      o.type = type;
-      o.frequency.setValueAtTime(f1, this.ctx.currentTime);
-      if (f2 !== f1) o.frequency.linearRampToValueAtTime(f2, this.ctx.currentTime + dur/1000);
-      g.gain.setValueAtTime(vol, this.ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur/1000);
-      o.start(); o.stop(this.ctx.currentTime + dur/1000);
-    } catch(e) {}
-  },
+
+  try {
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.connect(g); g.connect(this.ctx.destination);
+    o.type = type;
+    o.frequency.setValueAtTime(f1, this.ctx.currentTime);
+
+    if (f2 !== f1)
+      o.frequency.linearRampToValueAtTime(f2, this.ctx.currentTime + dur/1000);
+
+    g.gain.setValueAtTime(vol, this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur/1000);
+
+    o.start();
+    o.stop(this.ctx.currentTime + dur/1000);
+  } catch(e) {}
+},
   playPing()       { this._play(600, 600, 80, 'sine', 0.22); },
   playCorrect()    { this._play(440, 660, 150, 'sine', 0.28); },
   playSpeedBonus() { this._play(660, 880, 120, 'sine', 0.28); },
@@ -943,7 +940,7 @@ const SoundEngine = {
 const InputHandler = {
   listeners: [], lastInput: 0, DEBOUNCE: 150,
   init() {
-    document.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
       e.preventDefault();
       if (e.repeat) return;
@@ -959,7 +956,7 @@ const InputHandler = {
 };
 
 // ─── LEVELS & STATE ───────────────────────────────────────────────────────────
-const LEVELS = [
+const BASE_LEVELS = [
   { displayTime: 3000, minDelay: 1000, maxDelay: 2000 },
   { displayTime: 2500, minDelay: 800,  maxDelay: 2000 },
   { displayTime: 2000, minDelay: 600,  maxDelay: 2000 },
@@ -967,10 +964,23 @@ const LEVELS = [
   { displayTime: 1500, minDelay: 400,  maxDelay: 3000 },
   { displayTime: 1200, minDelay: 300,  maxDelay: 3000 },
 ];
+
+let LEVELS = [];
 const MAX_ROUNDS = 20, MAX_MISSES = 3, ROUNDS_PER_LEVEL = 5;
 
 let state = {};
-let highScore = Number(localStorage.getItem("lightCatcherHighScore")) || 0;
+function getDifficulty() {
+  return localStorage.getItem("ctg-difficulty") || "easy";
+}
+// ─── HIGH SCORE STORAGE ─────────────────────────────
+function getHighScore() {
+  return parseInt(localStorage.getItem('lightCatcherHighScore') || '0');
+}
+
+function setHighScore(score) {
+  localStorage.setItem('lightCatcherHighScore', score);
+}
+
 function resetState() {
   state = {
     score: 0, level: 1, round: 0, misses: 0, correct: 0,
@@ -984,7 +994,14 @@ function resetState() {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if (id === 'gameScreen') applyLandscapeLayout();
+
+  if (id === 'gameScreen') {
+    applyLandscapeLayout();
+    setTimeout(() => {
+      window.focus();
+      document.body.focus?.();
+    }, 50);
+  }
 }
 
 function goToMenu() {
@@ -995,7 +1012,7 @@ function goToMenu() {
 function goBack() {
   SoundEngine.init(); clearTimers(); InputHandler.clearAll();
   if (document.getElementById('gameScreen').classList.contains('active')) showResults();
-  else goToMenu();
+  else parent.goBack();
 }
 
 // ─── COUNTDOWN ───────────────────────────────────────────────────────────────
@@ -1022,7 +1039,28 @@ function startCountdown() {
 
 // ─── GAME ─────────────────────────────────────────────────────────────────────
 function startGame() {
+  const difficulty = getDifficulty();
+
+  // ✅ RESET LEVELS fresh every time
+  LEVELS = BASE_LEVELS.map(l => ({ ...l }));
+
+  if (difficulty === "easy") {
+    LEVELS.forEach(l => {
+      l.displayTime += 500;
+      l.minDelay += 300;
+      l.maxDelay += 300;
+    });
+  } 
+  else if (difficulty === "hard") {
+    LEVELS.forEach(l => {
+      l.displayTime -= 400;
+      l.minDelay -= 200;
+      l.maxDelay -= 200;
+    });
+  }
   showScreen('gameScreen');
+   window.focus();
+  document.body.focus?.();
   updateStats(); updateMissDots(); updateLevelBadge();
   document.getElementById('reactionDisplay').textContent = '—';
   document.getElementById('reactionDisplay').className = 'reaction-value';
@@ -1066,7 +1104,6 @@ function showLight() {
 }
 
 function handlePanelTap(dir) {
-  if (!state.waitingForInput) return; // ADD THIS
   SoundEngine.init();
   InputHandler.emit(dir);
 }
@@ -1136,9 +1173,8 @@ function resetTimeBar() {
 function updateStats() {
   document.getElementById('scoreDisplay').textContent = state.score;
   document.getElementById('roundDisplay').textContent = state.round + '/' + MAX_ROUNDS;
-  document.getElementById('bestDisplay').textContent  = state.bestReaction ? (state.bestReaction / 1000).toFixed(2) + 's' : '—';
-  document.getElementById('highScoreDisplay').textContent = highScore;
-}
+  document.getElementById('bestDisplay').textContent = getHighScore();
+  }
 function updateMissDots() {
   for (let i = 0; i < 3; i++) {
     document.getElementById('miss' + i).className = 'miss-dot' + (i < state.misses ? ' used' : '');
@@ -1163,6 +1199,11 @@ function endGame() {
 }
 
 function showResults() {
+// Save high score
+const highScore = getHighScore();
+if (state.score > highScore) {
+  setHighScore(state.score);
+}
   clearTimers(); InputHandler.clearAll(); resetPanels();
   const pct = state.round > 0 ? state.correct / state.round : 0;
   let emoji, title, msg;
@@ -1178,16 +1219,7 @@ function showResults() {
   document.getElementById('finalRounds').textContent    = state.round;
   document.getElementById('finalCorrect').textContent   = state.correct;
   document.getElementById('finalBest').textContent      = state.bestReaction ? (state.bestReaction / 1000).toFixed(2) + 's' : '—';
-
-// NEW
-if (state.score > highScore) {
-  highScore = state.score;
-  localStorage.setItem("lightCatcherHighScore", highScore);
-  document.getElementById('resultsMsg').textContent += " 🎉 New High Score!";
-}
-
-document.getElementById('resultsMsg').textContent += 
-  " | High Score: " + highScore;
+  document.getElementById('resultsLevelBadge').textContent = 'Level ' + state.level;
   showScreen('resultsScreen');
 }
 

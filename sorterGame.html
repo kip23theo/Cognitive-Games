@@ -322,15 +322,15 @@ Sorter Game
     <h3>How to Play</h3>    
     <div class="how-to-row">    
       <span class="key-badge">1</span>    
-      <span>Carefully read the rule shown above the shape</span>    
+      <span>Observe the rule carefully</span>    
     </div>    
     <div class="how-to-row">    
       <span class="key-badge">2</span>    
-      <span>Observe the shape or color displayed in the center</span>    
+      <span>Identify the shape or color</span>    
     </div>    
     <div class="how-to-row">    
       <span class="key-badge">3</span>    
-      <span>Decide if it matches and choose correct button</span>    
+      <span>Select the correct side</span>    
     </div>    
   </div>  <button id="startBtn" class="start-btn">▶ Start Game</button>  </div>  <div id="bgShapes">    
   <div class="shape c1"></div>    
@@ -343,12 +343,14 @@ Sorter Game
   <div class="shape star2">★</div>    
   <div class="shape midL"></div>    
   <div class="shape midR"></div>    
-</div>    
-<div id="game">    
-<div class="top">    
+</div>  
+  <div id="game">  
+  <div class="top">    
   <div>Level: <span id="level">1</span></div>    
   <div>Score: <span id="score">0</span></div>    
-</div>    <div id="rule"></div>  <canvas id="canvas" width="200" height="200" tabindex="0"></canvas>    <div class="btns">    
+</div>        
+  <div id="rule"></div>   
+    <canvas id="canvas" width="200" height="200" tabindex="0"></canvas>    <div class="btns">    
     <button class="left"    onclick="check('L')">LEFT</button>    
     <button class="right"   onclick="check('R')">RIGHT</button>    
     <button class="restart" onclick="restart()">RESTART</button>    
@@ -363,63 +365,68 @@ const ruleEl       = document.getElementById("rule");
 const resultEl     = document.getElementById("result");    
 const finalScoreEl = document.getElementById("finalScore");    
 const menuBackBtn  = document.getElementById("menuBackBtn");    
-const backBtn      = document.getElementById("backBtn");   
-  // ── Sound ────────────────────────────────────
+const backBtn      = document.getElementById("backBtn");    // ── Sound ─────────────────────────────────────────────────────────────────────
+if (localStorage.getItem("soundEnabled") === null) {
+localStorage.setItem("soundEnabled", "true");
+}
 const Sound = {
-  ctx: null,
+ctx: null,
 
-  isOn() {
-    const val = localStorage.getItem("soundEnabled");
-    return val !== "false"; // default ON like your friend's game
-  },
+isOn() {
+const val = localStorage.getItem("soundEnabled");
+return val !== "false"; // default ON like your friend's game
+},
 
-  init() {
-    if (!this.isOn()) return;
+init() {
+if (!this.isOn()) return;
 
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
+try {  
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;  
+  if (!AudioCtx) return;  
 
-      if (!this.ctx) {
-        this.ctx = new AudioCtx();
-      }
+  if (!this.ctx) {  
+    this.ctx = new AudioCtx();  
+  }  
 
-      if (this.ctx.state === "suspended") {
-        this.ctx.resume();
-      }
+  if (this.ctx.state === "suspended") {  
+    this.ctx.resume();  
+  }  
 
-    } catch (e) {}
-  },
+} catch (e) {}
 
-  tone(freq, time) {
-    if (!this.isOn()) return;
+},
 
-    this.init();
-    if (!this.ctx) return;
+tone(freq, time) {
+if (!this.isOn()) return;
 
-    const o = this.ctx.createOscillator();
-    const g = this.ctx.createGain();
+this.init();  
+if (!this.ctx) return;  
 
-    o.frequency.value = freq;
-    g.gain.value = 0.05;
+const o = this.ctx.createOscillator();  
+const g = this.ctx.createGain();  
 
-    o.connect(g);
-    g.connect(this.ctx.destination);
+o.frequency.value = freq;  
+g.gain.value = 0.05;  
 
-    o.start();
-    o.stop(this.ctx.currentTime + time);
-  },
+o.connect(g);  
+g.connect(this.ctx.destination);  
 
-  correct() {
-    this.tone(500, 0.08);
-    setTimeout(() => this.tone(700, 0.08), 80);
-    setTimeout(() => this.tone(900, 0.08), 160);
-  },
+o.start();  
+o.stop(this.ctx.currentTime + time);
 
-  wrong() {
-    this.tone(200, 0.25);
-  }
+},
+
+correct() {
+this.tone(500, 0.08);
+setTimeout(() => this.tone(700, 0.08), 80);
+setTimeout(() => this.tone(900, 0.08), 160);
+},
+
+wrong() {
+this.tone(200, 0.25);
+}
 };
+
 // ── Game state ────────────────────────────────────────────────────────────────
 const shapes = ["circle", "square", "triangle", "star"];
 const colors = {
@@ -592,4 +599,4 @@ resizeCanvas();
 
 </script>  <script src="shared.js"></script>  </body>
 
-</html>   
+</html>

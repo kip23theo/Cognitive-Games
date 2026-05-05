@@ -957,6 +957,31 @@
           border-width: 3px;
         }
       }
+      .zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+
+.zoom-controls button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  font-size: 22px;
+  font-weight: bold;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  cursor: pointer;
+}
+
+.zoom-controls button:hover {
+  background: rgba(0,0,0,0.8);
+}
     </style>
   </head>
   <body>
@@ -1125,6 +1150,10 @@
               right signal.
             </p>
           </div>
+          <div class="zoom-controls">
+  <button onclick="zoomOut()">−</button>
+  <button onclick="zoomIn()">+</button>
+</div>
         </section>
 
         <section id="resultScreen" class="screen panel" aria-label="Results">
@@ -1868,7 +1897,24 @@
           }
           el.addEventListener("pointerdown", handle);
         }
+let currentZoom = 1;
 
+function zoomIn() {
+  currentZoom += 0.1;
+  applyZoom();
+}
+
+function zoomOut() {
+  currentZoom -= 0.1;
+  if (currentZoom < 0.6) currentZoom = 0.6;
+  applyZoom();
+}
+
+function applyZoom() {
+  const game = document.getElementById("ctg-zoom-wrap");
+  game.style.transform = `scale(${currentZoom})`;
+  game.style.transformOrigin = "bottom right";
+}
         init();
       })();
     </script>

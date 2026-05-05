@@ -81,8 +81,7 @@
 
       body {
         margin: 0;
-        height: 100dvh;
-        height: 100vh;
+        min-height: 100vh;
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background: var(--color-bg);
@@ -106,13 +105,14 @@
       }
 
       #ctg-zoom-wrap {
-        height: 100dvh;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-      }
+  height: 100dvh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 
+  overflow-y: auto;
+  overflow-x: auto; /* 👈 ADD THIS */
+}
       .panel {
         background: var(--color-bg);
         border-radius: 0;
@@ -1950,8 +1950,13 @@ window.zoomOut = function () {
 
 function applyZoom() {
   const game = document.getElementById("ctg-zoom-wrap");
+
   game.style.transform = `scale(${currentZoom})`;
   game.style.transformOrigin = "top center";
+
+  // 🔥 THIS IS THE FIX
+  game.style.height = `${100 / currentZoom}vh`;
+  game.style.width = `${100 / currentZoom}%`;
 }
         init();
       })();

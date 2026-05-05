@@ -342,12 +342,14 @@ body {
 </div>
 
 <!-- ── Game screen ─────────────────────────────────────────────────────────── -->
-<div class="top-bar">
-  <span>Score: <span id="score">0</span></span>
-  <span>High: <span id="highScore">0</span></span> 
-  <span>Level: <span id="level">1</span></span>
-  <span>Mistakes: <span id="wrong">0</span>/5</span>
-</div>
+<div id="game">
+
+  <div class="top-bar">
+    <span>Score: <span id="score">0</span></span>
+    <span>High: <span id="highScore">0</span></span> 
+    <span>Level: <span id="level">1</span></span>
+    <span>Mistakes: <span id="wrong">0</span>/5</span>
+  </div>
 
   <div id="ruleHint"></div>
 
@@ -357,11 +359,12 @@ body {
   </div>
 
   <div class="btns">
-    <button class="match-btn"   onclick="answer(true)">MATCH</button>
+    <button class="match-btn" onclick="answer(true)">MATCH</button>
     <button class="nomatch-btn" onclick="answer(false)">NO MATCH</button>
   </div>
 
   <div id="msg"></div>
+
 </div>
 
 <!-- ── Game Over screen ─────────────────────────────────────────────────────── -->

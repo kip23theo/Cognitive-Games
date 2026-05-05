@@ -80,9 +80,10 @@
       }
 
       body {
-        margin: 0;
-        height: 100dvh;
-        height: 100vh;
+  margin: 0;
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto;
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background: var(--color-bg);
@@ -106,12 +107,12 @@
       }
 
       #ctg-zoom-wrap {
-        height: 100dvh;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;  
+}
 
       .panel {
         background: var(--color-bg);
@@ -344,7 +345,7 @@
       .game-body {
         flex: 1;
         min-height: 0;
-        overflow: hidden;
+         overflow-y: auto;
         padding: 10px max(env(safe-area-inset-right), 12px)
           max(env(safe-area-inset-bottom), 12px)
           max(env(safe-area-inset-left), 12px);
@@ -1101,6 +1102,7 @@
           animation: none !important;
           transition: none !important;
         }
+        
       }
     </style>
   </head>
@@ -1304,6 +1306,10 @@
         </section>
       </main>
     </div>
+    <div class="zoom-controls">
+  <button onclick="zoomOut()">−</button>
+  <button onclick="zoomIn()">+</button>
+</div>
 
     <script src="word-wise-data.js" onerror="void 0"></script>
     <script>
@@ -2515,6 +2521,31 @@
         init();
       })();
     </script>
+    <script>
+let currentZoom = 1;
+
+function zoomIn() {
+  currentZoom += 0.1;
+  applyZoom();
+}
+
+function zoomOut() {
+  currentZoom -= 0.1;
+  if (currentZoom < 0.6) currentZoom = 0.6;
+  applyZoom();
+}
+
+function applyZoom() {
+  const game = document.getElementById("ctg-zoom-wrap");
+
+  game.style.transform = `scale(${currentZoom})`;
+  game.style.transformOrigin = "top center";
+
+  /* prevents content cutting */
+  game.style.width = `${100 / currentZoom}%`;
+}
+</script>
     <script src="shared.js" onerror="void 0"></script>
+
   </body>
 </html>

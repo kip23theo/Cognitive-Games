@@ -316,7 +316,7 @@ body {
 </head>
 
 <body>
-<button id="backBtn" onclick="goBack()">← Back</button>
+<button id="backBtn" onclick="parent.goBack()">← Back</button>
 <!-- WELCOME -->
 <div id="welcome" class="menu-screen">
 
@@ -415,7 +415,7 @@ body {
     currentScreen = "welcome";
   }
   else {
-    window.location.href = "index.html";
+    parent.goBack();
   }
 }
 const InputHandler = {
@@ -446,21 +446,17 @@ const InputHandler = {
     this.listeners.forEach(fn => fn(dir));
   }
 };
-
+function isSoundEnabled() {
+  return localStorage.getItem('ctg-sound') !== 'off';
+}
 let ctx;
 function initAudio() {
-
-  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
-  if (!soundEnabled) return;
-
+  if (!isSoundEnabled()) return;
   if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
 }
 
 function tone(freq, duration=0.12) {
-
-  // 🔊 CONNECT TO SETTINGS PAGE
-  const soundEnabled = localStorage.getItem("soundEnabled") !== "false";
-  if (!soundEnabled) return;
+  if (!ctx || !isSoundEnabled()) return;
 
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
@@ -480,15 +476,23 @@ function tone(freq, duration=0.12) {
 
 const soundLeft = () => tone(300);
 const soundRight = () => tone(700);
-const rhythmTick = () => tone(500, 0.05);
+const rhythmTick = () => {
+  if (!isSoundEnabled()) return;
+  tone(500, 0.05);
+};
 let currentScreen = "welcome";
+function getDifficulty() {
+  return localStorage.getItem("ctg-difficulty") || "easy";
+}
 let pattern = [];
 let user = [];
 let level = 1;
 let score = 0;
+let patternSpeed = 900;   // interval speed
+let stepDelay = 700;      // delay after showing pattern
 let playing = false;
 let started = false;
-let patternInterval;
+
 const display = document.getElementById("display");
 const msg = document.getElementById("msg");
 const retryBtn = document.getElementById("retryBtn");
@@ -516,6 +520,20 @@ function countdownStart() {
 }
 
 function startGame() {
+   const difficulty = getDifficulty();
+
+  if (difficulty === "easy") {
+    patternSpeed = 1100;
+    stepDelay = 900;
+  } 
+  else if (difficulty === "medium") {
+    patternSpeed = 900;
+    stepDelay = 700;
+  } 
+  else {
+    patternSpeed = 650;
+    stepDelay = 500;
+  }
   pattern = [];
   level = 1;
   score = 0;
@@ -537,8 +555,7 @@ function showPattern() {
   let i = 0;
   playing = false;
 
-  clearInterval(patternInterval);
-patternInterval = setInterval(() => {
+  let interval = setInterval(() => {
     rhythmTick();
 
     let dir = pattern[i];
@@ -559,14 +576,14 @@ setTimeout(() => {
     i++;
 
     if (i >= pattern.length) {
-     clearInterval(patternInterval);
+      clearInterval(interval);
       setTimeout(() => {
         display.innerText = "YOUR TURN";
         msg.innerText = "Repeat the pattern";
         playing = true;
-      }, 700);
+      }, stepDelay);
     }
-  }, 900);
+  }, patternSpeed);
 }
 
 function handleInput(input) {
@@ -599,8 +616,7 @@ return;
     score++;
     document.getElementById("score").innerText = score;
     level++;
-  playing = false;
-setTimeout(nextLevel, 800);
+    setTimeout(nextLevel, 800);
   }
 }
 

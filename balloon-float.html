@@ -141,20 +141,22 @@ body {
 
 /* BALLOON */
 .balloon {
-  position:absolute;
-  width:38px;
-  height:52px;
-  border-radius:50%;
+  position: absolute;
+  width: 40px;
+  height: 54px;
+  border-radius: 50%;
 }
 
+/* LEFT = RED */
 .left {
-  left: 25%;
-  background: linear-gradient(145deg, #ff7675, #d63031); /* red */
+  left: 10%;
+  background: linear-gradient(145deg, #ff6b6b, #d63031);
 }
 
+/* RIGHT = BLUE */
 .right {
-  right: 25%;
-  background: linear-gradient(145deg, #74b9ff, #0984e3); /* blue */
+  right: 10%;
+  background: linear-gradient(145deg, #74b9ff, #0984e3);
 }
 
 /* CONTROLS */
@@ -325,7 +327,7 @@ body {
 </head>
 
 <body>
-<button id="backBtn" onclick="goBack()">← Back</button>
+<button id="backBtn" onclick="parent.goBack()">← Back</button>
 <!-- WELCOME -->
 <div id="welcomeScreen" class="screen active panel menu-screen">
   
@@ -376,10 +378,11 @@ body {
 
 <!-- GAME -->
 <div id="gameScreen">
-  <div id="topBar">
-    <div>Score: <span id="score">0</span></div>
-    <div>Time: <span id="time">120</span>s</div>
-  </div>
+ <div id="topBar">
+  <div>Score: <span id="score">0</span></div>
+  <div>High: <span id="highScore">0</span></div> 
+  <div>Time: <span id="time">120</span>s</div>
+</div>
 
   <div id="gameArea">
     <div id="escapeLine"></div>
@@ -403,8 +406,15 @@ body {
 </div>
 
 <script>
+  // 🔊 GLOBAL SOUND STATE (shared across pages)
+function isSoundOn() {
+  return localStorage.getItem("ctg-sound") !== "off";
+}
 let ctx, enabled=false;
 let currentScreen = "welcome"; 
+function getDifficulty() {
+  return localStorage.getItem("ctg-difficulty") || "easy";
+}
 const welcomeScreen = document.getElementById("welcomeScreen");
 const gameScreen = document.getElementById("gameScreen");
 const resultScreen = document.getElementById("resultScreen");
@@ -412,22 +422,22 @@ const countdown = document.getElementById("countdown");
 const gameArea = document.getElementById("gameArea");
 
 function initSound(){
-  if(enabled) return;
-  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  if(enabled || !isSoundOn()) return; // 🚫 don't init if OFF
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
   ctx.resume();
-  enabled=true;
+  enabled = true;
 }
 
 function play(freq){
+  if (!isSoundOn()) return; // 🚫 STOP SOUND IF OFF
 
-  // 🔴 CHECK SOUND SETTING
-  if (localStorage.getItem("soundEnabled") !== "true") return;
-
-  let o=ctx.createOscillator(), g=ctx.createGain();
-  o.frequency.value=freq;
-  g.gain.value=0.25;
-  o.connect(g); g.connect(ctx.destination);
-  o.start(); o.stop(ctx.currentTime+0.2);
+  let o = ctx.createOscillator(), g = ctx.createGain();
+  o.frequency.value = freq;
+  g.gain.value = 0.25;
+  o.connect(g); 
+  g.connect(ctx.destination);
+  o.start(); 
+  o.stop(ctx.currentTime + 0.2);
 }
 
 function playLeft(){ play(400); }
@@ -464,17 +474,42 @@ function startCountdown(){
 
 /* GAME */
 let score=0, missed=0, caught=0, time=60;
+let highScore = localStorage.getItem("lc-highscore") || 0;
 let balloons=[], spawnInt, gameInt;
 let reactionTimes=[];
 let inputLocked = false;   
   
-function startGame(){
-  gameScreen.style.display="block";
-currentScreen = "game";
- 
+function startGame(){ 
+  const difficulty = getDifficulty(); 
 
-  gameInt=setInterval(updateGame,1000);
-  spawnBalloons();
+  // 🎯 SET VALUES BASED ON DIFFICULTY
+  if (difficulty === "easy") {
+    time = 60;
+    spawnDelay = 2000;
+    speed = 1;
+  } 
+  else if (difficulty === "medium") {
+    time = 45;
+    spawnDelay = 1500;
+    speed = 1.5;
+  } 
+  else {
+    time = 30;
+    spawnDelay = 1000;
+    speed = 2;
+  }
+
+  gameScreen.style.display="block"; 
+  document.getElementById("highScore").textContent = highScore;
+  currentScreen = "game"; 
+
+  document.addEventListener("keydown", e => { 
+    if(e.key === "ArrowLeft") handleInput("left"); 
+    if(e.key === "ArrowRight") handleInput("right"); 
+  }); 
+
+  gameInt=setInterval(updateGame,1000); 
+  spawnBalloons(); 
 }
 function updateGame(){
   time--;
@@ -488,13 +523,20 @@ function getAgeRange(age){
   if(age <= 75) return [350, 600];
   return [400, 750];
 }
-
+let spawnDelay = 2000;
 function spawnBalloons(){
   spawnInt=setInterval(()=>{
     let side=Math.random()<0.5?'left':'right';
     let el=document.createElement("div");
-    el.className="balloon "+side;
-    el.style.bottom="0%";
+    el.className = "balloon " + side;
+el.style.bottom = "0%";
+
+/* keep inside its half */
+if(side === "left"){
+  el.style.left = (5 + Math.random() * 35) + "%";  // 5% → 40%
+} else {
+  el.style.left = (60 + Math.random() * 35) + "%"; // 60% → 95%
+}
 
     gameArea.appendChild(el);
 
@@ -502,9 +544,9 @@ function spawnBalloons(){
     balloons.push(obj);
 
     moveBalloon(obj);
-  },2000);
+  },spawnDelay);
 }
-
+let speed = 1;
 function moveBalloon(obj){
   obj.interval=setInterval(()=>{
     obj.pos+=1;
@@ -555,6 +597,10 @@ function endGame(){
   clearInterval(gameInt);
   clearInterval(spawnInt);
   gameOver();
+  if (score > highScore) {
+  highScore = score;
+  localStorage.setItem("lc-highscore", highScore);
+}
   gameScreen.style.display="none";
   resultScreen.style.display="flex";
 
@@ -573,6 +619,7 @@ function endGame(){
   document.getElementById("resultText").innerText =
     "Game Over\n\n"+
     "Score: "+score+
+"\nHigh Score: "+highScore+
     "\nYour Avg Reaction: "+avg+" ms"+
     "\nTypical for your age: ~"+typicalAvg+" ms"+
     "\nExpected Range: "+min+" - "+max+" ms\n\n"+
@@ -580,10 +627,6 @@ function endGame(){
 }
 
 function restartGame(){
-  balloons.forEach(b => {
-  clearInterval(b.interval);
-  if (b.el) b.el.remove();
-});
   score = 0;
   missed = 0;
   caught = 0;
@@ -597,7 +640,7 @@ function restartGame(){
   document.getElementById("time").textContent = 60;
 
   gameArea.innerHTML = '<div id="escapeLine"></div>';
-  escapeLine = document.getElementById("escapeLine");
+
   resultScreen.style.display = "none";
   gameScreen.style.display = "block";
 
@@ -631,7 +674,7 @@ function goBack(){
     document.getElementById("time").textContent = 120;
 
     gameArea.innerHTML = '<div id="escapeLine"></div>';
-    escapeLine = document.getElementById("escapeLine");
+
     gameScreen.style.display = "none";
     resultScreen.style.display = "none";
     countdown.style.display = "none";
@@ -640,16 +683,12 @@ function goBack(){
     currentScreen = "welcome";
   }
   else {
-    window.history.back();
+    parent.goBack();
   }
 }
   document.getElementById("menuStartBtn").addEventListener("click", () => {
   initSound();
   startCountdown();
-});
-  document.addEventListener("keydown", e => {
-  if(e.key === "ArrowLeft") handleInput("left");
-  if(e.key === "ArrowRight") handleInput("right");
 });
 </script>
 <script src="shared.js"></script>

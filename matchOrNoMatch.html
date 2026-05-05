@@ -241,7 +241,6 @@ body {
   display: flex;
   gap: 12px;
   justify-content: center;
-  margin-bottom:40px;
 }
 
 .btns button {
@@ -259,7 +258,7 @@ body {
 .nomatch-btn { background: #57bdf5; }
 
 #msg {
-  margin-top: 40px;
+  margin-top: 20px;
   font-size: 20px;
   font-weight: bold;
   min-height: 28px;
@@ -318,8 +317,8 @@ body {
 
 <!-- ── Header ──────────────────────────────────────────────────────────────── -->
 <div class="header">
-  <button id="menuBackBtn" onclick="window.location.href='index.html'">← Back</button>
-  <button id="gameBackBtn" onclick="goBackToMenu()">← Back</button>
+  <button id="menuBackBtn" onclick="parent.goBack()">← Back</button>
+  <button id="gameBackBtn" onclick="parent.goBack()">← Back</button>
   Match Game
 </div>
 
@@ -343,12 +342,12 @@ body {
 </div>
 
 <!-- ── Game screen ─────────────────────────────────────────────────────────── -->
-<div id="game">
-  <div class="top-bar">
-    <span>Score: <span id="score">0</span></span>
-    <span>Level: <span id="level">1</span></span>
-    <span>Mistakes: <span id="wrong">0</span>/5</span>
-  </div>
+<div class="top-bar">
+  <span>Score: <span id="score">0</span></span>
+  <span>High: <span id="highScore">0</span></span> 
+  <span>Level: <span id="level">1</span></span>
+  <span>Mistakes: <span id="wrong">0</span>/5</span>
+</div>
 
   <div id="ruleHint"></div>
 
@@ -373,68 +372,21 @@ body {
 </div>
 
 <script>
-  if (localStorage.getItem("soundEnabled") === null) {
-  localStorage.setItem("soundEnabled", "true");
-}
-  const Sound = {
-  ctx: null,
-
-  isOn() {
-    return localStorage.getItem("soundEnabled") === "true";
-  },
-
-  init() {
-    if (!this.isOn()) return;
-
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-
-    if (!this.ctx) {
-      this.ctx = new AudioCtx();
-    }
-
-    if (this.ctx.state === "suspended") {
-      this.ctx.resume();
-    }
-  },
-
-  tone(freq, time) {
-    if (!this.isOn()) return;
-    this.init();
-    if (!this.ctx) return;
-
-    const o = this.ctx.createOscillator();
-    const g = this.ctx.createGain();
-
-    o.frequency.value = freq;
-    g.gain.value = 0.05;
-
-    o.connect(g);
-    g.connect(this.ctx.destination);
-
-    o.start();
-    o.stop(this.ctx.currentTime + time);
-  },
-
-  correct() {
-    this.tone(500, 0.08);
-    setTimeout(() => this.tone(650, 0.08), 80);
-    setTimeout(() => this.tone(800, 0.08), 160);
-  },
-
-  wrong() {
-    this.tone(220, 0.2);
-  }
-};
 // ── State ─────────────────────────────────────────────────────────────────────
 let score        = 0;
 let level        = 1;
+let highScore    = localStorage.getItem("mg-highscore") || 0;
+function getDifficulty() {
+  return localStorage.getItem("ctg-difficulty") || "easy";
+}
 let correctCount = 0;
 let wrongCount   = 0;
 let isMatch      = false;
 let round = 0;
- const maxRounds=30; 
-  
+let maxRounds = 25;      // ✅ changed from const
+let levelUpTarget = 15;  // ✅ new
+let maxWrong = 5;        // ✅ new
+
 const shapes = ["circle", "triangle"];
 const colors = ["#E17055", "#6C5CE7", "#00B894", "#FDCB6E"];
 
@@ -445,12 +397,44 @@ const msgEl         = document.getElementById("msg");
 const menuBackBtn   = document.getElementById("menuBackBtn");
 const gameBackBtn   = document.getElementById("gameBackBtn");
 
+// ── Audio ─────────────────────────────────────────────────────────────────────
+let audioCtx = null;
 
+function beep(type) {
+  if (!isSoundOn()) return; // 🔥 THIS LINE DOES THE MAGIC
+
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc  = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.frequency.value = type === "good" ? 650 : 180;
+  gain.gain.value = 0.08;
+  osc.start();
+  setTimeout(() => osc.stop(), 120);
+}
 // ── Navigation ────────────────────────────────────────────────────────────────
 function startGame() {
-  Sound.init();
+  const difficulty = getDifficulty();
+
+  if (difficulty === "easy") {
+    maxRounds = 20;
+    levelUpTarget = 10;
+    maxWrong = 7;
+  } 
+  else if (difficulty === "medium") {
+    maxRounds = 25;
+    levelUpTarget = 15;
+    maxWrong = 5;
+  } 
+  else {
+    maxRounds = 30;
+    levelUpTarget = 20;
+    maxWrong = 3;
+  }
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("game").style.display       = "flex";
+  document.getElementById("highScore").innerText = highScore;
   menuBackBtn.style.display = "none";
   gameBackBtn.style.display = "block";
   resetState();
@@ -477,7 +461,7 @@ function resetState() {
   level        = 1;
   correctCount = 0;
   wrongCount   = 0;
-  round        =0;
+  round        = 0;
   msgEl.innerText = "";
   document.getElementById("score").innerText = 0;
   document.getElementById("level").innerText = 1;
@@ -518,11 +502,6 @@ function checkMatch(p1, p2) {
 
 // ── Round generation ──────────────────────────────────────────────────────────
 function newRound() {
-  round++;
-  
- level = Math.floor((round-1) / 5)+1;
-document.getElementById("level").innerText = level; 
-  
   let base = [], other = [];
 
   if (level <= 2) {
@@ -567,15 +546,16 @@ function updateRule() {
 
 // ── Answer handler ────────────────────────────────────────────────────────────
 function answer(user) {
+  round++;
   if (user === isMatch) {
     score += 2;
     correctCount++;
-   Sound.correct();
+    beep("good");
     msgEl.style.color   = "green";
     msgEl.innerText     = "Correct ✅";
   } else {
     wrongCount++;
-    Sound.wrong();
+    beep("bad");
     msgEl.style.color = "red";
     msgEl.innerText   = "Wrong ❌";
     document.getElementById("wrong").innerText = wrongCount;
@@ -583,14 +563,21 @@ function answer(user) {
 
   document.getElementById("score").innerText = score;
 
-  if (wrongCount >= 5) {
+  if (correctCount >= levelUpTarget) {
+    level++;
+    correctCount = 0;
+    document.getElementById("level").innerText = level;
+  }
+
+  if (wrongCount >= maxWrong) {
     setTimeout(showGameOver, 400);
     return;
   }
   if (round >= maxRounds) {
-  setTimeout(showFinalResult, 400);
+  setTimeout(showGameOver, 400);
   return;
 }
+
   setTimeout(() => {
     msgEl.innerText = "";
     newRound();
@@ -599,17 +586,15 @@ function answer(user) {
 
 // ── Game over ─────────────────────────────────────────────────────────────────
 function showGameOver() {
+
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("mg-highscore", highScore);
+  }
+
   document.getElementById("game").style.display           = "none";
   document.getElementById("gameOverScreen").style.display = "flex";
   document.getElementById("finalScore").innerText         = score;
-}
-  function showFinalResult() {
-  document.getElementById("game").style.display = "none";
-  document.getElementById("gameOverScreen").style.display = "flex";
-
-  document.querySelector("#gameOverScreen h2").innerText = "Game Finished 🎉";
-  document.getElementById("finalScore").innerText =
-  score + " | Accuracy: " + Math.round((score / (maxRounds * 2)) * 100) + "%";
 }
 // ── Keyboard Controls ─────────────────────────────────────────────
 document.addEventListener("keydown", function(e) {
@@ -636,6 +621,7 @@ document.addEventListener("keydown", function(e) {
 });
   
 </script>
+
 <script src="shared.js"></script>
 </body>
 </html>

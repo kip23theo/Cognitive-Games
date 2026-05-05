@@ -1113,11 +1113,11 @@
           aria-label="Word Wise Menu"
         >
           <div class="header">
-            <a href="index.html" class="back-btn">&larr; Back</a>
+            <a onclick="parent.goBack(); return false;" href="#" class="back-btn">&larr; Back</a>
             <span class="header-title">Word Wise</span>
             <div class="header-actions">
               <div class="level-badge">Language</div>
-              <a href="settings.html" class="settings-link" title="Settings"
+              <a onclick="parent.openSettings(); return false;" href="#" class="settings-link" title="Settings"
                 >⚙️</a
               >
             </div>
@@ -1366,14 +1366,11 @@
         };
 
         const SoundEngine = {
-          enabled: true,
           ctx: null,
           masterGain: null,
           masterVolume: 2.8,
 
           init() {
-            const saved = localStorage.getItem("soundEnabled");
-this.enabled = saved !== "false";
             if (!this.ctx) {
               const Ctx = window.AudioContext || window.webkitAudioContext;
               this.ctx = Ctx ? new Ctx() : null;
@@ -1393,9 +1390,9 @@ this.enabled = saved !== "false";
           },
 
           tone(freq, duration, type, peakGain, attack, decay, sustainLevel) {
-           if (!this.ctx || !this.enabled) {
-  return;
-}
+            if (!this.ctx) {
+              return;
+            }
             this.ensureRunning();
             const now = this.ctx.currentTime + 0.01;
             const osc = this.ctx.createOscillator();
@@ -1612,7 +1609,7 @@ this.enabled = saved !== "false";
             endGame();
             return;
           }
-          goToMenu();
+          parent.goBack();
         }
 
         function setStatus(main, sub) {
@@ -2071,7 +2068,7 @@ this.enabled = saved !== "false";
         function startTimerIfNeeded() {
           const config = currentConfig();
           clearRoundTimers();
-          const useActiveTimer = config.timeLimitMs > 0;
+          const useActiveTimer = state.level >= 3 && config.timeLimitMs > 0;
           if (!useActiveTimer) {
             setTimerCalmMode(true);
             return;

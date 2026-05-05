@@ -79,39 +79,36 @@
         box-sizing: border-box;
       }
 
-      body {
+     body {
   margin: 0;
   min-height: 100vh;
   height: auto;
-  overflow-y: auto;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: var(--color-bg);
-        color: var(--color-text);
-        font-size: 20px;
-        line-height: 1.5;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-      }
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 20px;
+  line-height: 1.5;
+
+  /* ✅ FIXES */
+  display: block;          /* instead of flex */
+  overflow-y: auto;        /* allow scrolling */
+
+  /* ✅ keep these */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
 
       .app {
-        width: 100%;
-        max-width: none;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
+  width: 100%;
+  min-height: 100vh;
+}
 
       #ctg-zoom-wrap {
   min-height: 100vh;
   height: auto;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;  
+  overflow: visible;   /* 🔥 important */
 }
 
       .panel {
@@ -123,13 +120,11 @@
       }
 
       .screen {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        flex: 1;
-        min-height: 0;
-        overflow: auto;
-      }
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  overflow: visible;  /* 🔥 allow scroll */
+}
       .screen.active {
         display: flex;
       }
@@ -345,7 +340,7 @@
       .game-body {
         flex: 1;
         min-height: 0;
-         overflow-y: auto;
+         overflow: visible;
         padding: 10px max(env(safe-area-inset-right), 12px)
           max(env(safe-area-inset-bottom), 12px)
           max(env(safe-area-inset-left), 12px);
@@ -1105,6 +1100,27 @@
         }
         
       }
+      .zoom-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.zoom-controls button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  background: #333;
+  color: white;
+  cursor: pointer;
+}
     </style>
   </head>
   <body>

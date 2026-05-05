@@ -381,8 +381,7 @@ const backBtn      = document.getElementById("backBtn");
   ctx: null,
 
   isOn() {
-    const val = localStorage.getItem("soundEnabled");
-    return val !== "false"; // default ON like your friend's game
+    const val = localStorage.getItem("soundEnabled") === "true";
   },
 
   init() {

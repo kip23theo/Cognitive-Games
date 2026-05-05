@@ -369,9 +369,10 @@ body {
   <div class="container">
 
     <div class="top-bar">
-      <div>Level: <span id="level">1</span></div>
-      <div>Score: <span id="score">0</span></div>
-    </div>
+  <div>Level: <span id="level">1</span></div>
+  <div>Score: <span id="score">0</span></div>
+  <div>High: <span id="highScore">0</span></div> 
+</div>
 
     <div id="msg">Press any switch to start</div>
 
@@ -398,10 +399,11 @@ body {
     started = false;
     playing = false;
 
-    pattern = [];
-    user = [];
-    level = 1;
-    score = 0;
+    let pattern = [];
+let user = [];
+let level = 1;
+let score = 0;
+let highScore = localStorage.getItem("rt-highscore") || 0;
 
     document.getElementById("score").innerText = 0;
     document.getElementById("level").innerText = 1;
@@ -539,6 +541,7 @@ function startGame() {
   score = 0;
   retryBtn.style.display = "none";
   document.getElementById("score").innerText = score;
+  document.getElementById("highScore").innerText = highScore;
   nextLevel();
 }
 
@@ -599,18 +602,24 @@ function handleInput(input) {
   user.push(input);
 
   let i = user.length - 1;
+if (user[i] !== pattern[i]) {
 
-  if (user[i] !== pattern[i]) {
-   display.innerText = "❌";
-msg.innerText = "Game Over";
-retryBtn.style.display = "block";
-started = false;
-playing = false;
-
-currentScreen = "result"; 
-
-return;
+  // ✅ UPDATE HIGH SCORE
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("rt-highscore", highScore);
   }
+
+  display.innerText = "❌";
+  msg.innerText = "Game Over";
+  retryBtn.style.display = "block";
+  started = false;
+  playing = false;
+
+  currentScreen = "result"; 
+
+  return;
+}
 
   if (user.length === pattern.length) { 
     score++;

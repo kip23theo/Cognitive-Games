@@ -2,190 +2,151 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Match Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorter Game</title>
 
 <style>
-:root {
-  --surface: #ffffff;
-  --surface2: #f0ede8;
-  --text: #2d3436;
-  --border: #e0dbd5;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
-[data-theme="dark"] {
-  --bg: #141414;
-  --surface: #1f1f1f;
-  --text: #f0ede8;
-  --text-light: #9a9590;
-  --border: #333333;
-}
-
-/* ── Base ───────────────────────────────────────────────────────────────────── */
-* { box-sizing: border-box; }
 
 body {
-  margin: 0;
-  font-family: Arial;
-  background: #f5f6fa;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  align-items: center;
-  overflow-y: auto;
+  font-family: Arial, sans-serif;
+  background: #f8f6f3;
+  overflow-x: hidden;
 }
 
-/* ── Header ─────────────────────────────────────────────────────────────────── */
 .header {
+  width: 100%;
+  height: 60px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  padding: 12px;
-  background: #fff;
-  border-bottom: 1px solid #e0dbd5;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  font-weight: bold;
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
-#menuBackBtn,
-#gameBackBtn {
+.back-btn {
   position: absolute;
-  left: 16px;
+  left: 15px;
   background: none;
   border: none;
-  font-size: 16px;
-  cursor: pointer;
+  font-size: 18px;
   color: #6c5ce7;
   font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background 0.15s;
+  cursor: pointer;
 }
 
-#menuBackBtn { display: block; }
-#gameBackBtn { display: none; }
-
-#menuBackBtn:hover,
-#gameBackBtn:hover {
-  background: #eee9ff;
-}
-
-/* ── Menu screen ─────────────────────────────────────────────────────────────── */
-.menu-screen {
-  position: fixed;
-  /* push below header */
-  top: 45px;
-  left: 0; right: 0; bottom: 0;
+#menuScreen {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 90px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 20px;
-  padding: 20px;
-  overflow-y: auto;
 }
 
-.menu-hero {
+.menu-card,
+.how-card {
   width: 90%;
   max-width: 420px;
   background: white;
   border-radius: 20px;
-  padding: 24px;
+  padding: 28px;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
-.game-icon-big {
+.icon {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6c5ce7, #4d3dbb);
+  background: linear-gradient(135deg,#6c5ce7,#4834d4);
   color: white;
-  font-size: 34px;
+  font-size: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 12px;
-  box-shadow: 0 6px 15px rgba(108,92,231,0.4);
+  margin: auto;
 }
 
-.menu-hero h2 {
-  margin: 0 0 6px;
-  font-size: 24px;
+.menu-card h1 {
+  margin-top: 15px;
+  font-size: 34px;
 }
 
-.domain-tag {
+.tag {
   display: inline-block;
-  margin: 6px 0 10px;
+  margin-top: 10px;
   background: #eee9ff;
   color: #6c5ce7;
-  font-size: 12px;
-  padding: 5px 14px;
+  padding: 6px 14px;
   border-radius: 20px;
+  font-size: 13px;
 }
 
-.menu-desc {
+.desc {
+  margin-top: 15px;
   color: #666;
-  font-size: 14px;
-  margin: 0;
 }
 
-.how-to {
-  width: 90%;
-  max-width: 420px;
-  background: white;
-  border-radius: 16px;
-  padding: 16px 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+.how-card {
+  text-align: left;
 }
 
-.how-to h3 {
-  margin: 0 0 10px;
+.how-card h2 {
+  margin-bottom: 15px;
 }
 
-.how-row {
+.step {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 8px 0;
-  font-size: 14px;
+  margin: 12px 0;
 }
 
-.badge {
-  flex-shrink: 0;
-  background: #f3f0ea;
-  padding: 6px 12px;
-  border-radius: 8px;
+.num {
+  width: 34px;
+  height: 34px;
+  background: #f1ede7;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
 }
 
 .start-btn {
   width: 90%;
   max-width: 420px;
-  padding: 16px;
+  height: 60px;
   border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #6c5ce7, #4d3dbb);
+  border-radius: 16px;
+  background: linear-gradient(135deg,#6c5ce7,#4834d4);
   color: white;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(108,92,231,0.4);
 }
 
-/* ── Game screen ─────────────────────────────────────────────────────────────── */
-#game {
+#gameScreen {
   display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content:center;
   width: 100%;
-  max-width: 500px;
-  padding: 24px 20px;
+  height: 100vh;
+  padding-top: 60px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  min-height: 100vh;
+  overflow: hidden;
 }
 
 .top-bar {
@@ -193,453 +154,459 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 420px;
-  margin-bottom: 18px;
-  padding: 10px 12px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-  font-size: 13px;
-}
-.top-bar span {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
+  max-width: 620px;
+  margin: 0 auto 18px auto;
+  padding: 8px 10px;
   background: transparent;
-  padding: 6px 4px;
-  border-radius: 8px;
-  text-align: center;
-  font-weight: 600;
-}
- .game{
-   display:flex;
-   justify-content:center;
-   gap:80px;
-   margin-bottom:15px;
- }
-#ruleHint {
-  margin-bottom: 24px;
-  font-size: 15px;
-  color: #555;
-  min-height: 22px;
-}
-
-/* Panels row */
-.panels {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  margin-bottom: 28px;
-  min-height: 140px;
-}
-
-.panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  min-height: 120px;
-}
-
-/* Shape grid inside a panel */
-.shape-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-/* ── Buttons ─────────────────────────────────────────────────────────────────── */
-.btns {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.btns button {
-  width: 130px;
-  height: 44px;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 15px;
+  box-shadow: none;
+  border-radius: 0;
   font-weight: bold;
-  cursor: pointer;
+  font-size: 16px;
 }
 
-.match-btn   { background: #e57373; }
-.nomatch-btn { background: #57bdf5; }
+.top-bar div {
+  flex: 1;
+  text-align: center;
+}
 
-#msg {
-  margin-top: 20px;
+.rule {
   font-size: 20px;
   font-weight: bold;
-  min-height: 28px;
+  margin-bottom: 22px;
 }
 
-/* ── Game Over screen ────────────────────────────────────────────────────────── */
-#gameOverScreen {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 40px 20px;
-  text-align: center;
-  width: 100%;
-  max-width: 400px;
+canvas {
+  width: 75vw;
+  height: 75vw;
+  max-width: 420px;
+  max-height: 420px;
+  display: block;
 }
 
-#gameOverScreen h2 { margin: 0; font-size: 28px; }
-#gameOverScreen h3 { margin: 0; font-size: 22px; color: #6c5ce7; }
+.buttons {
+  display: flex;
+  gap: 12px;
+  width: 90%;
+  max-width: 360px;
+  margin-top: 24px;
+}
 
-.restart-btn {
-  padding: 12px 32px;
+.buttons button {
+  flex: 1;
+  height: 50px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #6c5ce7, #4d3dbb);
   color: white;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(108,92,231,0.35);
 }
 
-/* ── Dark mode ───────────────────────────────────────────────────────────────── */
-[data-theme="dark"] body           { background: #141414; color: #f0ede8; }
-[data-theme="dark"] .header        { background: #1f1f1f; border-bottom-color: #333; color: #f0ede8; }
-[data-theme="dark"] #menuBackBtn,
-[data-theme="dark"] #gameBackBtn   { color: #a89cf7; }
-[data-theme="dark"] #menuBackBtn:hover,
-[data-theme="dark"] #gameBackBtn:hover { background: rgba(168,156,247,0.15); }
-[data-theme="dark"] .menu-hero,
-[data-theme="dark"] .how-to        { background: #1f1f1f; box-shadow: 0 6px 25px rgba(0,0,0,0.4); color: #f0ede8; }
-[data-theme="dark"] .menu-hero h2,
-[data-theme="dark"] .how-to h3     { color: #f0ede8; }
-[data-theme="dark"] .menu-desc     { color: #9a9590; }
-[data-theme="dark"] .domain-tag    { background: rgba(108,92,231,0.2); color: #a89cf7; }
-[data-theme="dark"] .badge         { background: #2a2a2a; color: #f0ede8; }
-[data-theme="dark"] #ruleHint      { color: #9a9590; }
-[data-theme="dark"] .top-bar,
-[data-theme="dark"] #msg,
-[data-theme="dark"] #gameOverScreen { color: #f0ede8; }
+.left {
+  background: #d96f6f;
+}
+
+.right {
+  background: #56aeea;
+}
+
+.restart {
+  background: #8f8f8f;
+}
+
+#result {
+  margin-top: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  min-height: 30px;
+}
+
+#finalScore {
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+@media(max-width: 600px) {
+  .top-bar {
+    font-size: 14px;
+  }
+
+  .rule {
+    font-size: 17px;
+  }
+
+  canvas {
+    width: 75vw;
+    height: 75vw;
+  }
+
+  .buttons button {
+    font-size: 13px;
+  }
+}
+
+@media(orientation: landscape) {
+  #gameScreen {
+    padding-top: 60px;
+    justify-content: center;
+  }
+
+  .top-bar {
+    max-width: 620px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .rule {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  canvas {
+    width: 55vh;
+    height: 55vh;
+    max-width: 340px;
+    max-height: 340px;
+  }
+
+  .buttons {
+    margin-top: 10px;
+    max-width: 340px;
+  }
+
+  .buttons button {
+    height: 42px;
+    font-size: 13px;
+  }
+}
+
+[data-theme="dark"] body {
+  background: #141414;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .header,
+[data-theme="dark"] .menu-card,
+[data-theme="dark"] .how-card {
+  background: #1f1f1f;
+  color: #f0ede8;
+}
+
+[data-theme="dark"] .desc {
+  color: #9a9590;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ── Header ──────────────────────────────────────────────────────────────── -->
 <div class="header">
-  <button id="menuBackBtn" onclick="parent.goBack()">← Back</button>
-  <button id="gameBackBtn" onclick="parent.goBack()">← Back</button>
-  Match Game
+  <button class="back-btn" id="menuBackBtn" onclick="goHome()">← Back</button>
+  <button class="back-btn" id="gameBackBtn" onclick="goBack()" style="display:none;">← Back</button>
 </div>
 
-<!-- ── Menu screen ─────────────────────────────────────────────────────────── -->
-<div id="menuScreen" class="menu-screen">
-  <div class="menu-hero">
-    <div class="game-icon-big">🎯</div>
-    <h2>Match Game</h2>
-    <div class="domain-tag">Memory · Matching</div>
-    <p class="menu-desc">Compare both sides and decide if they MATCH or NOT.</p>
+<div id="menuScreen">
+  <div class="menu-card">
+    <div class="icon">📦</div>
+    <h1>Sorter Game</h1>
+    <div class="tag">Memory · Sorting</div>
+    <p class="desc">Observe the rule and make the right move.</p>
   </div>
 
-  <div class="how-to">
-    <h3>How to Play</h3>
-    <div class="how-row"><span class="badge">1</span><span>Observe both sides carefully</span></div>
-    <div class="how-row"><span class="badge">2</span><span>Compare shapes or colors</span></div>
-    <div class="how-row"><span class="badge">3</span><span>Tap MATCH or NO MATCH</span></div>
+  <div class="how-card">
+    <h2>How to Play</h2>
+    <div class="step"><div class="num">1</div><div>Observe the rule carefully</div></div>
+    <div class="step"><div class="num">2</div><div>Identify the shape or color</div></div>
+    <div class="step"><div class="num">3</div><div>Select the correct side</div></div>
   </div>
 
   <button class="start-btn" onclick="startGame()">▶ Start Game</button>
 </div>
 
-<!-- ── Game screen ─────────────────────────────────────────────────────────── -->
-<div id="game">
-
+<div id="gameScreen">
   <div class="top-bar">
-  <span>Score <b id="score">0</b></span>
-  <span>High <b id="highScore">0</b></span>
-  <span>Level <b id="level">1</b></span>
-  <span>Wrong <b id="wrong">0</b>/5</span>
-</div>
-
-  <div id="ruleHint"></div>
-
-  <div class="panels">
-    <div class="panel" id="left"></div>
-    <div class="panel" id="right"></div>
+    <div>Level: <span id="level">1</span></div>
+    <div>Highest: <span id="highScore">0</span></div>
+    <div>Score: <span id="score">0</span></div>
   </div>
 
-  <div class="btns">
-    <button class="match-btn" onclick="answer(true)">MATCH</button>
-    <button class="nomatch-btn" onclick="answer(false)">NO MATCH</button>
+  <div class="rule" id="rule"></div>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="buttons">
+    <button class="left" onclick="check('L')">LEFT</button>
+    <button class="right" onclick="check('R')">RIGHT</button>
+    <button class="restart" onclick="restart()">RESTART</button>
   </div>
 
-  <div id="msg"></div>
-
+  <div id="result"></div>
+  <div id="finalScore"></div>
 </div>
-
-<!-- ── Game Over screen ─────────────────────────────────────────────────────── -->
-<div id="gameOverScreen">
-  <h2>Game Over 🎮</h2>
-  <h3>Score: <span id="finalScore">0</span></h3>
-  <button class="restart-btn" onclick="restartGame()">↺ Restart</button>
-</div>
-
-<script>
-// ── State ─────────────────────────────────────────────────────────────────────
-let score        = 0;
-let level        = 1;
-let highScore    = localStorage.getItem("mg-highscore") || 0;
-function getDifficulty() {
-  return localStorage.getItem("ctg-difficulty") || "easy";
-}
-let correctCount = 0;
-let wrongCount   = 0;
-let isMatch      = false;
-let round = 0;
-let maxRounds = 25;      // ✅ changed from const
-let levelUpTarget = 15;  // ✅ new
-let maxWrong = 5;        // ✅ new
-
-const shapes = ["circle", "triangle"];
-const colors = ["#E17055", "#6C5CE7", "#00B894", "#FDCB6E"];
-
-// ── DOM refs ──────────────────────────────────────────────────────────────────
-const leftEl        = document.getElementById("left");
-const rightEl       = document.getElementById("right");
-const msgEl         = document.getElementById("msg");
-const menuBackBtn   = document.getElementById("menuBackBtn");
-const gameBackBtn   = document.getElementById("gameBackBtn");
-
-// ── Audio ─────────────────────────────────────────────────────────────────────
-let audioCtx = null;
-
-function beep(type) {
-  if (!isSoundOn()) return; // 🔥 THIS LINE DOES THE MAGIC
-
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc  = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.frequency.value = type === "good" ? 650 : 180;
-  gain.gain.value = 0.08;
-  osc.start();
-  setTimeout(() => osc.stop(), 120);
-}
-// ── Navigation ────────────────────────────────────────────────────────────────
-function startGame() {
-  const difficulty = getDifficulty();
-
-  if (difficulty === "easy") {
-    maxRounds = 20;
-    levelUpTarget = 10;
-    maxWrong = 7;
-  } 
-  else if (difficulty === "medium") {
-    maxRounds = 25;
-    levelUpTarget = 15;
-    maxWrong = 5;
-  } 
-  else {
-  maxRounds = 30;
-  levelUpTarget = 20;
-  maxWrong = 5; 
-}
-  document.getElementById("menuScreen").style.display = "none";
-  document.getElementById("game").style.display       = "flex";
-  document.getElementById("highScore").innerText = highScore;
-  menuBackBtn.style.display = "none";
-  gameBackBtn.style.display = "block";
-  resetState();
-  newRound();
-}
-
-function goBackToMenu() {
-  document.getElementById("game").style.display           = "none";
-  document.getElementById("gameOverScreen").style.display = "none";
-  document.getElementById("menuScreen").style.display     = "flex";
-  menuBackBtn.style.display = "block";
-  gameBackBtn.style.display = "none";
-}
-
-function restartGame() {
-  document.getElementById("gameOverScreen").style.display = "none";
-  document.getElementById("game").style.display           = "flex";
-  resetState();
-  newRound();
-}
-
-function resetState() {
-  score        = 0;
-  level        = 1;
-  correctCount = 0;
-  wrongCount   = 0;
-  round        = 0;
-  msgEl.innerText = "";
-  document.getElementById("score").innerText = 0;
-  document.getElementById("level").innerText = 1;
-  document.getElementById("wrong").innerText = 0;
-}
-
-// ── Shape builder ─────────────────────────────────────────────────────────────
-function makeShape(s, c) {
-  const d    = document.createElement("div");
-  const size = level >= 5 ? 28 : 60;
-
-  if (s === "circle") {
-    d.style.cssText = `width:${size}px;height:${size}px;border-radius:50%;background:${c};`;
-  }
-  if (s === "triangle") {
-    const h = size;
-    const w = size / 2;
-    d.style.cssText = `width:0;height:0;border-left:${w}px solid transparent;border-right:${w}px solid transparent;border-bottom:${h}px solid ${c};`;
-  }
-  return d;
-}
-
-// ── Render panel ──────────────────────────────────────────────────────────────
-function render(panEl, items) {
-  panEl.innerHTML = "";
-  const grid = document.createElement("div");
-  grid.className = "shape-grid";
-  grid.style.gap = level >= 5 ? "10px" : level >= 3 ? "16px" : "0px";
-  items.forEach(x => grid.appendChild(makeShape(x.s, x.c)));
-  panEl.appendChild(grid);
-}
-
-// ── Match check ───────────────────────────────────────────────────────────────
-function checkMatch(p1, p2) {
-  if (level <= 2) return p1[0].s === p2[0].s;
-  return JSON.stringify(p1) === JSON.stringify(p2);
-}
-
-// ── Round generation ──────────────────────────────────────────────────────────
-function newRound() {
-  let base = [], other = [];
-
-  if (level <= 2) {
-    const s  = shapes[Math.floor(Math.random() * shapes.length)];
-    const c1 = colors[Math.floor(Math.random() * colors.length)];
-    let   c2 = colors[Math.floor(Math.random() * colors.length)];
-    while (c2 === c1) c2 = colors[Math.floor(Math.random() * colors.length)];
-
-    base = [{ s, c: c1 }];
-    other = Math.random() > 0.5
-      ? [{ s, c: c2 }]
-      : [{ s: shapes.find(x => x !== s), c: c2 }];
-  } else {
-    const count = level <= 4 ? 2 : 4;
-    for (let i = 0; i < count; i++) {
-      base.push({
-        s: shapes[Math.floor(Math.random() * shapes.length)],
-        c: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
-    other = Math.random() > 0.5
-      ? JSON.parse(JSON.stringify(base))
-      : base.map(() => ({
-          s: shapes[Math.floor(Math.random() * shapes.length)],
-          c: colors[Math.floor(Math.random() * colors.length)]
-        }));
-  }
-
-  isMatch = checkMatch(base, other);
-  render(leftEl,  base);
-  render(rightEl, other);
-  updateRule();
-}
-
-// ── Rule hint ─────────────────────────────────────────────────────────────────
-function updateRule() {
-  document.getElementById("ruleHint").innerText =
-    level <= 2 ? "Compare only shapes — MATCH or NO MATCH?" :
-    level <= 4 ? "Compare shapes and colors — MATCH or NO MATCH?" :
-                 "Compare patterns — MATCH or NO MATCH?";
-}
-
-// ── Answer handler ────────────────────────────────────────────────────────────
-function answer(user) {
-  round++;
-  if (user === isMatch) {
-    score += 2;
-    correctCount++;
-    beep("good");
-    msgEl.style.color   = "green";
-    msgEl.innerText     = "Correct ✅";
-  } else {
-    wrongCount++;
-    beep("bad");
-    msgEl.style.color = "red";
-    msgEl.innerText   = "Wrong ❌";
-    document.getElementById("wrong").innerText = wrongCount;
-  }
-
-  document.getElementById("score").innerText = score;
-
-  if (correctCount >= levelUpTarget) {
-    level++;
-    correctCount = 0;
-    document.getElementById("level").innerText = level;
-  }
-
-  if (wrongCount >= maxWrong) {
-    setTimeout(showGameOver, 400);
-    return;
-  }
-  if (round >= maxRounds) {
-  setTimeout(showGameOver, 400);
-  return;
-}
-
-  setTimeout(() => {
-    msgEl.innerText = "";
-    newRound();
-  }, 350);
-}
-
-// ── Game over ─────────────────────────────────────────────────────────────────
-function showGameOver() {
-
-  if (score > highScore) {
-    highScore = score;
-    localStorage.setItem("mg-highscore", highScore);
-  }
-
-  document.getElementById("game").style.display           = "none";
-  document.getElementById("gameOverScreen").style.display = "flex";
-  document.getElementById("finalScore").innerText         = score;
-}
-// ── Keyboard Controls ─────────────────────────────────────────────
-document.addEventListener("keydown", function(e) {
-
-  // stop arrow keys scrolling page
-  if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-    e.preventDefault();
-  }
-
-  // only allow when game screen is active
-  const gameVisible = document.getElementById("game").style.display === "flex";
-  if (!gameVisible) return;
-
-  // LEFT arrow or A → MATCH
-  if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
-    answer(true);
-  }
-
-  // RIGHT arrow or D → NO MATCH
-  if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
-    answer(false);
-  }
-
-});
-  
-</script>
 
 <script src="shared.js"></script>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const ruleEl = document.getElementById("rule");
+const resultEl = document.getElementById("result");
+const finalScoreEl = document.getElementById("finalScore");
+
+const scoreEl = document.getElementById("score");
+const levelEl = document.getElementById("level");
+const highScoreEl = document.getElementById("highScore");
+
+let score = 0;
+let level = 1;
+let highScore = 0;
+let gameOver = false;
+
+let ruleType;
+let ruleValue;
+let ruleSide;
+let current;
+
+const shapes = ["circle", "square", "triangle", "star"];
+
+const colors = {
+  red: "#d96f6f",
+  blue: "#56aeea",
+  green: "#59b77f",
+  yellow: "#e5c25d"
+};
+
+const Sound = {
+  ctx: null,
+
+  isEnabled() {
+    return localStorage.getItem("ctg-sound") !== "off";
+  },
+
+  init() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+
+    if (!this.ctx) {
+      this.ctx = new AudioContext();
+    }
+
+    if (this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+  },
+
+  tone(freq, dur) {
+    if (!this.isEnabled()) return;
+
+    this.init();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.frequency.value = freq;
+    gain.gain.value = 0.15;
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + dur);
+  },
+
+  correct() {
+    this.tone(700, 0.12);
+    setTimeout(() => this.tone(900, 0.12), 120);
+  },
+
+  wrong() {
+    this.tone(220, 0.22);
+  }
+};
+
+function goHome() {
+  window.location.href = "index.html";
+}
+
+function goBack() {
+  document.getElementById("gameScreen").style.display = "none";
+  document.getElementById("menuScreen").style.display = "flex";
+
+  document.getElementById("menuBackBtn").style.display = "block";
+  document.getElementById("gameBackBtn").style.display = "none";
+}
+
+function startGame() {
+  document.getElementById("menuScreen").style.display = "none";
+  document.getElementById("gameScreen").style.display = "flex";
+
+  document.getElementById("menuBackBtn").style.display = "none";
+  document.getElementById("gameBackBtn").style.display = "block";
+
+  Sound.init();
+  restart();
+}
+
+function resizeCanvas() {
+  let size;
+
+  if (window.innerWidth > window.innerHeight) {
+    size = Math.min(window.innerHeight * 0.55, 340);
+  } else {
+    size = Math.min(window.innerWidth * 0.75, 420);
+  }
+
+  canvas.width = size;
+  canvas.height = size;
+}
+
+function draw(shape, color) {
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = color;
+
+  if (shape === "circle") {
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, w / 3.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (shape === "square") {
+    ctx.fillRect(w * 0.18, h * 0.18, w * 0.64, h * 0.64);
+  }
+
+  if (shape === "triangle") {
+    ctx.beginPath();
+    ctx.moveTo(w / 2, h * 0.12);
+    ctx.lineTo(w * 0.12, h * 0.85);
+    ctx.lineTo(w * 0.88, h * 0.85);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  if (shape === "star") {
+    ctx.font = (w * 0.75) + "px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("★", w / 2, h / 2);
+  }
+}
+
+function newRound() {
+  if (gameOver) return;
+
+  resultEl.innerText = "";
+  finalScoreEl.innerText = "";
+
+  ruleType =
+    level <= 2
+      ? "color"
+      : Math.random() < 0.5
+      ? "color"
+      : "shape";
+
+  ruleSide = Math.random() < 0.5 ? "LEFT" : "RIGHT";
+
+  const shape = shapes[Math.floor(Math.random() * shapes.length)];
+  const colorKeys = Object.keys(colors);
+  const color = colorKeys[Math.floor(Math.random() * colorKeys.length)];
+
+  current = { shape, color };
+
+  ruleValue = ruleType === "color" ? color : shape;
+
+  resizeCanvas();
+  draw(shape, colors[color]);
+
+  ruleEl.innerText =
+    ruleType === "color"
+      ? `If color is ${ruleValue} → ${ruleSide}`
+      : `If shape is ${ruleValue} → ${ruleSide}`;
+
+  scoreEl.innerText = score;
+  levelEl.innerText = level;
+  highScoreEl.innerText = highScore;
+}
+
+function updateHighScore() {
+  if (score > highScore) {
+    highScore = score;
+    highScoreEl.innerText = highScore;
+  }
+}
+
+function check(choice) {
+  if (gameOver) return;
+
+  const match =
+    ruleType === "color"
+      ? current.color === ruleValue
+      : current.shape === ruleValue;
+
+  const correct =
+    ruleSide === "LEFT"
+      ? (match && choice === "L") || (!match && choice === "R")
+      : (match && choice === "R") || (!match && choice === "L");
+
+  if (correct) {
+    score++;
+    updateHighScore();
+
+    resultEl.style.color = "green";
+    resultEl.innerText = "Correct ✅";
+
+    Sound.correct();
+
+    if (score === 5) level = 2;
+    else if (score === 10) level = 3;
+    else if (score === 15) level = 4;
+    else if (score === 20) level = 5;
+    else if (score === 25) level = 6;
+    else if (score === 30) level = 7;
+
+    setTimeout(newRound, 500);
+  } else {
+    gameOver = true;
+
+    resultEl.style.color = "red";
+    resultEl.innerText = "Game Over ❌";
+    finalScoreEl.innerText = "Final Score: " + score;
+
+    updateHighScore();
+    Sound.wrong();
+  }
+}
+
+function restart() {
+  score = 0;
+  level = 1;
+  gameOver = false;
+
+  resultEl.innerText = "";
+  finalScoreEl.innerText = "";
+
+  scoreEl.innerText = score;
+  levelEl.innerText = level;
+  highScoreEl.innerText = highScore;
+
+  newRound();
+}
+
+window.addEventListener("resize", () => {
+  resizeCanvas();
+
+  if (current) {
+    draw(current.shape, colors[current.color]);
+  }
+});
+
+resizeCanvas();
+</script>
+
 </body>
 </html>

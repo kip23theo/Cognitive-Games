@@ -29,7 +29,8 @@ body {
   flex-direction: column;  
   min-height: 100vh;  
   align-items: center;  
-  overflow: hidden;  
+  overflow-x: hidden;
+  overflow-y:auto;
 }  
   
 .header {  
@@ -181,7 +182,8 @@ body {
 #game {  
   display: none;  
   width: 100%;  
-  height: calc(100vh-60px);  
+  height: calc(100vh  - 60px);
+  display:flex;
   flex-direction: column;  
   align-items: center;  
   justify-content:space-between;  
@@ -203,7 +205,7 @@ canvas {
   canvas:focus{  
     outline:none;  
   }  
-.btns {  
+.btns { 
   display: flex;  
   gap: 10px;  
   width: 100%;  
@@ -348,11 +350,12 @@ canvas {
   <div class="shape star2">★</div>  
   <div class="shape midL"></div>  
   <div class="shape midR"></div>  
-</div>  <div class="top">  
+</div>
+  <div id="game">
+  <div class="top">  
   <div>Level: <span id="level">1</span></div>  
   <div>Score: <span id="score">0</span></div>  
-</div>  <div id="game">  
-  <div id="top"></div>  
+</div>    
   <div id="rule"></div>  <canvas id="canvas" width="200" height="200" tabindex="0"></canvas>
 
   <div class="btns">  

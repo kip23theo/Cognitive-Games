@@ -51,6 +51,7 @@ body {
   width: 100%;
   min-height: 100vh;
   padding-top: 90px;
+  padding-bottom: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -58,14 +59,18 @@ body {
   gap: 20px;
 }
 
-.menu-card {
+.menu-card,
+.how-card {
   width: 90%;
   max-width: 420px;
   background: #fff;
   border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.menu-card {
   padding: 30px 20px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 .icon {
@@ -103,12 +108,7 @@ body {
 }
 
 .how-card {
-  width: 90%;
-  max-width: 420px;
-  background: #fff;
-  border-radius: 20px;
   padding: 25px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 .how-card h2 {
@@ -149,7 +149,7 @@ body {
 #gameScreen {
   display: none;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   padding-top: 60px;
   flex-direction: column;
   align-items: center;
@@ -167,14 +167,12 @@ body {
   margin: 0 auto 18px auto;
   font-weight: bold;
   font-size: 14px;
-  text-align: center;
 }
 
 .rule {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 24px;
-  text-align: center;
   padding: 0 10px;
 }
 
@@ -248,7 +246,7 @@ body {
 #gameOver {
   display: none;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   padding-top: 60px;
   text-align: center;
   align-items: center;
@@ -279,24 +277,16 @@ body {
 }
 
 @media(max-width:500px) {
-  #gameScreen {
-    justify-content: center;
-    padding-top: 60px;
-  }
-
   .top-bar {
     font-size: 12px;
-    margin-bottom: 16px;
   }
 
   .rule {
     font-size: 18px;
-    margin-bottom: 20px;
   }
 
   .panels {
     gap: 30px;
-    margin: 18px auto 25px auto;
   }
 
   .panel {
@@ -316,48 +306,6 @@ body {
   }
 
   .buttons button {
-    font-size: 15px;
-  }
-}
-
-@media(orientation:landscape) {
-  #gameScreen {
-    justify-content: center;
-    padding-top: 60px;
-  }
-
-  .top-bar {
-    margin-bottom: 10px;
-  }
-
-  .rule {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .panels {
-    gap: 60px;
-    margin: 10px auto 18px auto;
-  }
-
-  .panel {
-    width: 120px;
-    height: 120px;
-  }
-
-  .circle {
-    width: 75px;
-    height: 75px;
-  }
-
-  .triangle {
-    border-left: 38px solid transparent;
-    border-right: 38px solid transparent;
-    border-bottom: 76px solid;
-  }
-
-  .buttons button {
-    height: 44px;
     font-size: 15px;
   }
 }
@@ -438,6 +386,7 @@ const scoreEl = document.getElementById("score");
 const highEl = document.getElementById("high");
 const levelEl = document.getElementById("level");
 const roundEl = document.getElementById("round");
+const ruleEl = document.getElementById("rule");
 const messageEl = document.getElementById("message");
 const finalScoreEl = document.getElementById("finalScore");
 
@@ -466,6 +415,19 @@ function soundAllowed() {
   return localStorage.getItem("ctg-sound") !== "off";
 }
 
+function unlockAudio() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+
+  if (!audioCtx) {
+    audioCtx = new AudioContext();
+  }
+
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+
 function beep(type) {
   if (!soundAllowed()) return;
 
@@ -486,14 +448,25 @@ function beep(type) {
   osc.connect(gain);
   gain.connect(audioCtx.destination);
 
-  osc.frequency.value = type === "good" ? 650 : 180;
-  gain.gain.value = 0.12;
+  if (type === "good") {
+    osc.frequency.value = 700;
+  } else {
+    osc.frequency.value = 180;
+  }
+
+  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
 
   osc.start();
-  setTimeout(() => osc.stop(), 120);
+  osc.stop(audioCtx.currentTime + 0.18);
 }
 
 function startGame() {
+  window.scrollTo(0, 0);
+  unlockAudio();
+
+  document.body.style.overflow = "hidden";
+
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("gameScreen").style.display = "flex";
   document.getElementById("gameOver").style.display = "none";
@@ -527,7 +500,7 @@ function makeShape(shape, color) {
 
   if (shape === "circle") {
     d.className = "circle";
-    d.style.background = color;
+    d.style.backgroundColor = color;
   }
 
   if (shape === "triangle") {
@@ -538,9 +511,31 @@ function makeShape(shape, color) {
   return d;
 }
 
+function updateLevel() {
+  if (score >= 20) {
+    level = 3;
+  } else if (score >= 10) {
+    level = 2;
+  } else {
+    level = 1;
+  }
+
+  levelEl.innerText = level;
+
+  if (level === 1) {
+    ruleEl.innerText = "Compare only shapes — MATCH or NO MATCH?";
+  } else if (level === 2) {
+    ruleEl.innerText = "Compare shape and color — MATCH or NO MATCH?";
+  } else {
+    ruleEl.innerText = "Compare carefully — shape and color must both match!";
+  }
+}
+
 function newRound() {
   leftPanel.innerHTML = "";
   rightPanel.innerHTML = "";
+
+  updateLevel();
 
   let leftShape = randomShape();
   let leftColor = randomColor();
@@ -550,17 +545,55 @@ function newRound() {
 
   isMatch = Math.random() > 0.5;
 
-  if (!isMatch) {
-    if (Math.random() > 0.5) {
-      rightShape = randomShape();
+  if (level === 1) {
+    if (!isMatch) {
+      do {
+        rightShape = randomShape();
+      } while (rightShape === leftShape);
     }
 
-    if (Math.random() > 0.5) {
-      rightColor = randomColor();
-    }
+    rightColor = randomColor();
+  }
 
-    if (rightShape === leftShape && rightColor === leftColor) {
-      rightColor = colors.find(c => c !== leftColor);
+  else if (level === 2) {
+    if (!isMatch) {
+      if (Math.random() > 0.5) {
+        do {
+          rightShape = randomShape();
+        } while (rightShape === leftShape);
+      } else {
+        do {
+          rightColor = randomColor();
+        } while (rightColor === leftColor);
+      }
+    }
+  }
+
+  else {
+    if (!isMatch) {
+      const changeType = Math.floor(Math.random() * 3);
+
+      if (changeType === 0) {
+        do {
+          rightShape = randomShape();
+        } while (rightShape === leftShape);
+      }
+
+      else if (changeType === 1) {
+        do {
+          rightColor = randomColor();
+        } while (rightColor === leftColor);
+      }
+
+      else {
+        do {
+          rightShape = randomShape();
+        } while (rightShape === leftShape);
+
+        do {
+          rightColor = randomColor();
+        } while (rightColor === leftColor);
+      }
     }
   }
 
@@ -588,13 +621,8 @@ function answer(user) {
 
   scoreEl.innerText = score;
 
-  if (score >= 10) level = 2;
-  if (score >= 20) level = 3;
-
-  levelEl.innerText = level;
-
   if (round >= maxRounds) {
-    setTimeout(gameOver, 400);
+    setTimeout(gameOver, 450);
     return;
   }
 
@@ -604,12 +632,15 @@ function answer(user) {
   setTimeout(() => {
     messageEl.innerText = "";
     newRound();
-  }, 400);
+  }, 450);
 }
 
 function gameOver() {
+  document.body.style.overflow = "hidden";
+
   document.getElementById("gameScreen").style.display = "none";
   document.getElementById("gameOver").style.display = "flex";
+
   finalScoreEl.innerText = score;
 }
 </script>

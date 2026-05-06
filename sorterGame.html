@@ -1,13 +1,13 @@
-<!DOCTYPE html>  <html>    <head>    
-<title>Sorter Game</title>    
-<meta charset="UTF-8">    
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  <style>    
-:root {    
-  --surface: #ffffff;    
-  --surface2: #f0ede8;    
-  --text: #2d3436;    
-  --border: #e0dbd5;    
-}    [data-theme="dark"] {
+<!DOCTYPE html>  <html>      <head>      
+<title>Sorter Game</title>      
+<meta charset="UTF-8">      
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  <style>      
+:root {      
+  --surface: #ffffff;      
+  --surface2: #f0ede8;      
+  --text: #2d3436;      
+  --border: #e0dbd5;      
+}      [data-theme="dark"] {
 --bg: #141414;
 --surface: #1f1f1f;
 --text: #f0ede8;
@@ -306,121 +306,88 @@ color: #f0ede8;
 }
 </style>  </head>  <body>  <div class="header">
 
-  <!-- Menu page: goes back to hub/previous page -->    <button id="menuBackBtn" onclick="window.history.back()">← Back</button>
+  <!-- Menu page: goes back to hub/previous page -->      <button id="menuBackBtn" onclick="window.history.back()">← Back</button>
 
-  <!-- Game page: goes back to menu screen -->    <button id="backBtn" onclick="goBack()">← Back</button>
+  <!-- Game page: goes back to menu screen -->      <button id="backBtn" onclick="goBack()">← Back</button>
 Sorter Game
 
-</div>  </div>    
-<div id="menuScreen" class="menu-screen">    
-  <div class="menu-hero">    
-    <div class="game-icon-big">📦</div>    
-    <h2>Sorter Game</h2>    
-    <div class="domain-tag">Memory · Sorting</div>    
-    <p class="menu-desc">Observe the rule and make the right move.</p>    
-  </div>    <div class="how-to">    
-    <h3>How to Play</h3>    
-    <div class="how-to-row">    
-      <span class="key-badge">1</span>    
-      <span>Observe the rule carefully</span>    
-    </div>    
-    <div class="how-to-row">    
-      <span class="key-badge">2</span>    
-      <span>Identify the shape or color</span>    
-    </div>    
-    <div class="how-to-row">    
-      <span class="key-badge">3</span>    
-      <span>Select the correct side</span>    
-    </div>    
-  </div>  <button id="startBtn" class="start-btn">▶ Start Game</button>  </div>  <div id="bgShapes">    
-  <div class="shape c1"></div>    
-  <div class="shape s1"></div>    
-  <div class="shape t1"></div>    
-  <div class="shape star1">★</div>    
-  <div class="shape c2"></div>    
-  <div class="shape s2"></div>    
-  <div class="shape t2"></div>    
-  <div class="shape star2">★</div>    
-  <div class="shape midL"></div>    
-  <div class="shape midR"></div>    
-</div>  
-  <div id="game">  
-  <div class="top">    
-  <div>Level: <span id="level">1</span></div>    
-  <div>Score: <span id="score">0</span></div>    
-</div>        
-  <div id="rule"></div>   
-    <canvas id="canvas" width="200" height="200" tabindex="0"></canvas>    <div class="btns">    
-    <button class="left"    onclick="check('L')">LEFT</button>    
-    <button class="right"   onclick="check('R')">RIGHT</button>    
-    <button class="restart" onclick="restart()">RESTART</button>    
-  </div>    
-  <div id="result"></div>    
-  <div id="finalScore"></div>    
-</div>  <script>    
-// ── DOM refs ──────────────────────────────────────────────────────────────────    
-const canvas       = document.getElementById("canvas");    
-const ctx          = canvas.getContext("2d");    
-const ruleEl       = document.getElementById("rule");    
-const resultEl     = document.getElementById("result");    
-const finalScoreEl = document.getElementById("finalScore");    
-const menuBackBtn  = document.getElementById("menuBackBtn");    
-const backBtn      = document.getElementById("backBtn");    // ── Sound ─────────────────────────────────────────────────────────────────────
+</div>  </div>      
+<div id="menuScreen" class="menu-screen">      
+  <div class="menu-hero">      
+    <div class="game-icon-big">📦</div>      
+    <h2>Sorter Game</h2>      
+    <div class="domain-tag">Memory · Sorting</div>      
+    <p class="menu-desc">Observe the rule and make the right move.</p>      
+  </div>    <div class="how-to">      
+    <h3>How to Play</h3>      
+    <div class="how-to-row">      
+      <span class="key-badge">1</span>      
+      <span>Observe the rule carefully</span>      
+    </div>      
+    <div class="how-to-row">      
+      <span class="key-badge">2</span>      
+      <span>Identify the shape or color</span>      
+    </div>      
+    <div class="how-to-row">      
+      <span class="key-badge">3</span>      
+      <span>Select the correct side</span>      
+    </div>      
+  </div>  <button id="startBtn" class="start-btn">▶ Start Game</button>    </div>  <div id="bgShapes">      
+  <div class="shape c1"></div>      
+  <div class="shape s1"></div>      
+  <div class="shape t1"></div>      
+  <div class="shape star1">★</div>      
+  <div class="shape c2"></div>      
+  <div class="shape s2"></div>      
+  <div class="shape t2"></div>      
+  <div class="shape star2">★</div>      
+  <div class="shape midL"></div>      
+  <div class="shape midR"></div>      
+</div>  <div class="top">      
+  <div>Level: <span id="level">1</span></div>      
+  <div>Score: <span id="score">0</span></div>      
+</div>  <div id="game">      
+  <div id="top"></div>      
+  <div id="rule"></div>  <canvas id="canvas" width="200" height="200" tabindex="0"></canvas>      <div class="btns">      
+    <button class="left"    onclick="check('L')">LEFT</button>      
+    <button class="right"   onclick="check('R')">RIGHT</button>      
+    <button class="restart" onclick="restart()">RESTART</button>      
+  </div>      
+  <div id="result"></div>      
+  <div id="finalScore"></div>      
+</div>  <script>      
+// ── DOM refs ──────────────────────────────────────────────────────────────────      
+const canvas       = document.getElementById("canvas");      
+const ctx          = canvas.getContext("2d");      
+const ruleEl       = document.getElementById("rule");      
+const resultEl     = document.getElementById("result");      
+const finalScoreEl = document.getElementById("finalScore");      
+const menuBackBtn  = document.getElementById("menuBackBtn");      
+const backBtn      = document.getElementById("backBtn");      // ── Sound ─────────────────────────────────────────────────────────────────────
 const Sound = {
 ctx: null,
-
-isOn() {
-const val = localStorage.getItem("soundEnabled");
-return val !== "false"; // default ON like your friend's game
-},
-
 init() {
-if (!this.isOn()) return;
-
-try {  
-  const AudioCtx = window.AudioContext || window.webkitAudioContext;  
-  if (!AudioCtx) return;  
-
-  if (!this.ctx) {  
-    this.ctx = new AudioCtx();  
-  }  
-
-  if (this.ctx.state === "suspended") {  
-    this.ctx.resume();  
-  }  
-
-} catch (e) {}
-
+const A = window.AudioContext || window.webkitAudioContext;
+if (!this.ctx) this.ctx = new A();
 },
-
-tone(freq, time) {
-if (!this.isOn()) return;
-
-this.init();  
-if (!this.ctx) return;  
-
-const o = this.ctx.createOscillator();  
-const g = this.ctx.createGain();  
-
-o.frequency.value = freq;  
-g.gain.value = 0.05;  
-
-o.connect(g);  
-g.connect(this.ctx.destination);  
-
-o.start();  
-o.stop(this.ctx.currentTime + time);
-
+tone(f, t) {
+this.init();
+const o = this.ctx.createOscillator();
+const g = this.ctx.createGain();
+o.frequency.value = f;
+g.gain.value = 0.05;
+o.connect(g);
+g.connect(this.ctx.destination);
+o.start();
+o.stop(this.ctx.currentTime + t);
 },
-
 correct() {
 this.tone(500, 0.08);
-setTimeout(() => this.tone(700, 0.08), 80);
-setTimeout(() => this.tone(900, 0.08), 160);
+setTimeout(() => this.tone(650, 0.08), 80);
+setTimeout(() => this.tone(800, 0.08), 160);
 },
-
 wrong() {
-this.tone(200, 0.25);
+this.tone(220, 0.2);
 }
 };
 
@@ -438,7 +405,6 @@ let ruleType, ruleValue, ruleSide, current;
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 document.getElementById("startBtn").onclick = () => {
-Sound.init();
 document.getElementById("menuScreen").style.display = "none";
 document.getElementById("game").style.display ="flex";
 document.getElementById("bgShapes").style.display="block";
@@ -558,10 +524,10 @@ else if (score === 20)  level = 5;
 else if (score === 25)  level = 6;
 else if (score === 30)  level = 7;
 
-document.getElementById("score").innerText = score;    
-document.getElementById("level").innerText = level;    
-    
-
+document.getElementById("score").innerText = score;      
+document.getElementById("level").innerText = level;      
+      
+  
 setTimeout(newRound, 700);
 
 } else {
@@ -596,4 +562,4 @@ resizeCanvas();
 
 </script>  <script src="shared.js"></script>  </body>
 
-</html>  In this code
+</html>This is not above isefactor code. I will give the my code. What are the changes that bring in that code and this code, please tell me.

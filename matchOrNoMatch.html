@@ -6,771 +6,623 @@
 <title>Match Game</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f6fa;
-  overflow-x: hidden;
+body{
+  font-family:Arial,sans-serif;
+  background:#f5f6fa;
+  overflow-x:hidden;
 }
 
-.header {
-  width: 100%;
-  height: 60px;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
+/* HEADER */
+
+.header{
+  width:100%;
+  height:60px;
+  background:#fff;
+  border-bottom:1px solid #ddd;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:1000;
 }
 
-.header h2 {
-  font-size: 20px;
+.header h2{
+  font-size:20px;
 }
 
-.back-btn {
-  position: absolute;
-  left: 15px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #6c5ce7;
-  font-weight: bold;
-  cursor: pointer;
+.back-btn{
+  position:absolute;
+  left:15px;
+
+  background:none;
+  border:none;
+
+  font-size:18px;
+  color:#6c5ce7;
+  font-weight:bold;
+
+  cursor:pointer;
 }
 
-#menuScreen {
-  width: 100%;
-  min-height: 100vh;
-  padding-top: 90px;
-  padding-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+/* MENU */
+
+#menuScreen{
+  width:100%;
+  min-height:100vh;
+
+  padding-top:90px;
+  padding-bottom:40px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  gap:20px;
 }
 
 .menu-card,
-.how-card {
-  width: 90%;
-  max-width: 420px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+.how-card{
+  width:90%;
+  max-width:420px;
+
+  background:#fff;
+  border-radius:20px;
+
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
 
-.menu-card {
-  padding: 30px 20px;
-  text-align: center;
+.menu-card{
+  padding:30px 20px;
+  text-align:center;
 }
 
-.icon {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(135deg,#6c5ce7,#4834d4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-  font-size: 36px;
-  color: white;
+.icon{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+
+  background:linear-gradient(135deg,#6c5ce7,#4834d4);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  margin:auto;
+
+  font-size:36px;
+  color:white;
 }
 
-.menu-card h1 {
-  margin-top: 15px;
-  font-size: 34px;
+.menu-card h1{
+  margin-top:15px;
+  font-size:34px;
 }
 
-.tag {
-  display: inline-block;
-  margin-top: 10px;
-  background: #eee9ff;
-  color: #6c5ce7;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
+.tag{
+  display:inline-block;
+
+  margin-top:10px;
+
+  background:#eee9ff;
+  color:#6c5ce7;
+
+  padding:6px 14px;
+  border-radius:20px;
+
+  font-size:13px;
 }
 
-.desc {
-  margin-top: 15px;
-  color: #666;
-  font-size: 15px;
+.desc{
+  margin-top:15px;
+  color:#666;
+  font-size:15px;
 }
 
-.how-card {
-  padding: 25px;
+.how-card{
+  padding:25px;
 }
 
-.how-card h2 {
-  margin-bottom: 15px;
+.how-card h2{
+  margin-bottom:15px;
 }
 
-.step {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 12px 0;
+.step{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  margin:12px 0;
 }
 
-.num {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: #f1ede7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
+.num{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+
+  background:#f1ede7;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-weight:bold;
 }
 
-.start-btn {
-  width: 90%;
-  max-width: 420px;
-  height: 60px;
-  border: none;
-  border-radius: 16px;
-  background: linear-gradient(135deg,#6c5ce7,#4834d4);
-  color: white;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
+.start-btn{
+  width:90%;
+  max-width:420px;
+  height:60px;
+
+  border:none;
+  border-radius:16px;
+
+  background:linear-gradient(135deg,#6c5ce7,#4834d4);
+
+  color:white;
+  font-size:22px;
+  font-weight:bold;
+
+  cursor:pointer;
 }
 
-#gameScreen {
-  display: none;
-  width: 100%;
-  min-height: 100vh;
-  padding-top: 60px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  overflow: hidden;
+/* GAME SCREEN */
+
+#gameScreen{
+  display:none;
+
+  width:100%;
+  min-height:100vh;
+
+  padding-top:70px;
+  padding-bottom:20px;
+
+  flex-direction:column;
+  align-items:center;
+
+  text-align:center;
+
+  overflow-y:auto;
 }
 
-.top-bar {
-  width: 95%;
-  max-width: 560px;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto 18px auto;
-  font-weight: bold;
-  font-size: 14px;
+/* TOP BAR */
+
+.top-bar{
+  width:95%;
+  max-width:560px;
+
+  display:flex;
+  justify-content:space-between;
+
+  margin:0 auto 18px auto;
+
+  font-weight:bold;
+  font-size:14px;
 }
 
-.rule {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 24px;
-  padding: 0 10px;
+/* RULE */
+
+.rule{
+  font-size:22px;
+  font-weight:bold;
+
+  line-height:1.3;
+
+  margin-bottom:24px;
+
+  padding:0 16px;
+
+  max-width:560px;
 }
 
-.panels {
-  width: 100%;
-  max-width: 560px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 70px;
-  margin: 20px auto 30px auto;
+/* PANELS */
+
+.panels{
+  width:100%;
+  max-width:560px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  gap:60px;
+
+  margin:20px auto 40px auto;
 }
 
-.panel {
-  width: 170px;
-  height: 170px;
+.panel{
+  width:170px;
+  height:170px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-  position: relative;
-}
-.panel > * {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  position:relative;
 }
 
-.circle {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
+.panel > *{
+  position:absolute;
+
+  top:50%;
+  left:50%;
+
+  transform:translate(-50%, -50%);
 }
 
-.square {
-  width: 90px;
-  height: 90px;
-  border-radius: 10px;
+/* LARGE SHAPES */
+
+.circle{
+  width:90px;
+  height:90px;
+  border-radius:50%;
 }
 
-.triangle {
-  width: 0;
-  height: 0;
-  border-left: 45px solid transparent;
-  border-right: 45px solid transparent;
-  border-bottom: 90px solid;
+.square{
+  width:90px;
+  height:90px;
+  border-radius:10px;
 }
+
+.triangle{
+  width:0;
+  height:0;
+
+  border-left:45px solid transparent;
+  border-right:45px solid transparent;
+  border-bottom:90px solid;
+}
+
+/* PATTERNS */
 
 .pattern-row,
-.pattern-grid {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.pattern-grid{
+  position:absolute;
+
+  top:50%;
+  left:50%;
+
+  transform:translate(-50%, -50%);
 }
 
-.pattern-grid {
-  width: 120px;
-  height: 120px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  place-items: center;
-  gap: 12px;
+.pattern-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  gap:28px;
 }
 
-.mini-circle {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+.pattern-grid{
+  width:120px;
+  height:120px;
+
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+
+  place-items:center;
+
+  gap:12px;
 }
 
-.mini-square {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
+/* MINI SHAPES */
+
+.mini-circle{
+  width:34px;
+  height:34px;
+  border-radius:50%;
 }
 
-.mini-triangle {
-  width: 0;
-  height: 0;
-  border-left: 18px solid transparent;
-  border-right: 18px solid transparent;
-  border-bottom: 34px solid;
+.mini-square{
+  width:34px;
+  height:34px;
+  border-radius:6px;
 }
 
-.buttons {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  width: 90%;
-  max-width: 380px;
-  margin: 10px auto 0;
+.mini-triangle{
+  width:0;
+  height:0;
+
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-bottom:34px solid;
 }
 
-.buttons button {
-  flex: 1;
-  height: 52px;
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
+/* BUTTONS */
+
+.buttons{
+  width:100%;
+  max-width:420px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  gap:16px;
+
+  margin:0 auto;
 }
 
-.match {
-  background: #e57373;
+.buttons button{
+  width:170px;
+  height:56px;
+
+  border:none;
+  border-radius:14px;
+
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+
+  cursor:pointer;
 }
 
-.nomatch {
-  background: #4fc3f7;
+.match{
+  background:#e57373;
 }
 
-#message {
-  margin-top: 18px;
-  font-size: 24px;
-  font-weight: bold;
-  min-height: 30px;
+.nomatch{
+  background:#4fc3f7;
 }
 
-#gameOver {
-  display: none;
-  width: 100%;
-  min-height: 100vh;
-  padding-top: 60px;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+/* MESSAGE */
+
+#message{
+  margin-top:18px;
+
+  font-size:24px;
+  font-weight:bold;
+
+  min-height:30px;
 }
 
-#gameOver h1 {
-  font-size: 40px;
+/* GAME OVER */
+
+#gameOver{
+  display:none;
+
+  width:100%;
+  min-height:100vh;
+
+  padding-top:60px;
+
+  text-align:center;
+
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
 }
 
-#gameOver h2 {
-  margin-top: 15px;
-  color: #6c5ce7;
+#gameOver h1{
+  font-size:40px;
 }
 
-.restart {
-  margin-top: 25px;
-  width: 220px;
-  height: 55px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg,#6c5ce7,#4834d4);
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
+#gameOver h2{
+  margin-top:15px;
+  color:#6c5ce7;
 }
 
-@media(max-width:500px) {
-  .top-bar {
-    font-size: 12px;
+.restart{
+  margin-top:25px;
+
+  width:220px;
+  height:55px;
+
+  border:none;
+  border-radius:14px;
+
+  background:linear-gradient(135deg,#6c5ce7,#4834d4);
+
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:500px){
+
+  .top-bar{
+    font-size:12px;
   }
 
-  .rule {
-    font-size: 18px;
+  .rule{
+    font-size:18px;
   }
 
-  .panels {
-    gap: 28px;
+  .panels{
+    gap:36px;
   }
 
-  .panel {
-    width: 130px;
-    height: 130px;
+  .panel{
+    width:130px;
+    height:130px;
   }
 
   .circle,
-  .square {
-    width: 75px;
-    height: 75px;
+  .square{
+    width:75px;
+    height:75px;
   }
 
-  .triangle {
-    border-left: 38px solid transparent;
-    border-right: 38px solid transparent;
-    border-bottom: 76px solid;
+  .triangle{
+    border-left:38px solid transparent;
+    border-right:38px solid transparent;
+    border-bottom:76px solid;
   }
 
-  .buttons button {
-    font-size: 15px;
+  .buttons{
+    width:90%;
+    max-width:380px;
+    gap:14px;
+  }
+
+  .buttons button{
+    flex:1;
+    width:auto;
+    height:52px;
+    font-size:15px;
   }
 }
+
+/* LANDSCAPE FIX */
+
+@media (orientation: landscape) and (max-height: 500px){
+
+  body{
+    overflow-y:auto;
+  }
+
+  #gameScreen{
+    justify-content:flex-start;
+
+    min-height:auto;
+
+    padding-top:70px;
+    padding-bottom:20px;
+
+    overflow-y:auto;
+  }
+
+  .top-bar{
+    width:92%;
+    font-size:12px;
+
+    margin-top:0;
+    margin-bottom:8px;
+  }
+
+  .rule{
+    font-size:18px;
+    line-height:1.2;
+
+    margin-bottom:10px;
+    padding:0 12px;
+  }
+
+  .panels{
+    gap:40px;
+
+    margin-top:10px;
+    margin-bottom:18px;
+  }
+
+  .panel{
+    width:100px;
+    height:100px;
+  }
+
+  .circle,
+  .square{
+    width:62px;
+    height:62px;
+  }
+
+  .triangle{
+    border-left:31px solid transparent;
+    border-right:31px solid transparent;
+    border-bottom:62px solid;
+  }
+
+  .pattern-row{
+    gap:18px;
+  }
+
+  .pattern-grid{
+    width:85px;
+    height:85px;
+    gap:6px;
+  }
+
+  .mini-circle,
+  .mini-square{
+    width:24px;
+    height:24px;
+  }
+
+  .mini-triangle{
+    border-left:12px solid transparent;
+    border-right:12px solid transparent;
+    border-bottom:24px solid;
+  }
+
+  .buttons{
+    width:92%;
+    max-width:340px;
+
+    gap:10px;
+  }
+
+  .buttons button{
+    height:42px;
+
+    font-size:13px;
+
+    border-radius:10px;
+  }
+
+  #message{
+    margin-top:8px;
+    font-size:16px;
+    min-height:18px;
+  }
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <button class="back-btn" onclick="goHome()">← Back</button>
+  <button class="back-btn">← Back</button>
   <h2>Match Game</h2>
 </div>
 
-<div id="menuScreen">
-  <div class="menu-card">
-    <div class="icon">🎯</div>
-    <h1>Match Game</h1>
-    <div class="tag">Memory · Matching</div>
-    <p class="desc">Compare both sides and decide if they MATCH or NOT.</p>
-  </div>
+<div id="gameScreen" style="display:flex;">
 
-  <div class="how-card">
-    <h2>How to Play</h2>
-    <div class="step">
-      <div class="num">1</div>
-      <div>Observe both sides carefully</div>
-    </div>
-    <div class="step">
-      <div class="num">2</div>
-      <div>Compare shapes, colors, and patterns</div>
-    </div>
-    <div class="step">
-      <div class="num">3</div>
-      <div>Tap MATCH or NO MATCH</div>
-    </div>
-  </div>
-
-  <button class="start-btn" onclick="startGame()">▶ Start Game</button>
-</div>
-
-<div id="gameScreen">
   <div class="top-bar">
-    <div>Score<br><span id="score">0</span></div>
-    <div>High<br><span id="high">0</span></div>
-    <div>Level<br><span id="level">1</span></div>
-    <div>Round<br><span id="round">1</span>/30</div>
+    <div>Score<br><span>0</span></div>
+    <div>High<br><span>52</span></div>
+    <div>Level<br><span>1</span></div>
+    <div>Round<br><span>1</span>/30</div>
   </div>
 
-  <div class="rule" id="rule">
-    Level 1: Same shape or different shape?
+  <div class="rule">
+    Level 1: Are the shapes the same or different?
   </div>
 
   <div class="panels">
-    <div class="panel" id="leftPanel"></div>
-    <div class="panel" id="rightPanel"></div>
+
+    <div class="panel">
+      <div class="triangle" style="border-bottom-color:#00b894;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="square" style="background:#e17055;"></div>
+    </div>
+
   </div>
 
   <div class="buttons">
-    <button class="match" onclick="answer(true)">MATCH</button>
-    <button class="nomatch" onclick="answer(false)">NO MATCH</button>
+    <button class="match">MATCH</button>
+    <button class="nomatch">NO MATCH</button>
   </div>
 
   <div id="message"></div>
+
 </div>
-
-<div id="gameOver">
-  <h1>Game Over 🎮</h1>
-  <h2>Final Score: <span id="finalScore">0</span></h2>
-  <button class="restart" onclick="restartGame()">Restart</button>
-</div>
-
-<script src="shared.js"></script>
-
-<script>
-const leftPanel = document.getElementById("leftPanel");
-const rightPanel = document.getElementById("rightPanel");
-const scoreEl = document.getElementById("score");
-const highEl = document.getElementById("high");
-const levelEl = document.getElementById("level");
-const roundEl = document.getElementById("round");
-const ruleEl = document.getElementById("rule");
-const messageEl = document.getElementById("message");
-const finalScoreEl = document.getElementById("finalScore");
-
-let score = 0;
-let level = 1;
-let round = 1;
-let maxRounds = 30;
-let isMatch = false;
-let audioCtx = null;
-
-let highScore = Number(localStorage.getItem("match-high")) || 0;
-highEl.innerText = highScore;
-
-const shapes = ["circle", "triangle", "square"];
-const colors = ["#6c5ce7", "#00b894", "#e17055", "#fdcb6e"];
-
-function goHome() {
-  window.location.href = "index.html";
-}
-
-function soundAllowed() {
-  if (typeof isSoundOn === "function") {
-    return isSoundOn();
-  }
-  return localStorage.getItem("ctg-sound") !== "off";
-}
-
-function unlockAudio() {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return;
-
-  if (!audioCtx) {
-    audioCtx = new AudioContext();
-  }
-
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
-}
-
-function beep(type) {
-  if (!soundAllowed()) return;
-
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return;
-
-  if (!audioCtx) {
-    audioCtx = new AudioContext();
-  }
-
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
-
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  osc.frequency.value = type === "good" ? 700 : 180;
-
-  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
-
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.18);
-}
-
-function startGame() {
-  window.scrollTo(0, 0);
-  unlockAudio();
-
-  document.body.style.overflow = "hidden";
-
-  document.getElementById("menuScreen").style.display = "none";
-  document.getElementById("gameScreen").style.display = "flex";
-  document.getElementById("gameOver").style.display = "none";
-
-  score = 0;
-  level = 1;
-  round = 1;
-
-  scoreEl.innerText = score;
-  levelEl.innerText = level;
-  roundEl.innerText = round;
-  messageEl.innerText = "";
-
-  newRound();
-}
-
-function restartGame() {
-  startGame();
-}
-
-function randomFrom(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-function randomShape() {
-  return randomFrom(shapes);
-}
-
-function randomColor() {
-  return randomFrom(colors);
-}
-
-function updateLevel() {
-  if (round <= 5) level = 1;
-  else if (round <= 10) level = 2;
-  else if (round <= 15) level = 3;
-  else if (round <= 20) level = 4;
-  else if (round <= 25) level = 5;
-  else level = 6;
-
-  levelEl.innerText = level;
-
-  const rules = {
-    1: "Level 1: Same shape or different shape?",
-    2: "Level 2: Same color or different color?",
-    3: "Level 3: Shape and color must match.",
-    4: "Level 4: Compare shape pairs carefully.",
-    5: "Level 5: Compare 2×2 patterns.",
-    6: "Level 6: Spot subtle pattern differences."
-  };
-
-  ruleEl.innerText = rules[level];
-}
-
-function makeShape(shape, color) {
-  const d = document.createElement("div");
-
-  if (shape === "circle") {
-    d.className = "circle";
-    d.style.backgroundColor = color;
-  }
-
-  if (shape === "square") {
-    d.className = "square";
-    d.style.backgroundColor = color;
-  }
-
-  if (shape === "triangle") {
-    d.className = "triangle";
-    d.style.borderBottomColor = color;
-  }
-
-  return d;
-}
-
-function makeMiniShape(shape, color) {
-  const d = document.createElement("div");
-
-  if (shape === "circle") {
-    d.className = "mini-circle";
-    d.style.backgroundColor = color;
-  }
-
-  if (shape === "square") {
-    d.className = "mini-square";
-    d.style.backgroundColor = color;
-  }
-
-  if (shape === "triangle") {
-    d.className = "mini-triangle";
-    d.style.borderBottomColor = color;
-  }
-
-  return d;
-}
-
-function newRound() {
-  leftPanel.innerHTML = "";
-  rightPanel.innerHTML = "";
-
-  updateLevel();
-
-  isMatch = Math.random() > 0.5;
-
-  if (level <= 3) {
-    createSingleShapeRound();
-  } else {
-    createPatternRound();
-  }
-}
-
-function createSingleShapeRound() {
-  let leftShape = randomShape();
-  let leftColor = randomColor();
-
-  let rightShape = leftShape;
-  let rightColor = leftColor;
-
-  if (!isMatch) {
-    if (level === 1) {
-      do {
-        rightShape = randomShape();
-      } while (rightShape === leftShape);
-
-      rightColor = randomColor();
-    }
-
-    else if (level === 2) {
-      rightShape = leftShape;
-
-      do {
-        rightColor = randomColor();
-      } while (rightColor === leftColor);
-    }
-
-    else {
-      if (Math.random() > 0.5) {
-        do {
-          rightShape = randomShape();
-        } while (rightShape === leftShape);
-      } else {
-        do {
-          rightColor = randomColor();
-        } while (rightColor === leftColor);
-      }
-    }
-  }
-
-  leftPanel.appendChild(makeShape(leftShape, leftColor));
-  rightPanel.appendChild(makeShape(rightShape, rightColor));
-}
-
-function createPatternRound() {
-  const leftPattern = [];
-  const rightPattern = [];
-
-  const count = level === 4 ? 2 : 4;
-
-  for (let i = 0; i < count; i++) {
-    const item = {
-      shape: randomShape(),
-      color: randomColor()
-    };
-
-    leftPattern.push(item);
-    rightPattern.push({
-      shape: item.shape,
-      color: item.color
-    });
-  }
-
-  if (!isMatch) {
-    const index = Math.floor(Math.random() * count);
-
-    if (level === 4) {
-      do {
-        rightPattern[index].shape = randomShape();
-      } while (rightPattern[index].shape === leftPattern[index].shape);
-    }
-
-    else if (level === 5) {
-      if (Math.random() > 0.5) {
-        do {
-          rightPattern[index].shape = randomShape();
-        } while (rightPattern[index].shape === leftPattern[index].shape);
-      } else {
-        do {
-          rightPattern[index].color = randomColor();
-        } while (rightPattern[index].color === leftPattern[index].color);
-      }
-    }
-
-    else {
-      do {
-        rightPattern[index].color = randomColor();
-      } while (rightPattern[index].color === leftPattern[index].color);
-    }
-  }
-
-  drawPattern(leftPanel, leftPattern, count);
-  drawPattern(rightPanel, rightPattern, count);
-}
-
-function drawPattern(panel, pattern, count) {
-  const box = document.createElement("div");
-  box.className = count === 2 ? "pattern-row" : "pattern-grid";
-
-  pattern.forEach(item => {
-    box.appendChild(makeMiniShape(item.shape, item.color));
-  });
-
-  panel.appendChild(box);
-}
-
-function answer(userAnswer) {
-  if (userAnswer === isMatch) {
-    score += 2;
-    messageEl.style.color = "green";
-    messageEl.innerText = "Correct ✅";
-    beep("good");
-  } else {
-    messageEl.style.color = "red";
-    messageEl.innerText = "Wrong ❌";
-    beep("bad");
-  }
-
-  if (score > highScore) {
-    highScore = score;
-    localStorage.setItem("match-high", highScore);
-    highEl.innerText = highScore;
-  }
-
-  scoreEl.innerText = score;
-
-  if (round >= maxRounds) {
-    setTimeout(gameOver, 450);
-    return;
-  }
-
-  round++;
-  roundEl.innerText = round;
-
-  setTimeout(() => {
-    messageEl.innerText = "";
-    newRound();
-  }, 450);
-}
-
-function gameOver() {
-  document.body.style.overflow = "hidden";
-
-  document.getElementById("gameScreen").style.display = "none";
-  document.getElementById("gameOver").style.display = "flex";
-
-  finalScoreEl.innerText = score;
-}
-</script>
 
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sorter Game</title>
+<title>Match Game</title>
 
 <style>
 * {
@@ -14,7 +14,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: #f8f6f3;
+  background: #f5f6fa;
   overflow-x: hidden;
 }
 
@@ -30,6 +30,10 @@ body {
   top: 0;
   left: 0;
   z-index: 1000;
+}
+
+.header h2 {
+  font-size: 20px;
 }
 
 .back-btn {
@@ -54,13 +58,12 @@ body {
   gap: 20px;
 }
 
-.menu-card,
-.how-card {
+.menu-card {
   width: 90%;
   max-width: 420px;
-  background: white;
+  background: #fff;
   border-radius: 20px;
-  padding: 28px;
+  padding: 30px 20px;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
@@ -70,12 +73,12 @@ body {
   height: 80px;
   border-radius: 50%;
   background: linear-gradient(135deg,#6c5ce7,#4834d4);
-  color: white;
-  font-size: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: auto;
+  font-size: 36px;
+  color: white;
 }
 
 .menu-card h1 {
@@ -96,10 +99,16 @@ body {
 .desc {
   margin-top: 15px;
   color: #666;
+  font-size: 15px;
 }
 
 .how-card {
-  text-align: left;
+  width: 90%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 .how-card h2 {
@@ -116,8 +125,8 @@ body {
 .num {
   width: 34px;
   height: 34px;
-  background: #f1ede7;
   border-radius: 10px;
+  background: #f1ede7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,158 +152,214 @@ body {
   height: 100vh;
   padding-top: 60px;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   text-align: center;
   overflow: hidden;
 }
 
 .top-bar {
+  width: 95%;
+  max-width: 520px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  max-width: 620px;
   margin: 0 auto 18px auto;
-  padding: 8px 10px;
-  background: transparent;
-  box-shadow: none;
-  border-radius: 0;
   font-weight: bold;
-  font-size: 16px;
-}
-
-.top-bar div {
-  flex: 1;
+  font-size: 14px;
   text-align: center;
 }
 
 .rule {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
+  text-align: center;
+  padding: 0 10px;
 }
 
-canvas {
-  width: 75vw;
-  height: 75vw;
-  max-width: 420px;
-  max-height: 420px;
-  display: block;
+.panels {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  margin: 20px auto 30px auto;
+}
+
+.panel {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: 45px solid transparent;
+  border-right: 45px solid transparent;
+  border-bottom: 90px solid;
 }
 
 .buttons {
   display: flex;
-  gap: 12px;
+  justify-content: center;
+  gap: 14px;
   width: 90%;
-  max-width: 360px;
-  margin-top: 24px;
+  max-width: 380px;
+  margin: 10px auto 0;
 }
 
 .buttons button {
   flex: 1;
-  height: 50px;
+  height: 52px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   color: white;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
 }
 
-.left {
-  background: #d96f6f;
+.match {
+  background: #e57373;
 }
 
-.right {
-  background: #56aeea;
+.nomatch {
+  background: #4fc3f7;
 }
 
-.restart {
-  background: #8f8f8f;
-}
-
-#result {
-  margin-top: 15px;
-  font-size: 22px;
+#message {
+  margin-top: 18px;
+  font-size: 24px;
   font-weight: bold;
   min-height: 30px;
 }
 
-#finalScore {
-  margin-top: 8px;
+#gameOver {
+  display: none;
+  width: 100%;
+  height: 100vh;
+  padding-top: 60px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#gameOver h1 {
+  font-size: 40px;
+}
+
+#gameOver h2 {
+  margin-top: 15px;
+  color: #6c5ce7;
+}
+
+.restart {
+  margin-top: 25px;
+  width: 220px;
+  height: 55px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#6c5ce7,#4834d4);
+  color: white;
   font-size: 20px;
   font-weight: bold;
+  cursor: pointer;
 }
 
-@media(max-width: 600px) {
-  .top-bar {
-    font-size: 14px;
-  }
-
-  .rule {
-    font-size: 17px;
-  }
-
-  canvas {
-    width: 75vw;
-    height: 75vw;
-  }
-
-  .buttons button {
-    font-size: 13px;
-  }
-}
-
-@media(orientation: landscape) {
+@media(max-width:500px) {
   #gameScreen {
-    padding-top: 60px;
     justify-content: center;
+    padding-top: 60px;
   }
 
   .top-bar {
-    max-width: 620px;
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-size: 12px;
+    margin-bottom: 16px;
   }
 
   .rule {
-    font-size: 16px;
-    margin-bottom: 8px;
+    font-size: 18px;
+    margin-bottom: 20px;
   }
 
-  canvas {
-    width: 55vh;
-    height: 55vh;
-    max-width: 340px;
-    max-height: 340px;
+  .panels {
+    gap: 30px;
+    margin: 18px auto 25px auto;
   }
 
-  .buttons {
-    margin-top: 10px;
-    max-width: 340px;
+  .panel {
+    width: 120px;
+    height: 120px;
+  }
+
+  .circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .triangle {
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 80px solid;
   }
 
   .buttons button {
-    height: 42px;
-    font-size: 13px;
+    font-size: 15px;
   }
 }
 
-[data-theme="dark"] body {
-  background: #141414;
-  color: #f0ede8;
-}
+@media(orientation:landscape) {
+  #gameScreen {
+    justify-content: center;
+    padding-top: 60px;
+  }
 
-[data-theme="dark"] .header,
-[data-theme="dark"] .menu-card,
-[data-theme="dark"] .how-card {
-  background: #1f1f1f;
-  color: #f0ede8;
-}
+  .top-bar {
+    margin-bottom: 10px;
+  }
 
-[data-theme="dark"] .desc {
-  color: #9a9590;
+  .rule {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .panels {
+    gap: 60px;
+    margin: 10px auto 18px auto;
+  }
+
+  .panel {
+    width: 120px;
+    height: 120px;
+  }
+
+  .circle {
+    width: 75px;
+    height: 75px;
+  }
+
+  .triangle {
+    border-left: 38px solid transparent;
+    border-right: 38px solid transparent;
+    border-bottom: 76px solid;
+  }
+
+  .buttons button {
+    height: 44px;
+    font-size: 15px;
+  }
 }
 </style>
 </head>
@@ -302,23 +367,32 @@ canvas {
 <body>
 
 <div class="header">
-  <button class="back-btn" id="menuBackBtn" onclick="goHome()">← Back</button>
-  <button class="back-btn" id="gameBackBtn" onclick="goBack()" style="display:none;">← Back</button>
+  <button class="back-btn" onclick="goHome()">← Back</button>
+  <h2>Match Game</h2>
 </div>
 
 <div id="menuScreen">
   <div class="menu-card">
-    <div class="icon">📦</div>
-    <h1>Sorter Game</h1>
-    <div class="tag">Memory · Sorting</div>
-    <p class="desc">Observe the rule and make the right move.</p>
+    <div class="icon">🎯</div>
+    <h1>Match Game</h1>
+    <div class="tag">Memory · Matching</div>
+    <p class="desc">Compare both sides and decide if they MATCH or NOT.</p>
   </div>
 
   <div class="how-card">
     <h2>How to Play</h2>
-    <div class="step"><div class="num">1</div><div>Observe the rule carefully</div></div>
-    <div class="step"><div class="num">2</div><div>Identify the shape or color</div></div>
-    <div class="step"><div class="num">3</div><div>Select the correct side</div></div>
+    <div class="step">
+      <div class="num">1</div>
+      <div>Observe both sides carefully</div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div>Compare shapes or colors</div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div>Tap MATCH or NO MATCH</div>
+    </div>
   </div>
 
   <button class="start-btn" onclick="startGame()">▶ Start Game</button>
@@ -326,286 +400,218 @@ canvas {
 
 <div id="gameScreen">
   <div class="top-bar">
-    <div>Level: <span id="level">1</span></div>
-    <div>Highest: <span id="highScore">0</span></div>
-    <div>Score: <span id="score">0</span></div>
+    <div>Score<br><span id="score">0</span></div>
+    <div>High<br><span id="high">0</span></div>
+    <div>Level<br><span id="level">1</span></div>
+    <div>Round<br><span id="round">1</span>/30</div>
   </div>
 
-  <div class="rule" id="rule"></div>
+  <div class="rule" id="rule">
+    Compare only shapes — MATCH or NO MATCH?
+  </div>
 
-  <canvas id="canvas"></canvas>
+  <div class="panels">
+    <div class="panel" id="leftPanel"></div>
+    <div class="panel" id="rightPanel"></div>
+  </div>
 
   <div class="buttons">
-    <button class="left" onclick="check('L')">LEFT</button>
-    <button class="right" onclick="check('R')">RIGHT</button>
-    <button class="restart" onclick="restart()">RESTART</button>
+    <button class="match" onclick="answer(true)">MATCH</button>
+    <button class="nomatch" onclick="answer(false)">NO MATCH</button>
   </div>
 
-  <div id="result"></div>
-  <div id="finalScore"></div>
+  <div id="message"></div>
+</div>
+
+<div id="gameOver">
+  <h1>Game Over 🎮</h1>
+  <h2>Final Score: <span id="finalScore">0</span></h2>
+  <button class="restart" onclick="restartGame()">Restart</button>
 </div>
 
 <script src="shared.js"></script>
 
 <script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-const ruleEl = document.getElementById("rule");
-const resultEl = document.getElementById("result");
-const finalScoreEl = document.getElementById("finalScore");
-
+const leftPanel = document.getElementById("leftPanel");
+const rightPanel = document.getElementById("rightPanel");
 const scoreEl = document.getElementById("score");
+const highEl = document.getElementById("high");
 const levelEl = document.getElementById("level");
-const highScoreEl = document.getElementById("highScore");
+const roundEl = document.getElementById("round");
+const messageEl = document.getElementById("message");
+const finalScoreEl = document.getElementById("finalScore");
 
 let score = 0;
 let level = 1;
-let highScore = 0;
-let gameOver = false;
+let round = 1;
+let maxRounds = 30;
 
-let ruleType;
-let ruleValue;
-let ruleSide;
-let current;
+let highScore = Number(localStorage.getItem("match-high")) || 0;
+highEl.innerText = highScore;
 
-const shapes = ["circle", "square", "triangle", "star"];
+const shapes = ["circle", "triangle"];
+const colors = ["#6c5ce7", "#00b894", "#e17055", "#fdcb6e"];
 
-const colors = {
-  red: "#d96f6f",
-  blue: "#56aeea",
-  green: "#59b77f",
-  yellow: "#e5c25d"
-};
-
-const Sound = {
-  ctx: null,
-
-  isEnabled() {
-    return localStorage.getItem("ctg-sound") !== "off";
-  },
-
-  init() {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-
-    if (!this.ctx) {
-      this.ctx = new AudioContext();
-    }
-
-    if (this.ctx.state === "suspended") {
-      this.ctx.resume();
-    }
-  },
-
-  tone(freq, dur) {
-    if (!this.isEnabled()) return;
-
-    this.init();
-    if (!this.ctx) return;
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-
-    osc.frequency.value = freq;
-    gain.gain.value = 0.15;
-
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-
-    osc.start();
-    osc.stop(this.ctx.currentTime + dur);
-  },
-
-  correct() {
-    this.tone(700, 0.12);
-    setTimeout(() => this.tone(900, 0.12), 120);
-  },
-
-  wrong() {
-    this.tone(220, 0.22);
-  }
-};
+let isMatch = false;
+let audioCtx = null;
 
 function goHome() {
   window.location.href = "index.html";
 }
 
-function goBack() {
-  document.getElementById("gameScreen").style.display = "none";
-  document.getElementById("menuScreen").style.display = "flex";
+function soundAllowed() {
+  if (typeof isSoundOn === "function") {
+    return isSoundOn();
+  }
+  return localStorage.getItem("ctg-sound") !== "off";
+}
 
-  document.getElementById("menuBackBtn").style.display = "block";
-  document.getElementById("gameBackBtn").style.display = "none";
+function beep(type) {
+  if (!soundAllowed()) return;
+
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+
+  if (!audioCtx) {
+    audioCtx = new AudioContext();
+  }
+
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.frequency.value = type === "good" ? 650 : 180;
+  gain.gain.value = 0.12;
+
+  osc.start();
+  setTimeout(() => osc.stop(), 120);
 }
 
 function startGame() {
   document.getElementById("menuScreen").style.display = "none";
   document.getElementById("gameScreen").style.display = "flex";
+  document.getElementById("gameOver").style.display = "none";
 
-  document.getElementById("menuBackBtn").style.display = "none";
-  document.getElementById("gameBackBtn").style.display = "block";
-
-  Sound.init();
-  restart();
-}
-
-function resizeCanvas() {
-  let size;
-
-  if (window.innerWidth > window.innerHeight) {
-    size = Math.min(window.innerHeight * 0.55, 340);
-  } else {
-    size = Math.min(window.innerWidth * 0.75, 420);
-  }
-
-  canvas.width = size;
-  canvas.height = size;
-}
-
-function draw(shape, color) {
-  const w = canvas.width;
-  const h = canvas.height;
-
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = color;
-
-  if (shape === "circle") {
-    ctx.beginPath();
-    ctx.arc(w / 2, h / 2, w / 3.2, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  if (shape === "square") {
-    ctx.fillRect(w * 0.18, h * 0.18, w * 0.64, h * 0.64);
-  }
-
-  if (shape === "triangle") {
-    ctx.beginPath();
-    ctx.moveTo(w / 2, h * 0.12);
-    ctx.lineTo(w * 0.12, h * 0.85);
-    ctx.lineTo(w * 0.88, h * 0.85);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  if (shape === "star") {
-    ctx.font = (w * 0.75) + "px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("★", w / 2, h / 2);
-  }
-}
-
-function newRound() {
-  if (gameOver) return;
-
-  resultEl.innerText = "";
-  finalScoreEl.innerText = "";
-
-  ruleType =
-    level <= 2
-      ? "color"
-      : Math.random() < 0.5
-      ? "color"
-      : "shape";
-
-  ruleSide = Math.random() < 0.5 ? "LEFT" : "RIGHT";
-
-  const shape = shapes[Math.floor(Math.random() * shapes.length)];
-  const colorKeys = Object.keys(colors);
-  const color = colorKeys[Math.floor(Math.random() * colorKeys.length)];
-
-  current = { shape, color };
-
-  ruleValue = ruleType === "color" ? color : shape;
-
-  resizeCanvas();
-  draw(shape, colors[color]);
-
-  ruleEl.innerText =
-    ruleType === "color"
-      ? `If color is ${ruleValue} → ${ruleSide}`
-      : `If shape is ${ruleValue} → ${ruleSide}`;
-
-  scoreEl.innerText = score;
-  levelEl.innerText = level;
-  highScoreEl.innerText = highScore;
-}
-
-function updateHighScore() {
-  if (score > highScore) {
-    highScore = score;
-    highScoreEl.innerText = highScore;
-  }
-}
-
-function check(choice) {
-  if (gameOver) return;
-
-  const match =
-    ruleType === "color"
-      ? current.color === ruleValue
-      : current.shape === ruleValue;
-
-  const correct =
-    ruleSide === "LEFT"
-      ? (match && choice === "L") || (!match && choice === "R")
-      : (match && choice === "R") || (!match && choice === "L");
-
-  if (correct) {
-    score++;
-    updateHighScore();
-
-    resultEl.style.color = "green";
-    resultEl.innerText = "Correct ✅";
-
-    Sound.correct();
-
-    if (score === 5) level = 2;
-    else if (score === 10) level = 3;
-    else if (score === 15) level = 4;
-    else if (score === 20) level = 5;
-    else if (score === 25) level = 6;
-    else if (score === 30) level = 7;
-
-    setTimeout(newRound, 500);
-  } else {
-    gameOver = true;
-
-    resultEl.style.color = "red";
-    resultEl.innerText = "Game Over ❌";
-    finalScoreEl.innerText = "Final Score: " + score;
-
-    updateHighScore();
-    Sound.wrong();
-  }
-}
-
-function restart() {
   score = 0;
   level = 1;
-  gameOver = false;
+  round = 1;
 
-  resultEl.innerText = "";
-  finalScoreEl.innerText = "";
-
-  scoreEl.innerText = score;
-  levelEl.innerText = level;
-  highScoreEl.innerText = highScore;
+  scoreEl.innerText = 0;
+  levelEl.innerText = 1;
+  roundEl.innerText = 1;
+  messageEl.innerText = "";
 
   newRound();
 }
 
-window.addEventListener("resize", () => {
-  resizeCanvas();
+function restartGame() {
+  startGame();
+}
 
-  if (current) {
-    draw(current.shape, colors[current.color]);
+function randomShape() {
+  return shapes[Math.floor(Math.random() * shapes.length)];
+}
+
+function randomColor() {
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function makeShape(shape, color) {
+  const d = document.createElement("div");
+
+  if (shape === "circle") {
+    d.className = "circle";
+    d.style.background = color;
   }
-});
 
-resizeCanvas();
+  if (shape === "triangle") {
+    d.className = "triangle";
+    d.style.borderBottomColor = color;
+  }
+
+  return d;
+}
+
+function newRound() {
+  leftPanel.innerHTML = "";
+  rightPanel.innerHTML = "";
+
+  let leftShape = randomShape();
+  let leftColor = randomColor();
+
+  let rightShape = leftShape;
+  let rightColor = leftColor;
+
+  isMatch = Math.random() > 0.5;
+
+  if (!isMatch) {
+    if (Math.random() > 0.5) {
+      rightShape = randomShape();
+    }
+
+    if (Math.random() > 0.5) {
+      rightColor = randomColor();
+    }
+
+    if (rightShape === leftShape && rightColor === leftColor) {
+      rightColor = colors.find(c => c !== leftColor);
+    }
+  }
+
+  leftPanel.appendChild(makeShape(leftShape, leftColor));
+  rightPanel.appendChild(makeShape(rightShape, rightColor));
+}
+
+function answer(user) {
+  if (user === isMatch) {
+    score += 2;
+    messageEl.style.color = "green";
+    messageEl.innerText = "Correct ✅";
+    beep("good");
+  } else {
+    messageEl.style.color = "red";
+    messageEl.innerText = "Wrong ❌";
+    beep("bad");
+  }
+
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("match-high", highScore);
+    highEl.innerText = highScore;
+  }
+
+  scoreEl.innerText = score;
+
+  if (score >= 10) level = 2;
+  if (score >= 20) level = 3;
+
+  levelEl.innerText = level;
+
+  if (round >= maxRounds) {
+    setTimeout(gameOver, 400);
+    return;
+  }
+
+  round++;
+  roundEl.innerText = round;
+
+  setTimeout(() => {
+    messageEl.innerText = "";
+    newRound();
+  }, 400);
+}
+
+function gameOver() {
+  document.getElementById("gameScreen").style.display = "none";
+  document.getElementById("gameOver").style.display = "flex";
+  finalScoreEl.innerText = score;
+}
 </script>
 
 </body>

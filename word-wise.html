@@ -1,934 +1,1681 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-/>
-
-<title>Word Wise</title>
-
-<style>
-
-:root{
-  --bg:#f8f6f3;
-  --surface:#ffffff;
-  --text:#2d3436;
-  --muted:#666;
-  --accent:#d8a62a;
-  --accent2:#c99216;
-
-  --left:#e17055;
-  --right:#3498db;
-}
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-body{
-  font-family:Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-
-  width:100%;
-  height:100vh;
-  overflow:hidden;
-}
-
-/* HEADER */
-
-.header{
-  width:100%;
-  height:58px;
-
-  background:white;
-
-  border-bottom:1px solid #ddd;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  position:fixed;
-  top:0;
-  left:0;
-
-  z-index:1000;
-}
-
-.back-btn{
-  position:absolute;
-  left:14px;
-
-  border:none;
-  background:none;
-
-  color:#6c63ff;
-
-  font-size:16px;
-  font-weight:700;
-
-  cursor:pointer;
-}
-
-.header-title{
-  font-size:20px;
-  font-weight:800;
-}
-
-/* SCREENS */
-
-.screen{
-  width:100%;
-  height:100vh;
-
-  display:none;
-  flex-direction:column;
-}
-
-.active{
-  display:flex;
-}
-
-/* MENU */
-
-.menu-screen{
-  padding-top:75px;
-  overflow-y:auto;
-
-  align-items:center;
-}
-
-.card{
-  width:92%;
-  max-width:500px;
-
-  background:white;
-
-  border-radius:22px;
-
-  padding:26px 22px;
-
-  margin-bottom:18px;
-
-  box-shadow:0 4px 18px rgba(0,0,0,0.08);
-}
-
-.game-icon{
-  width:82px;
-  height:82px;
-
-  border-radius:50%;
-
-  background:linear-gradient(135deg,#f0c856,#d59f16);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:40px;
-
-  margin:auto;
-}
-
-.title{
-  text-align:center;
-
-  font-size:40px;
-  font-weight:800;
-
-  margin-top:16px;
-}
-
-.tag{
-  width:max-content;
-
-  margin:14px auto;
-
-  background:#f4ead0;
-  color:#d8a62a;
-
-  padding:6px 14px;
-
-  border-radius:20px;
-
-  font-size:14px;
-  font-weight:700;
-}
-
-.desc{
-  text-align:center;
-
-  color:#666;
-
-  font-size:18px;
-  line-height:1.5;
-}
-
-.how-title{
-  font-size:28px;
-  font-weight:800;
-
-  margin-bottom:18px;
-}
-
-.row{
-  display:flex;
-  align-items:flex-start;
-
-  gap:14px;
-
-  margin-bottom:14px;
-}
-
-.num{
-  min-width:38px;
-  height:38px;
-
-  border-radius:10px;
-
-  background:#f1ece3;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-weight:800;
-}
-
-.row p{
-  font-size:18px;
-  line-height:1.5;
-}
-
-.start-btn{
-  width:92%;
-  max-width:500px;
-
-  border:none;
-
-  border-radius:18px;
-
-  padding:18px;
-
-  background:linear-gradient(
-    135deg,
-    var(--accent),
-    var(--accent2)
-  );
-
-  color:white;
-
-  font-size:26px;
-  font-weight:800;
-
-  margin-bottom:30px;
-
-  cursor:pointer;
-}
-
-/* GAME */
-
-.game-screen{
-  padding-top:60px;
-  padding-bottom:10px;
-
-  align-items:center;
-
-  overflow:hidden;
-}
-
-.game-container{
-  width:100%;
-  max-width:900px;
-
-  height:100%;
-
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-
-  padding:10px;
-}
-
-/* STATS */
-
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-
-  gap:12px;
-
-  margin-bottom:10px;
-}
-
-.stat{
-  background:white;
-
-  border-radius:14px;
-
-  padding:12px;
-
-  text-align:center;
-
-  box-shadow:0 3px 12px rgba(0,0,0,0.05);
-}
-
-.stat h3{
-  font-size:16px;
-  color:#666;
-}
-
-.stat p{
-  font-size:28px;
-  font-weight:800;
-}
-
-/* QUESTION */
-
-.question{
-  text-align:center;
-
-  font-size:32px;
-  font-weight:800;
-
-  margin:8px 0 30px;
-}
-
-/* OPTIONS */
-
-.options{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-
-  gap:12px;
-
-  align-items:center;
-
-  margin-top:20px;
-
-  width:100%;
-
-  max-width:700px;
-
-  margin-left:auto;
-  margin-right:auto;
-}
-
-.option{
-  border-radius:20px;
-
-  min-height:170px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  text-align:center;
-
-  padding:14px;
-
-  color:white;
-
-  font-size:40px;
-  font-weight:800;
-
-  cursor:pointer;
-}
-
-.left{
-  background:linear-gradient(135deg,#ea7a7a,#d85d5d);
-}
-
-.right{
-  background:linear-gradient(135deg,#59b9ee,#379ad4);
-}
-
-/* MESSAGE */
-
-.message{
-  min-height:32px;
-
-  text-align:center;
-
-  font-size:20px;
-  font-weight:700;
-
-  margin-top:14px;
-}
-
-/* RESULT */
-
-.result-screen{
-  justify-content:center;
-  align-items:center;
-
-  text-align:center;
-
-  padding:20px;
-}
-
-.result-screen h1{
-  font-size:52px;
-  margin-bottom:18px;
-}
-
-.result-screen p{
-  font-size:24px;
-  margin-bottom:28px;
-}
-
-.play-btn{
-  border:none;
-
-  background:linear-gradient(
-    135deg,
-    var(--accent),
-    var(--accent2)
-  );
-
-  color:white;
-
-  border-radius:18px;
-
-  padding:18px 40px;
-
-  font-size:24px;
-  font-weight:800;
-
-  cursor:pointer;
-}
-
-/* MOBILE */
-
-@media(max-width:700px){
-
-  .title{
-    font-size:34px;
-  }
-
-  .question{
-    font-size:24px;
-  }
-
-  .option{
-    min-height:120px;
-    font-size:28px;
-  }
-}
-
-/* LANDSCAPE FIX */
-
-@media (orientation: landscape) and (max-height: 520px){
-
-  body{
-    overflow:hidden;
-  }
-
-  .header{
-    height:44px;
-  }
-
-  .game-screen{
-    padding-top:46px;
-    overflow:hidden;
-  }
-
-  .game-container{
-    padding:6px 10px;
-    gap:4px;
-  }
-
-  .stats{
-    margin-bottom:4px;
-    gap:8px;
-  }
-
-  .stat{
-    padding:6px;
-  }
-
-  .stat h3{
-    font-size:12px;
-  }
-
-  .stat p{
-    font-size:20px;
-  }
-
-  .question{
-    font-size:18px;
-    margin:2px 0 10px;
-  }
-
-  .options{
-    gap:8px;
-    margin-top:0;
-  }
-
-  .option{
-    min-height:85px;
-    font-size:22px;
-    border-radius:14px;
-    padding:8px;
-  }
-
-  .message{
-    font-size:14px;
-    min-height:18px;
-    margin-top:4px;
-  }
-
-}
-
-/* DARK */
-
-[data-theme="dark"] body{
-  background:#141414;
-  color:#f0ede8;
-}
-
-[data-theme="dark"] .header,
-[data-theme="dark"] .card,
-[data-theme="dark"] .stat{
-  background:#1f1f1f;
-}
-
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' file: 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' file: data:; media-src 'self' file: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <title>Word Wise</title>
+
+  <script>
+    (function () {
+      var t = localStorage.getItem("ctg-theme") || "light";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+
+  <style>
+    :root {
+      --bg: #f8f6f3;
+      --surface: #ffffff;
+      --surface2: #f0ede8;
+      --text: #2d3436;
+      --text-light: #636e72;
+      --border: #e0dbd5;
+      --accent: #e17055;
+      --success: #00b894;
+      --error: #e17055;
+      --highlight: #74b9ff;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.07);
+      --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --color-language: #fdcb6e;
+      --color-game-bg: var(--surface2);
+      --left-border: #c0392b;
+      --left-bg: linear-gradient(135deg, #e55039, #c0392b);
+      --left-text: rgba(255, 255, 255, 0.9);
+      --right-border: #1a6fc4;
+      --right-bg: linear-gradient(135deg, #2e86de, #1a6fc4);
+      --right-text: rgba(255, 255, 255, 0.9);
+    }
+
+    [data-theme="dark"] {
+      --bg: #141414;
+      --surface: #1f1f1f;
+      --surface2: #2a2a2a;
+      --text: #f0ede8;
+      --text-light: #9a9590;
+      --border: #333333;
+      --accent: #ff7a5a;
+      --success: #00d4a8;
+      --error: #ff7a5a;
+      --highlight: #90c8ff;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --color-language: #ffd070;
+      --left-border: #d14f3a;
+      --left-bg: linear-gradient(135deg, #d14f3a, #a53a2f);
+      --right-border: #2b7ecf;
+      --right-bg: linear-gradient(135deg, #2b7ecf, #1f5f9d);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100dvh;
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    #ctg-zoom-wrap,
+    .app {
+      width: 100%;
+      height: 100dvh;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: max(env(safe-area-inset-top), 8px) max(env(safe-area-inset-right), 12px) 8px max(env(safe-area-inset-left), 12px);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      min-height: 52px;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 38px;
+      cursor: pointer;
+    }
+
+    .header-title {
+      font-size: clamp(15px, 4vw, 18px);
+      font-weight: 700;
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .level-badge {
+      background: color-mix(in srgb, #d3a845 18%, var(--surface));
+      color: var(--color-language);
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .settings-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      font-size: 16px;
+      text-decoration: none;
+      color: var(--text-light);
+    }
+
+    .menu-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 14px max(env(safe-area-inset-right), 14px) max(env(safe-area-inset-bottom), 14px) max(env(safe-area-inset-left), 14px);
+    }
+
+    .menu-hero,
+    .how-to {
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .menu-hero {
+      border-radius: 18px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .game-icon-big {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f4d06f, #e0b94f);
+      color: #6e4b00;
+      font-size: 34px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(224, 185, 79, 0.35);
+    }
+
+    .domain-tag {
+      display: inline-block;
+      background: color-mix(in srgb, #d3a845 18%, var(--surface));
+      color: var(--color-language);
+      border-radius: 16px;
+      padding: 3px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 8px 0;
+    }
+
+    .menu-desc {
+      color: var(--text-light);
+      font-size: clamp(13px, 3.5vw, 15px);
+      line-height: 1.5;
+    }
+
+    .how-to {
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .how-to h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .how-to-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: clamp(13px, 3.5vw, 15px);
+    }
+
+    .key-badge {
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 7px;
+      padding: 4px 10px;
+      font-weight: 700;
+      font-size: 15px;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .start-btn {
+      width: 100%;
+      max-width: 480px;
+      background: linear-gradient(135deg, #e0b94f, #c99328);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: clamp(17px, 4.5vw, 20px);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 16px rgba(201, 147, 40, 0.35);
+    }
+
+    .game-body {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      padding: 10px max(env(safe-area-inset-right), 12px) max(env(safe-area-inset-bottom), 12px) max(env(safe-area-inset-left), 12px);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .game-top {
+      margin-top: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .game-meta {
+      text-align: center;
+    }
+
+    .game-area {
+      margin-top: 0;
+      border-radius: 14px;
+      background: var(--color-game-bg);
+      border: 2px solid var(--border);
+      padding: clamp(8px, 1.4vh, 14px);
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: clamp(6px, 1vh, 12px);
+      overflow: hidden;
+    }
+
+    .status {
+      text-align: center;
+      min-height: clamp(22px, 3.8vh, 36px);
+      font-size: clamp(15px, 2.6vh, 21px);
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .progress {
+      text-align: center;
+      color: var(--text-light);
+      font-size: clamp(14px, 2.5vh, 22px);
+      font-weight: 600;
+    }
+
+    .mode-badge {
+      margin: 0 auto;
+      padding: clamp(3px, 0.8vh, 6px) 12px;
+      border-radius: 999px;
+      border: 2px solid var(--highlight);
+      background: color-mix(in srgb, var(--highlight) 18%, var(--surface));
+      color: var(--highlight);
+      font-size: clamp(13px, 2.2vh, 20px);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .mode-badge.category {
+      border-color: #d3a845;
+      background: color-mix(in srgb, #d3a845 18%, var(--surface));
+      color: var(--color-language);
+    }
+
+    .mode-badge.completion {
+      border-color: #c18e3a;
+      background: color-mix(in srgb, #c18e3a 18%, var(--surface));
+      color: var(--color-language);
+    }
+
+    .timer-wrap {
+      width: 100%;
+      height: clamp(10px, 1.9vh, 22px);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--border) 65%, var(--color-game-bg));
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .timer-wrap.calm {
+      background: color-mix(in srgb, var(--border) 48%, var(--color-game-bg));
+    }
+
+    .timer-bar {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #f4d06f, var(--accent));
+      transition: width 200ms linear;
+    }
+
+    .timer-wrap.calm .timer-bar {
+      width: 100% !important;
+    }
+
+    .prompt {
+      text-align: center;
+      min-height: clamp(20px, 3.5vh, 44px);
+      font-size: clamp(14px, 2.2vh, 20px);
+      font-weight: 500;
+      color: var(--text-light);
+      letter-spacing: 0.3px;
+    }
+
+    .prompt.question {
+      font-size: clamp(16px, 2.8vh, 22px);
+      font-weight: 400;
+      margin-bottom: 2px;
+    }
+
+    .prompt.answer {
+      font-size: clamp(22px, 4.2vh, 36px);
+      font-weight: 700;
+      color: var(--text);
+      min-height: clamp(30px, 5.2vh, 56px);
+    }
+
+    .prompt.answer .blank {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-thickness: 4px;
+      text-underline-offset: 6px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(6px, 1vh, 12px);
+      flex-shrink: 0;
+    }
+
+    .option {
+      border-radius: 14px;
+      border: 4px solid var(--border);
+      min-height: clamp(74px, 16vh, 142px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: clamp(6px, 1vh, 10px);
+      color: var(--text-light);
+      word-break: break-word;
+      overflow-wrap: break-word;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: background-color 220ms ease-out, box-shadow 220ms ease-out;
+    }
+
+    .option.left {
+      border-color: var(--left-border);
+      background: var(--left-bg);
+      color: var(--left-text);
+    }
+
+    .option.right {
+      border-color: var(--right-border);
+      background: var(--right-bg);
+      color: var(--right-text);
+    }
+
+    .option:active {
+      filter: brightness(0.98);
+    }
+
+    .option-arrow {
+      font-size: clamp(20px, 3.4vh, 34px);
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .option-side {
+      margin-top: 4px;
+      min-width: clamp(24px, 4vh, 40px);
+      min-height: clamp(24px, 4vh, 40px);
+      border-radius: 999px;
+      border: 3px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(13px, 2.2vh, 20px);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .option-text {
+      font-size: clamp(18px, 3.2vh, 30px);
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .option.correct {
+      background: #d5f6ec;
+      box-shadow: 0 0 0 4px #6dd8b8 inset;
+      color: #145c47;
+    }
+
+    .option.wrong {
+      background: #ffe1d7;
+      box-shadow: 0 0 0 4px #ef9a84 inset;
+      color: #7a2518;
+    }
+
+    .feedback-banner {
+      min-height: clamp(30px, 5vh, 56px);
+      border: 2px solid color-mix(in srgb, var(--success) 60%, var(--border));
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--success) 16%, var(--surface));
+      color: var(--success);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px 10px;
+      font-size: clamp(14px, 2.6vh, 22px);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .feedback-banner.show {
+      display: flex;
+    }
+
+    .feedback-banner.error {
+      border-color: color-mix(in srgb, var(--error) 55%, var(--border));
+      background: color-mix(in srgb, var(--error) 16%, var(--surface));
+      color: var(--error);
+    }
+
+    .streak-dots {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: clamp(4px, 0.8vh, 8px);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .dot {
+      width: clamp(9px, 1.6vh, 16px);
+      height: clamp(9px, 1.6vh, 16px);
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      flex: 0 0 auto;
+    }
+
+    .dot.correct {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .dot.wrong {
+      background: var(--error);
+      border-color: var(--error);
+    }
+
+    .directions {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      color: var(--text-light);
+      flex-shrink: 0;
+    }
+
+    .direction-left {
+      color: var(--accent);
+    }
+
+    .direction-right {
+      color: var(--highlight);
+    }
+
+    .help {
+      margin-top: 2px;
+      color: var(--text-light);
+      text-align: center;
+      font-size: clamp(12px, 2vh, 18px);
+      flex-shrink: 0;
+    }
+
+    .results-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px max(env(safe-area-inset-right), 14px) max(env(safe-area-inset-bottom), 14px) max(env(safe-area-inset-left), 14px);
+    }
+
+    .result-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 3px solid #e0b94f;
+      background: color-mix(in srgb, #e0b94f 18%, var(--surface));
+      color: #d0a329;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      margin: 0 auto;
+    }
+
+    .result-title {
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .subtitle {
+      color: var(--text-light);
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .result-card {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--color-game-bg);
+      text-align: center;
+      padding: 10px;
+    }
+
+    .result-card strong {
+      display: block;
+      font-size: 46px;
+      line-height: 1;
+    }
+
+    .result-card span {
+      display: block;
+      margin-top: 6px;
+      color: var(--text-light);
+      font-size: 20px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .btn {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      min-height: 80px;
+      min-width: 140px;
+      font-size: 20px;
+      font-weight: 600;
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      border-color: #d3a845;
+      background: color-mix(in srgb, #d3a845 18%, var(--surface));
+    }
+
+    .result-controls .btn {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 540px) {
+      .game-area {
+        padding: 12px;
+        gap: 12px;
+      }
+
+      .status {
+        font-size: 20px;
+        min-height: 34px;
+      }
+
+      .progress {
+        font-size: 22px;
+      }
+
+      .mode-badge {
+        font-size: 18px;
+        width: fit-content;
+        max-width: 100%;
+      }
+
+      .prompt.question {
+        font-size: clamp(18px, 4.6vw, 22px);
+      }
+
+      .prompt.answer {
+        font-size: clamp(34px, 8.5vw, 44px);
+        min-height: 52px;
+      }
+
+      .option {
+        min-height: 112px;
+        padding: 10px;
+      }
+
+      .option-arrow {
+        font-size: 30px;
+      }
+
+      .option-text {
+        font-size: clamp(22px, 6vw, 32px);
+      }
+
+      .game-top {
+        grid-template-columns: 1fr;
+      }
+
+      .feedback-banner {
+        min-height: 58px;
+        font-size: 22px;
+      }
+
+      .dot {
+        width: 14px;
+        height: 14px;
+      }
+
+      .directions {
+        font-size: 18px;
+      }
+
+      .controls,
+      .btn {
+        width: 100%;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-height: 680px) {
+      .directions {
+        display: none;
+      }
+
+      .help {
+        display: none;
+      }
+
+      .game-body {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        gap: 6px;
+      }
+    }
+
+    /* LANDSCAPE VISIBILITY FIX */
+    @media (orientation: landscape) and (max-height: 520px) {
+      body,
+      #ctg-zoom-wrap,
+      .app {
+        height: 100dvh;
+        overflow: hidden;
+      }
+
+      .screen {
+        overflow: hidden;
+      }
+
+      .header {
+        min-height: 40px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+      }
+
+      .back-btn {
+        min-height: 28px;
+        padding: 3px 8px;
+        font-size: 12px;
+      }
+
+      .header-title {
+        font-size: 14px;
+      }
+
+      .level-badge {
+        font-size: 11px;
+        padding: 2px 7px;
+      }
+
+      .settings-link {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+      }
+
+      .game-body {
+        padding: 4px 8px 5px;
+        gap: 3px;
+      }
+
+      .game-top {
+        gap: 4px;
+        font-size: 12px;
+      }
+
+      .game-meta {
+        font-size: 12px;
+      }
+
+      .game-area {
+        padding: 4px;
+        gap: 3px;
+        border-radius: 8px;
+        border-width: 1.5px;
+      }
+
+      .status {
+        min-height: 14px;
+        font-size: 11px;
+      }
+
+      .progress {
+        font-size: 11px;
+      }
+
+      .mode-badge {
+        font-size: 10px;
+        padding: 1px 7px;
+        border-width: 1px;
+      }
+
+      .timer-wrap {
+        height: 6px;
+      }
+
+      .prompt {
+        min-height: 14px;
+      }
+
+      .prompt.question {
+        font-size: 11px;
+        margin-bottom: 0;
+      }
+
+      .prompt.answer {
+        font-size: 18px;
+        min-height: 22px;
+      }
+
+      .options {
+        gap: 5px;
+      }
+
+      .option {
+        min-height: 46px;
+        padding: 3px;
+        border-radius: 8px;
+        border-width: 2px;
+      }
+
+      .option-arrow {
+        font-size: 14px;
+      }
+
+      .option-text {
+        font-size: 15px;
+      }
+
+      .option-side {
+        min-width: 19px;
+        min-height: 19px;
+        font-size: 10px;
+        border-width: 1.5px;
+        margin-top: 1px;
+      }
+
+      .feedback-banner {
+        min-height: 22px;
+        font-size: 11px;
+        padding: 2px 5px;
+        border-radius: 8px;
+        border-width: 1px;
+      }
+
+      .streak-dots {
+        gap: 2px;
+      }
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-width: 1px;
+      }
+
+      .directions {
+        display: flex;
+        font-size: 9px;
+        gap: 2px 6px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .help {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div id="ctg-zoom-wrap">
+    <main class="app" aria-live="polite">
+      <section id="menuScreen" class="screen active panel menu-screen" aria-label="Word Wise Menu">
+        <div class="header">
+          <a href="index.html" class="back-btn">&larr; Back</a>
+          <span class="header-title">Word Wise</span>
+          <div class="header-actions">
+            <div class="level-badge">Language</div>
+            <a href="settings.html" class="settings-link" title="Settings">⚙️</a>
+          </div>
+        </div>
 
-<!-- HEADER -->
+        <div class="menu-body">
+          <div class="menu-hero">
+            <div class="game-icon-big">📚</div>
+            <h2>Word Wise</h2>
+            <div class="domain-tag">Language · Processing Speed</div>
+            <p class="menu-desc">
+              Choose the correct word fast across spelling, category matching,
+              and word completion rounds.
+            </p>
+          </div>
 
-<div class="header">
+          <div class="how-to">
+            <h3>How to Play</h3>
+            <div class="how-to-row">
+              <span class="key-badge">1</span>
+              <span><strong>Read</strong> the prompt and look at both options.</span>
+            </div>
+            <div class="how-to-row">
+              <span class="key-badge">2</span>
+              <span><strong>Pick</strong> the word that matches the spelling, category, or missing letter.</span>
+            </div>
+            <div class="how-to-row">
+              <span class="key-badge">3</span>
+              <span><strong>Answer quickly</strong> to score better and keep the round going.</span>
+            </div>
+          </div>
 
-  <button class="back-btn" onclick="goBack()">
-    ← Back
-  </button>
+          <button id="menuStartBtn" class="start-btn" type="button">▶️ Start Game</button>
+        </div>
+      </section>
 
-  <div class="header-title">
-    Word Wise
+      <section id="gameScreen" class="screen panel" aria-label="Word Wise Game">
+        <div class="header">
+          <button id="backBtn" class="back-btn" type="button">&larr; Back</button>
+          <span class="header-title">Word Wise</span>
+          <div class="header-actions">
+            <div id="gameLevelBadge" class="level-badge">Level 1</div>
+          </div>
+        </div>
+
+        <div class="game-body">
+          <h2 class="sr-only">Word Wise</h2>
+
+          <div class="game-top">
+            <div class="game-meta">Score: <span id="scoreValue">0</span></div>
+            <div class="game-meta">Round: <span id="roundValue">0</span>/15</div>
+          </div>
+
+          <div id="gameArea" class="game-area" tabindex="-1" aria-label="Gameplay Area">
+            <p id="phaseText" class="status">Get ready.</p>
+            <p id="progressText" class="progress"></p>
+            <p id="modeBadge" class="mode-badge">Spelling Check</p>
+
+            <div class="timer-wrap calm" aria-hidden="true">
+              <div id="timerBar" class="timer-bar"></div>
+            </div>
+
+            <p id="promptQuestion" class="prompt question">Ready?</p>
+            <p id="promptAnswer" class="prompt answer">READY?</p>
+
+            <div class="options">
+              <div id="optionLeft" class="option left">
+                <span class="option-arrow">&larr;</span>
+                <span id="optionLeftText" class="option-text">LEFT</span>
+                <span class="option-side" aria-hidden="true">L</span>
+              </div>
+              <div id="optionRight" class="option right">
+                <span class="option-arrow">&rarr;</span>
+                <span id="optionRightText" class="option-text">RIGHT</span>
+                <span class="option-side" aria-hidden="true">R</span>
+              </div>
+            </div>
+
+            <p id="feedbackBanner" class="feedback-banner" aria-live="polite"></p>
+            <div id="streakDots" class="streak-dots" aria-label="Recent round results"></div>
+
+            <div class="directions">
+              <span class="direction-left">&larr; LEFT BUTTON (ORANGE)</span>
+              <span class="direction-right">RIGHT BUTTON (BLUE) &rarr;</span>
+            </div>
+          </div>
+
+          <p class="help">Tap START GAME to begin.</p>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="screen panel" aria-label="Results">
+        <div class="header">
+          <button id="resultHeaderBackBtn" class="back-btn" type="button">&larr; Back</button>
+          <span class="header-title">Word Wise</span>
+          <div class="header-actions">
+            <div id="resultsLevelBadge" class="level-badge">Level 1</div>
+          </div>
+        </div>
+
+        <div class="results-body">
+          <div class="result-icon" aria-hidden="true">★</div>
+          <h2 id="resultMessage" class="result-title">Great effort! Keep practising!</h2>
+          <p class="subtitle">You completed all 15 rounds</p>
+
+          <div class="result-grid" aria-label="Session stats">
+            <div class="result-card">
+              <strong id="resultScore">0</strong>
+              <span>Score</span>
+            </div>
+            <div class="result-card">
+              <strong id="resultCorrect">0</strong>
+              <span>Correct</span>
+            </div>
+            <div class="result-card">
+              <strong id="resultLevel">1</strong>
+              <span>Level</span>
+            </div>
+          </div>
+
+          <div class="controls result-controls">
+            <button id="playAgainBtn" class="btn primary" type="button">Play Again</button>
+            <button id="resultBackBtn" class="btn" type="button">Back to Menu</button>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
-</div>
-
-<!-- MENU -->
-
-<div id="menuScreen" class="screen menu-screen active">
-
-  <div class="card">
-
-    <div class="game-icon">📚</div>
-
-    <div class="title">
-      Word Wise
-    </div>
-
-    <div class="tag">
-      Language · Processing Speed
-    </div>
-
-    <div class="desc">
-      Choose the correct word fast across spelling,
-      category matching and word completion rounds.
-    </div>
-
-  </div>
-
-  <div class="card">
-
-    <div class="how-title">
-      How to Play
-    </div>
-
-    <div class="row">
-      <div class="num">1</div>
-      <p><b>Read</b> the question carefully.</p>
-    </div>
-
-    <div class="row">
-      <div class="num">2</div>
-      <p><b>Choose</b> the correct answer.</p>
-    </div>
-
-    <div class="row">
-      <div class="num">3</div>
-      <p><b>Answer quickly</b> to score higher.</p>
-    </div>
-
-  </div>
-
-  <button class="start-btn" onclick="startGame()">
-    ▶ Start Game
-  </button>
-
-</div>
-
-<!-- GAME -->
-
-<div id="gameScreen" class="screen game-screen">
-
-  <div class="game-container">
-
-    <div class="stats">
-
-      <div class="stat">
-        <h3>Score</h3>
-        <p id="score">0</p>
-      </div>
-
-      <div class="stat">
-        <h3>Round</h3>
-        <p><span id="round">1</span>/15</p>
-      </div>
-
-    </div>
-
-    <div class="question" id="question">
-      Which spelling is correct?
-    </div>
-
-    <div class="options">
-
-      <div class="option left"
-           id="leftOption"
-           onclick="checkAnswer('left')">
-        APPLE
-      </div>
-
-      <div class="option right"
-           id="rightOption"
-           onclick="checkAnswer('right')">
-        APLLE
-      </div>
-
-    </div>
-
-    <div class="message" id="message"></div>
-
-  </div>
-
-</div>
-
-<!-- RESULT -->
-
-<div id="resultScreen" class="screen result-screen">
-
-  <h1>🎉 Game Finished</h1>
-
-  <p id="finalScore">
-    Your Score: 0
-  </p>
-
-  <button class="play-btn" onclick="restartGame()">
-    Play Again
-  </button>
-
-</div>
-
-<script>
-
-const questions = [
-
-{
-question:"Which spelling is correct?",
-left:"APPLE",
-right:"APLLE",
-correct:"left"
-},
-
-{
-question:"Which animal can fly?",
-left:"DOG",
-right:"BIRD",
-correct:"right"
-},
-
-{
-question:"Choose the correct word",
-left:"BANANA",
-right:"BANANAA",
-correct:"left"
-},
-
-{
-question:"Which is a fruit?",
-left:"CAR",
-right:"MANGO",
-correct:"right"
-},
-
-{
-question:"Which spelling is correct?",
-left:"ORANGE",
-right:"ORNAGE",
-correct:"left"
-}
-
-];
-
-/* SOUND */
-
-const SoundEngine = {
-
-ctx:null,
-
-isEnabled(){
-  return localStorage.getItem("ctg-sound") !== "off";
-},
-
-init(){
-
-  if(!this.isEnabled()) return;
-
-  const AudioContext =
-    window.AudioContext ||
-    window.webkitAudioContext;
-
-  if(!AudioContext) return;
-
-  if(!this.ctx){
-    this.ctx = new AudioContext();
-  }
-
-  if(this.ctx.state === "suspended"){
-    this.ctx.resume();
-  }
-},
-
-tone(freq,duration,type="sine"){
-
-  if(!this.isEnabled()) return;
-
-  this.init();
-
-  if(!this.ctx) return;
-
-  const osc =
-    this.ctx.createOscillator();
-
-  const gain =
-    this.ctx.createGain();
-
-  osc.type = type;
-  osc.frequency.value = freq;
-
-  osc.connect(gain);
-  gain.connect(this.ctx.destination);
-
-  gain.gain.setValueAtTime(
-    0.18,
-    this.ctx.currentTime
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    0.001,
-    this.ctx.currentTime + duration
-  );
-
-  osc.start();
-
-  osc.stop(
-    this.ctx.currentTime + duration
-  );
-},
-
-playCorrect(){
-
-  this.tone(700,0.12);
-
-  setTimeout(()=>{
-    this.tone(900,0.12);
-  },120);
-},
-
-playIncorrect(){
-  this.tone(220,0.25);
-},
-
-playClick(){
-  this.tone(520,0.08);
-}
-
-};
-
-/* STATE */
-
-let score = 0;
-let round = 1;
-let currentQuestion = 0;
-
-/* BACK */
-
-function goBack(){
-
-  if(
-    document.getElementById("gameScreen")
-    .classList.contains("active")
-  ){
-
-    document
-      .getElementById("gameScreen")
-      .classList.remove("active");
-
-    document
-      .getElementById("menuScreen")
-      .classList.add("active");
-
-    return;
-  }
-
-  if(
-    document.getElementById("resultScreen")
-    .classList.contains("active")
-  ){
-
-    document
-      .getElementById("resultScreen")
-      .classList.remove("active");
-
-    document
-      .getElementById("menuScreen")
-      .classList.add("active");
-
-    return;
-  }
-
-  window.location.href = "index.html";
-}
-
-/* START */
-
-function startGame(){
-
-  SoundEngine.init();
-
-  document
-    .getElementById("menuScreen")
-    .classList.remove("active");
-
-  document
-    .getElementById("gameScreen")
-    .classList.add("active");
-
-  loadQuestion();
-}
-
-/* LOAD */
-
-function loadQuestion(){
-
-  const q = questions[currentQuestion];
-
-  document.getElementById("question").innerText =
-    q.question;
-
-  document.getElementById("leftOption").innerText =
-    q.left;
-
-  document.getElementById("rightOption").innerText =
-    q.right;
-
-  document.getElementById("round").innerText =
-    round;
-
-  document.getElementById("message").innerText =
-    "";
-
-  SoundEngine.playClick();
-}
-
-/* CHECK */
-
-function checkAnswer(side){
-
-  const q = questions[currentQuestion];
-
-  if(side === q.correct){
-
-    score++;
-
-    SoundEngine.playCorrect();
-
-    document.getElementById("message").style.color =
-      "green";
-
-    document.getElementById("message").innerText =
-      "Correct ✅";
-
-  }else{
-
-    SoundEngine.playIncorrect();
-
-    document.getElementById("message").style.color =
-      "red";
-
-    document.getElementById("message").innerText =
-      "Wrong ❌";
-  }
-
-  document.getElementById("score").innerText =
-    score;
-
-  setTimeout(()=>{
-
-    round++;
-    currentQuestion++;
-
-    if(round > 15){
-
-      endGame();
-      return;
-    }
-
-    if(currentQuestion >= questions.length){
-      currentQuestion = 0;
-    }
-
-    loadQuestion();
-
-  },500);
-}
-
-/* END */
-
-function endGame(){
-
-  document
-    .getElementById("gameScreen")
-    .classList.remove("active");
-
-  document
-    .getElementById("resultScreen")
-    .classList.add("active");
-
-  document.getElementById("finalScore").innerText =
-    "Your Score: " + score;
-}
-
-/* RESTART */
-
-function restartGame(){
-
-  score = 0;
-  round = 1;
-  currentQuestion = 0;
-
-  document
-    .getElementById("resultScreen")
-    .classList.remove("active");
-
-  document
-    .getElementById("menuScreen")
-    .classList.add("active");
-}
-
-</script>
-
+  <script src="word-wise-data.js" onerror="void 0"></script>
+
+  <script>
+    (function () {
+      const fallbackData = {
+        TOTAL_ROUNDS: 15,
+        DIFFICULTY_ORDER: ["EASY", "MEDIUM", "HARD"],
+        LEVEL_CONFIG: [
+          { mode: "spelling", difficulty: "EASY", timeLimitMs: 0 },
+          { mode: "spelling", difficulty: "EASY", timeLimitMs: 0 },
+          { mode: "category", difficulty: "MEDIUM", timeLimitMs: 7000 },
+          { mode: "category", difficulty: "MEDIUM", timeLimitMs: 6500 },
+          { mode: "completion", difficulty: "HARD", timeLimitMs: 6000 },
+          { mode: "mixed", difficulty: "HARD", timeLimitMs: 5500 }
+        ],
+        MODE_INSTRUCTIONS: {
+          "Spelling Check": "Which spelling is correct?",
+          "Category Match": "Choose the word that matches the category.",
+          "Word Completion": "Choose the missing letter."
+        },
+        SPELLING_BY_DIFFICULTY: {
+          EASY: [["APPLE", "APLLE"], ["ORANGE", "ORNAGE"], ["BANANA", "BANANAA"], ["TABLE", "TABEL"]],
+          MEDIUM: [["SCHOOL", "SHCOOL"], ["WINDOW", "WINDWO"], ["FLOWER", "FLOEWR"], ["ANIMAL", "ANIMEL"]],
+          HARD: [["BEAUTIFUL", "BEUTIFUL"], ["ELEPHANT", "ELEFANT"], ["TOMORROW", "TOMMOROW"], ["LANGUAGE", "LANGAUGE"]]
+        },
+        CATEGORIES: {
+          FRUIT: ["MANGO", "APPLE", "ORANGE", "BANANA"],
+          ANIMAL: ["DOG", "CAT", "BIRD", "LION"],
+          VEHICLE: ["CAR", "BUS", "TRAIN", "BIKE"],
+          COLOR: ["RED", "BLUE", "GREEN", "YELLOW"]
+        },
+        CATEGORY_DIFFICULTY: {
+          EASY: { FRUIT: ["VEHICLE", "ANIMAL"], ANIMAL: ["FRUIT", "COLOR"], VEHICLE: ["FRUIT", "COLOR"], COLOR: ["ANIMAL", "VEHICLE"] },
+          MEDIUM: { FRUIT: ["COLOR", "VEHICLE"], ANIMAL: ["VEHICLE", "FRUIT"], VEHICLE: ["ANIMAL", "FRUIT"], COLOR: ["FRUIT", "ANIMAL"] },
+          HARD: { FRUIT: ["COLOR", "ANIMAL"], ANIMAL: ["VEHICLE", "FRUIT"], VEHICLE: ["ANIMAL", "COLOR"], COLOR: ["FRUIT", "VEHICLE"] }
+        },
+        COMPLETION_BY_DIFFICULTY: {
+          EASY: ["CAT", "DOG", "SUN", "CAR"],
+          MEDIUM: ["APPLE", "TRAIN", "HOUSE", "GREEN"],
+          HARD: ["FLOWER", "SCHOOL", "WINDOW", "ANIMAL"]
+        },
+        CONFUSABLES: {
+          A: ["E", "O"], E: ["A", "I"], I: ["E", "A"], O: ["A", "U"], U: ["O", "A"],
+          B: ["D", "P"], D: ["B", "P"], P: ["B", "R"], M: ["N"], N: ["M"], S: ["C"], C: ["S"]
+        },
+        COMPLETION_PRIORITY_LETTERS: ["A", "E", "I", "O", "U", "B", "D", "P", "M", "N", "S", "C"]
+      };
+
+      const externalData = window.WORD_WISE_DATA || {};
+      const WORD_WISE_DATA = Object.assign({}, fallbackData, externalData);
+
+      const SPELLING = WORD_WISE_DATA.SPELLING_BY_DIFFICULTY || fallbackData.SPELLING_BY_DIFFICULTY;
+      const CATEGORIES = WORD_WISE_DATA.CATEGORIES || fallbackData.CATEGORIES;
+      const CATEGORY_DIFFICULTY = WORD_WISE_DATA.CATEGORY_DIFFICULTY || fallbackData.CATEGORY_DIFFICULTY;
+      const COMPLETION = WORD_WISE_DATA.COMPLETION_BY_DIFFICULTY || fallbackData.COMPLETION_BY_DIFFICULTY;
+      const CONFUSABLES = WORD_WISE_DATA.CONFUSABLES || fallbackData.CONFUSABLES;
+      const TOTAL_ROUNDS = WORD_WISE_DATA.TOTAL_ROUNDS || 15;
+      const DIFFICULTY_ORDER = WORD_WISE_DATA.DIFFICULTY_ORDER || fallbackData.DIFFICULTY_ORDER;
+      const LEVEL_CONFIG = WORD_WISE_DATA.LEVEL_CONFIG || fallbackData.LEVEL_CONFIG;
+      const MODE_INSTRUCTIONS = WORD_WISE_DATA.MODE_INSTRUCTIONS || fallbackData.MODE_INSTRUCTIONS;
+      const COMPLETION_PRIORITY_LETTERS = WORD_WISE_DATA.COMPLETION_PRIORITY_LETTERS || fallbackData.COMPLETION_PRIORITY_LETTERS;
+
+      const ui = {
+        menuScreen: document.getElementById("menuScreen"),
+        gameScreen: document.getElementById("gameScreen"),
+        resultScreen: document.getElementById("resultScreen"),
+        menuStartBtn: document.getElementById("menuStartBtn"),
+        backBtn: document.getElementById("backBtn"),
+        resultHeaderBackBtn: document.getElementById("resultHeaderBackBtn"),
+        resultBackBtn: document.getElementById("resultBackBtn"),
+        playAgainBtn: document.getElementById("playAgainBtn"),
+        gameLevelBadge: document.getElementById("gameLevelBadge"),
+        resultsLevelBadge: document.getElementById("resultsLevelBadge"),
+        phaseText: document.getElementById("phaseText"),
+        progressText: document.getElementById("progressText"),
+        modeBadge: document.getElementById("modeBadge"),
+        promptQuestion: document.getElementById("promptQuestion"),
+        promptAnswer: document.getElementById("promptAnswer"),
+        optionLeft: document.getElementById("optionLeft"),
+        optionRight: document.getElementById("optionRight"),
+        optionLeftText: document.getElementById("optionLeftText"),
+        optionRightText: document.getElementById("optionRightText"),
+        feedbackBanner: document.getElementById("feedbackBanner"),
+        streakDots: document.getElementById("streakDots"),
+        scoreValue: document.getElementById("scoreValue"),
+        roundValue: document.getElementById("roundValue"),
+        timerWrap: document.querySelector(".timer-wrap"),
+        timerBar: document.getElementById("timerBar"),
+        gameArea: document.getElementById("gameArea"),
+        resultMessage: document.getElementById("resultMessage"),
+        resultScore: document.getElementById("resultScore"),
+        resultLevel: document.getElementById("resultLevel"),
+        resultCorrect: document.getElementById("resultCorrect")
+      };
+
+      const state = {
+        score: 0,
+        level: 1,
+        round: 0,
+        mistakes: 0,
+        correctCount: 0,
+        attemptedRounds: 0,
+        recentOutcomes: [],
+        fastBonusCount: 0,
+        speedBonusThresholdMs: 3000,
+        usedQuestionKeys: {
+          spelling: new Set(),
+          category: new Set(),
+          completion: new Set()
+        },
+        phase: "idle",
+        currentQuestion: null,
+        roundStartedAt: 0,
+        roundTimer: null,
+        timerInterval: null,
+        countdownTimer: null,
+        nextRoundTimer: null,
+        lastTimerPercent: 100
+      };
+
+      const SoundEngine = {
+        ctx: null,
+        init() {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!Ctx) return;
+          if (!this.ctx) this.ctx = new Ctx();
+          if (this.ctx.state === "suspended") this.ctx.resume().catch(() => {});
+        },
+        tone(freq, duration, type) {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime + 0.01;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type || "sine";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration);
+        },
+        playCorrect() {
+          this.tone(520, 0.09, "sine");
+          setTimeout(() => this.tone(760, 0.08, "sine"), 75);
+        },
+        playIncorrect() {
+          this.tone(260, 0.16, "triangle");
+        },
+        playTimeout() {
+          this.tone(220, 0.2, "sine");
+        },
+        playWordAppear() {
+          this.tone(650, 0.05, "triangle");
+        }
+      };
+
+      function showScreen(name) {
+        ui.menuScreen.classList.remove("active");
+        ui.gameScreen.classList.remove("active");
+        ui.resultScreen.classList.remove("active");
+
+        if (name === "menu") ui.menuScreen.classList.add("active");
+        if (name === "game") {
+          ui.gameScreen.classList.add("active");
+          ui.gameArea.focus({ preventScroll: true });
+        }
+        if (name === "result") ui.resultScreen.classList.add("active");
+      }
+
+      function clearAllTimers() {
+        clearTimeout(state.roundTimer);
+        clearTimeout(state.countdownTimer);
+        clearTimeout(state.nextRoundTimer);
+        clearInterval(state.timerInterval);
+        state.roundTimer = null;
+        state.countdownTimer = null;
+        state.nextRoundTimer = null;
+        state.timerInterval = null;
+        ui.timerBar.style.width = "100%";
+        ui.timerWrap.classList.add("calm");
+      }
+
+      function randomInt(max) {
+        return Math.floor(Math.random() * max);
+      }
+
+      function pickFrom(arr) {
+        if (!arr || !arr.length) return null;
+        return arr[randomInt(arr.length)];
+      }
+
+      function normalizeDifficulty(diff) {
+        if (diff === "MEDIUM_HARD") return "MEDIUM";
+        return DIFFICULTY_ORDER.includes(diff) ? diff : "EASY";
+      }
+
+      function levelFromRound(round) {
+        if (round <= 2) return 1;
+        if (round <= 4) return 2;
+        if (round <= 6) return 3;
+        if (round <= 9) return 4;
+        if (round <= 12) return 5;
+        return 6;
+      }
+
+      function syncLevelToRound() {
+        state.level = levelFromRound(Math.max(1, state.round || 1));
+      }
+
+      function currentConfig() {
+        const base = LEVEL_CONFIG[Math.min(state.level - 1, LEVEL_CONFIG.length - 1)] || LEVEL_CONFIG[0];
+        return {
+          ...base,
+          difficulty: normalizeDifficulty(base.difficulty),
+          timeLimitMs: base.timeLimitMs || 0
+        };
+      }
+
+      function getDifficultyForRound(round) {
+        if (round <= 5) return "EASY";
+        if (round <= 10) return "MEDIUM";
+        return "HARD";
+      }
+
+      function pickUniqueItem(pool, usedSet, keyOf) {
+        if (!pool || !pool.length) return null;
+        const unused = pool.filter((item) => !usedSet.has(keyOf(item)));
+        if (!unused.length) {
+          usedSet.clear();
+          return pickFrom(pool);
+        }
+        return pickFrom(unused);
+      }
+
+      function updateHeader() {
+        ui.scoreValue.textContent = String(state.score);
+        ui.roundValue.textContent = String(state.round);
+        ui.gameLevelBadge.textContent = "Level " + String(state.level);
+        ui.resultsLevelBadge.textContent = "Level " + String(state.level);
+      }
+
+      function setStatus(main, sub) {
+        ui.phaseText.textContent = main;
+        ui.progressText.textContent = sub || "";
+      }
+
+      function updateModeBadge(question) {
+        const mode = question ? question.mode : "Spelling Check";
+        ui.modeBadge.textContent = mode;
+        ui.modeBadge.classList.remove("category", "completion");
+        if (mode === "Category Match") ui.modeBadge.classList.add("category");
+        if (mode === "Word Completion") ui.modeBadge.classList.add("completion");
+      }
+
+      function setPrompt(question, answerText) {
+        ui.promptQuestion.textContent = question;
+        if (answerText.includes("_")) {
+          ui.promptAnswer.innerHTML = answerText.replace(/_/g, '<span class="blank">_</span>');
+        } else {
+          ui.promptAnswer.textContent = answerText;
+        }
+      }
+
+      function clearFeedbackBanner() {
+        ui.feedbackBanner.textContent = "";
+        ui.feedbackBanner.classList.remove("show", "error");
+      }
+
+      function showFeedbackBanner(text, isError) {
+        ui.feedbackBanner.textContent = text;
+        ui.feedbackBanner.classList.add("show");
+        ui.feedbackBanner.classList.toggle("error", Boolean(isError));
+      }
+
+      function renderStreakDots() {
+        ui.streakDots.innerHTML = "";
+        for (let i = 0; i < TOTAL_ROUNDS; i += 1) {
+          const dot = document.createElement("span");
+          dot.className = "dot";
+          if (state.recentOutcomes[i] === true) dot.classList.add("correct");
+          if (state.recentOutcomes[i] === false) dot.classList.add("wrong");
+          ui.streakDots.appendChild(dot);
+        }
+      }
+
+      function recordRoundOutcome(isCorrect) {
+        state.attemptedRounds += 1;
+        state.recentOutcomes.push(Boolean(isCorrect));
+        if (state.recentOutcomes.length > TOTAL_ROUNDS) state.recentOutcomes.shift();
+        renderStreakDots();
+      }
+
+      function buildSpellingQuestion() {
+        const difficulty = getDifficultyForRound(state.round);
+        const pool = SPELLING[normalizeDifficulty(difficulty)] || SPELLING.EASY || [];
+        const pair = pickUniqueItem(pool, state.usedQuestionKeys.spelling, (item) => item[0]);
+        if (!pair) return null;
+        state.usedQuestionKeys.spelling.add(pair[0]);
+        const leftIsCorrect = Math.random() < 0.5;
+        return {
+          mode: "Spelling Check",
+          prompt: "Which spelling is correct?",
+          left: leftIsCorrect ? pair[0] : pair[1],
+          right: leftIsCorrect ? pair[1] : pair[0],
+          correct: leftIsCorrect ? "left" : "right"
+        };
+      }
+
+      function getWrongCategoryByDifficulty(correctCategory, round) {
+        const difficulty = getDifficultyForRound(round);
+        const difficultyMap = CATEGORY_DIFFICULTY[difficulty] || CATEGORY_DIFFICULTY.EASY || {};
+        const candidates = difficultyMap[correctCategory] || [];
+        if (!candidates.length) {
+          const allNames = Object.keys(CATEGORIES);
+          return pickFrom(allNames.filter((c) => c !== correctCategory));
+        }
+        return pickFrom(candidates);
+      }
+
+      function buildCategoryQuestion() {
+        const names = Object.keys(CATEGORIES);
+        const category = pickFrom(names);
+        if (!category) return null;
+        const valid = pickUniqueItem(CATEGORIES[category], state.usedQuestionKeys.category, (item) => category + ":" + item);
+        const wrongCategory = getWrongCategoryByDifficulty(category, state.round);
+        const invalid = pickFrom(CATEGORIES[wrongCategory]);
+        if (!valid || !invalid) return null;
+        state.usedQuestionKeys.category.add(category + ":" + valid);
+        const leftIsCorrect = Math.random() < 0.5;
+        return {
+          mode: "Category Match",
+          prompt: "Pick the word for: " + category.replace("_", " "),
+          left: leftIsCorrect ? valid : invalid,
+          right: leftIsCorrect ? invalid : valid,
+          correct: leftIsCorrect ? "left" : "right"
+        };
+      }
+
+      function chooseMissingLetterIndex(word) {
+        const internalIndexes = [];
+        for (let i = 1; i < word.length - 1; i += 1) internalIndexes.push(i);
+        if (!internalIndexes.length) return 1;
+        const vowels = internalIndexes.filter((index) => "AEIOU".includes(word[index]));
+        if (vowels.length) return pickFrom(vowels);
+        const common = internalIndexes.filter((index) => COMPLETION_PRIORITY_LETTERS.includes(word[index]));
+        if (common.length) return pickFrom(common);
+        return pickFrom(internalIndexes);
+      }
+
+      function buildCompletionQuestion() {
+        const difficulty = getDifficultyForRound(state.round);
+        const pool = COMPLETION[normalizeDifficulty(difficulty)] || COMPLETION.EASY || [];
+        const word = pickUniqueItem(pool, state.usedQuestionKeys.completion, (item) => item);
+        if (!word || word.length < 3) return null;
+        state.usedQuestionKeys.completion.add(word);
+        const missingIndex = chooseMissingLetterIndex(word);
+        const correctLetter = word[missingIndex];
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let wrongLetter = correctLetter;
+        const confusables = CONFUSABLES[correctLetter];
+        if (confusables && confusables.length) {
+          wrongLetter = confusables[randomInt(confusables.length)];
+        } else {
+          while (wrongLetter === correctLetter) wrongLetter = alphabet[randomInt(alphabet.length)];
+        }
+        const masked = word.slice(0, missingIndex) + "_" + word.slice(missingIndex + 1);
+        const leftIsCorrect = Math.random() < 0.5;
+        return {
+          mode: "Word Completion",
+          prompt: masked,
+          left: leftIsCorrect ? correctLetter : wrongLetter,
+          right: leftIsCorrect ? wrongLetter : correctLetter,
+          correct: leftIsCorrect ? "left" : "right"
+        };
+      }
+
+      function resolveRoundType(config) {
+        const cycle = ["spelling", "category", "completion"];
+        if (config.mode === "mixed") return cycle[state.round % cycle.length];
+        return config.mode;
+      }
+
+      function buildQuestion() {
+        const config = currentConfig();
+        const roundType = resolveRoundType(config);
+        if (roundType === "spelling") return buildSpellingQuestion();
+        if (roundType === "category") return buildCategoryQuestion();
+        return buildCompletionQuestion();
+      }
+
+      function modeInstruction(question) {
+        return MODE_INSTRUCTIONS[question.mode] || "Choose LEFT or RIGHT.";
+      }
+
+      function correctAnswerText() {
+        if (!state.currentQuestion) return "";
+        return state.currentQuestion[state.currentQuestion.correct];
+      }
+
+      function flashOption(direction, styleClass, duration) {
+        const node = direction === "left" ? ui.optionLeft : ui.optionRight;
+        node.classList.add(styleClass);
+        setTimeout(() => node.classList.remove(styleClass), duration || 260);
+      }
+
+      function startTimerIfNeeded() {
+        clearTimeout(state.roundTimer);
+        clearInterval(state.timerInterval);
+        ui.timerBar.style.width = "100%";
+        const config = currentConfig();
+        const useActiveTimer = state.level >= 3 && config.timeLimitMs > 0;
+        if (!useActiveTimer) {
+          ui.timerWrap.classList.add("calm");
+          return;
+        }
+        ui.timerWrap.classList.remove("calm");
+        runActiveTimer(config.timeLimitMs);
+      }
+
+      function runActiveTimer(durationMs) {
+        const start = performance.now();
+        state.timerInterval = setInterval(() => {
+          const elapsed = performance.now() - start;
+          const remaining = Math.max(0, durationMs - elapsed);
+          const percent = Math.floor((remaining / durationMs) * 100);
+          if (percent !== state.lastTimerPercent) {
+            state.lastTimerPercent = percent;
+            ui.timerBar.style.width = String(percent) + "%";
+          }
+        }, 120);
+
+        state.roundTimer = setTimeout(() => {
+          if (state.phase !== "awaiting-answer") return;
+          state.phase = "feedback";
+          state.mistakes += 1;
+          recordRoundOutcome(false);
+          SoundEngine.playTimeout();
+          const answer = correctAnswerText();
+          setStatus("Time is up.", "Let's keep going.");
+          showFeedbackBanner("Time up. Correct answer: " + answer + ".", true);
+          flashOption(state.currentQuestion.correct, "correct", 280);
+          updateHeader();
+          scheduleNextRoundOrEnd();
+        }, durationMs);
+      }
+
+      function presentQuestion() {
+        syncLevelToRound();
+        const question = buildQuestion();
+        if (!question) {
+          setStatus("Dataset missing.", "Please press Back and start again.");
+          state.phase = "idle";
+          return;
+        }
+        state.currentQuestion = question;
+        state.roundStartedAt = performance.now();
+        state.phase = "awaiting-answer";
+        setPrompt(modeInstruction(question), question.prompt);
+        updateModeBadge(question);
+        clearFeedbackBanner();
+        ui.optionLeftText.textContent = question.left;
+        ui.optionRightText.textContent = question.right;
+        setStatus(question.mode + " Round", modeInstruction(question) + " Use LEFT or RIGHT.");
+        SoundEngine.playWordAppear();
+        startTimerIfNeeded();
+      }
+
+      function scheduleNextRoundOrEnd() {
+        clearTimeout(state.roundTimer);
+        clearInterval(state.timerInterval);
+        if (state.mistakes >= 5 || state.round >= TOTAL_ROUNDS) {
+          endGame();
+          return;
+        }
+        state.phase = "transition";
+        state.nextRoundTimer = setTimeout(() => {
+          state.round += 1;
+          updateHeader();
+          presentQuestion();
+        }, 900);
+      }
+
+      function handleAnswer(direction) {
+        if (state.phase !== "awaiting-answer" || !state.currentQuestion) return;
+        state.phase = "feedback";
+        const isCorrect = direction === state.currentQuestion.correct;
+        const responseMs = performance.now() - state.roundStartedAt;
+        const answer = correctAnswerText();
+
+        if (isCorrect) {
+          state.correctCount += 1;
+          state.score += responseMs < state.speedBonusThresholdMs ? 3 : 2;
+          recordRoundOutcome(true);
+          SoundEngine.playCorrect();
+          flashOption(direction, "correct", 260);
+          showFeedbackBanner((responseMs < state.speedBonusThresholdMs ? "Correct and quick! +3 points. " : "Nice work! +2 points. ") + answer + " is correct.");
+          setStatus(state.currentQuestion.mode + " Round", "Great progress.");
+        } else {
+          state.mistakes += 1;
+          recordRoundOutcome(false);
+          SoundEngine.playIncorrect();
+          flashOption(direction, "wrong", 280);
+          flashOption(state.currentQuestion.correct, "correct", 280);
+          showFeedbackBanner("Good try. Correct answer: " + answer + ".", true);
+          setStatus(state.currentQuestion.mode + " Round", "Let's keep going.");
+        }
+
+        updateHeader();
+        scheduleNextRoundOrEnd();
+      }
+
+      function resetSession() {
+        clearAllTimers();
+        state.score = 0;
+        state.level = 1;
+        state.round = 0;
+        state.mistakes = 0;
+        state.correctCount = 0;
+        state.attemptedRounds = 0;
+        state.recentOutcomes = [];
+        state.fastBonusCount = 0;
+        state.speedBonusThresholdMs = 3000;
+        state.usedQuestionKeys = {
+          spelling: new Set(),
+          category: new Set(),
+          completion: new Set()
+        };
+        state.phase = "idle";
+        state.currentQuestion = null;
+        setPrompt("Ready?", "READY?");
+        updateModeBadge(null);
+        clearFeedbackBanner();
+        renderStreakDots();
+        ui.optionLeftText.textContent = "";
+        ui.optionRightText.textContent = "";
+        syncLevelToRound();
+        setStatus("Get ready...", "Starting soon.");
+        updateHeader();
+      }
+
+      function beginCountdown() {
+        state.phase = "countdown";
+        let count = 3;
+        function step() {
+          if (count <= 0) {
+            setPrompt("Starting now", "GO");
+            setStatus("Let's begin!", "Choose LEFT or RIGHT.");
+            state.countdownTimer = setTimeout(() => {
+              state.round = 1;
+              syncLevelToRound();
+              updateHeader();
+              presentQuestion();
+            }, 550);
+            return;
+          }
+          setPrompt("Starting soon", String(count));
+          setStatus("Starting soon.", "Get ready. Round starts in " + String(count) + ".");
+          count -= 1;
+          state.countdownTimer = setTimeout(step, 750);
+        }
+        step();
+      }
+
+      function beginNewRun() {
+        SoundEngine.init();
+        showScreen("game");
+        resetSession();
+        beginCountdown();
+      }
+
+      function endGame() {
+        clearAllTimers();
+        state.phase = "done";
+        ui.resultScore.textContent = String(state.score);
+        ui.resultLevel.textContent = String(state.level);
+        ui.resultCorrect.textContent = String(state.correctCount);
+
+        if (state.score >= 40) ui.resultMessage.textContent = "Fantastic work!";
+        else if (state.score >= 20) ui.resultMessage.textContent = "Great effort! Keep practising!";
+        else ui.resultMessage.textContent = "Good try! You will do even better next time!";
+
+        showScreen("result");
+      }
+
+      function goToMenu() {
+        clearAllTimers();
+        state.phase = "idle";
+        showScreen("menu");
+      }
+
+      function goBack() {
+        if (ui.gameScreen.classList.contains("active")) {
+          endGame();
+          return;
+        }
+        goToMenu();
+      }
+
+      ui.menuStartBtn.addEventListener("click", beginNewRun);
+      ui.backBtn.addEventListener("click", goBack);
+      ui.resultHeaderBackBtn.addEventListener("click", goToMenu);
+      ui.resultBackBtn.addEventListener("click", goToMenu);
+      ui.playAgainBtn.addEventListener("click", beginNewRun);
+      ui.optionLeft.addEventListener("click", () => handleAnswer("left"));
+      ui.optionRight.addEventListener("click", () => handleAnswer("right"));
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          handleAnswer("left");
+        }
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          handleAnswer("right");
+        }
+      });
+
+      renderStreakDots();
+      updateHeader();
+    })();
+  </script>
 </body>
 </html>

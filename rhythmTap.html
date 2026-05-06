@@ -403,10 +403,12 @@ body {
 let user = [];
 let level = 1;
 let score = 0;
-let highScore = localStorage.getItem("rt-highscore") || 0;
+  highScore =
+  Number(localStorage.getItem("rt-highscore")) || 0;
 
     document.getElementById("score").innerText = 0;
     document.getElementById("level").innerText = 1;
+    document.getElementById("highScore").innerText=highScore;
 
     retryBtn.style.display = "none";
 

@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -274,11 +274,11 @@
       }
 
       .menu-benefit {
-  font-size: 13px;
-  color: var(--text-light);
-  margin-top: 6px;
-  font-style: italic;
-}
+        font-size: 13px;
+        color: var(--text-light);
+        margin-top: 6px;
+        font-style: italic;
+      }
 
       .game-arrow {
         font-size: 22px;
@@ -451,10 +451,22 @@
           and spatial awareness — right in your browser.
         </p>
         <div class="hero-cta">
-          <a onclick="loadGame('light-catcher'); return false;" href="#" class="btn-hero btn-hero-primary"
+          <a
+            onclick="
+              loadGame('light-catcher');
+              return false;
+            "
+            href="#"
+            class="btn-hero btn-hero-primary"
             >▶ Play Now</a
           >
-          <a onclick="openSettings(); return false;" href="#" class="btn-hero btn-hero-secondary"
+          <a
+            onclick="
+              openSettings();
+              return false;
+            "
+            href="#"
+            class="btn-hero btn-hero-secondary"
             >⚙️ Settings</a
           >
         </div>
@@ -484,7 +496,14 @@
       <p class="section-label">All Games</p>
       <section class="games-section">
         <div class="games-list">
-          <a class="game-card" onclick="loadGame('light-catcher'); return false;" href="#">
+          <a
+            class="game-card"
+            onclick="
+              loadGame('light-catcher');
+              return false;
+            "
+            href="#"
+          >
             <div class="game-icon">💡</div>
             <div class="game-info">
               <div class="game-name">Light Catcher</div>
@@ -493,13 +512,21 @@
                 Tap the side where the light appears as fast as you can!
               </div>
               <p class="menu-benefit">
-  Improves your ability to remember patterns and react in sequence.
-</p>
+                Improves your ability to remember patterns and react in
+                sequence.
+              </p>
             </div>
             <div class="game-arrow">›</div>
           </a>
 
-          <a class="game-card game-card-blue" onclick="loadGame('road-runner'); return false;" href="#">
+          <a
+            class="game-card game-card-blue"
+            onclick="
+              loadGame('road-runner');
+              return false;
+            "
+            href="#"
+          >
             <div class="game-icon">🚗</div>
             <div class="game-info">
               <div class="game-name">Road Runner</div>
@@ -508,13 +535,20 @@
                 Drive and dodge obstacles by switching lanes!
               </div>
               <p class="menu-benefit">
-  Sharpens quick decision-making under pressure.
-</p>
+                Sharpens quick decision-making under pressure.
+              </p>
             </div>
             <div class="game-arrow">›</div>
           </a>
 
-          <a class="game-card" onclick="loadGame('simons-path'); return false;" href="#">
+          <a
+            class="game-card"
+            onclick="
+              loadGame('simons-path');
+              return false;
+            "
+            href="#"
+          >
             <div class="game-icon">🧭</div>
             <div class="game-info">
               <div class="game-name">Simon's Path</div>
@@ -523,13 +557,20 @@
                 Watch the pattern, then repeat left and right in the same order.
               </div>
               <p class="menu-benefit">
-  Strengthens memory by training you to recall sequences.
-</p>
+                Strengthens memory by training you to recall sequences.
+              </p>
             </div>
             <div class="game-arrow">›</div>
           </a>
 
-          <a class="game-card game-card-blue" onclick="loadGame('word-wise'); return false;" href="#">
+          <a
+            class="game-card game-card-blue"
+            onclick="
+              loadGame('word-wise');
+              return false;
+            "
+            href="#"
+          >
             <div class="game-icon">📚</div>
             <div class="game-info">
               <div class="game-name">Word Wise</div>
@@ -538,28 +579,43 @@
                 Choose the best word quickly to build vocabulary and focus.
               </div>
               <p class="menu-benefit">
-  Enhances vocabulary and quick word recognition.
-</p>
+                Enhances vocabulary and quick word recognition.
+              </p>
             </div>
             <div class="game-arrow">›</div>
           </a>
 
-          <a class="game-card " onclick="loadGame('sorterGame'); return false;" href="#">
+          <a
+            class="game-card"
+            onclick="
+              loadGame('sorterGame');
+              return false;
+            "
+            href="#"
+          >
             <div class="game-icon">📦</div>
             <div class="game-info">
               <div class="game-name">Sorter Game</div>
               <div class="game-tag">Memory · Sequence</div>
               <div class="game-desc">
-                Interactive puzzle game that improves thinking through sorting challenges.
+                Interactive puzzle game that improves thinking through sorting
+                challenges.
               </div>
               <p class="menu-benefit">
- Trains your brain to quickly categorize and follow rules.
-</p>
+                Trains your brain to quickly categorize and follow rules.
+              </p>
             </div>
             <div class="game-arrow">›</div>
           </a>
 
-             <a class="game-card game-card-blue" onclick="loadGame('matchOrNoMatch'); return false;" href="#">
+          <a
+            class="game-card game-card-blue"
+            onclick="
+              loadGame('matchOrNoMatch');
+              return false;
+            "
+            href="#"
+          >
             <div class="game-icon">🎯</div>
             <div class="game-info">
               <div class="game-name">Match Or No Match</div>
@@ -568,40 +624,55 @@
                 Players decide whether two items match or do not match.
               </div>
               <p class="menu-benefit">
-  Helps you notice differences and make faster decisions.
-</p>
+                Helps you notice differences and make faster decisions.
+              </p>
             </div>
             <div class="game-arrow">›</div>
           </a>
-<a class="game-card" onclick="loadGame('balloon-float'); return false;" href="#">
-  <div class="game-icon">🎈</div>
-  <div class="game-info">
-    <div class="game-name">Balloon Float</div>
-    <div class="game-tag">Focus · Control</div>
-    <div class="game-desc">
-      Keep the balloon floating and avoid obstacles!
-    </div>
-    <p class="menu-benefit">
- Improves logical thinking and step-by-step problem solving.
-</p>
-  </div>
-  <div class="game-arrow">›</div>
-</a>
+          <a
+            class="game-card"
+            onclick="
+              loadGame('balloon-float');
+              return false;
+            "
+            href="#"
+          >
+            <div class="game-icon">🎈</div>
+            <div class="game-info">
+              <div class="game-name">Balloon Float</div>
+              <div class="game-tag">Focus · Control</div>
+              <div class="game-desc">
+                Keep the balloon floating and avoid obstacles!
+              </div>
+              <p class="menu-benefit">
+                Improves logical thinking and step-by-step problem solving.
+              </p>
+            </div>
+            <div class="game-arrow">›</div>
+          </a>
 
-<a class="game-card game-card-blue" onclick="loadGame('rhythmTap'); return false;" href="#">
-  <div class="game-icon">🎵</div>
-  <div class="game-info">
-    <div class="game-name">Rhythm Tap</div>
-    <div class="game-tag">Timing · Memory</div>
-    <div class="game-desc">
-      Follow the rhythm and tap in the correct pattern!
-    </div>
-    <p class="menu-benefit">
-  Improves your ability to remember patterns and react in sequence.
-</p>
-  </div>
-  <div class="game-arrow">›</div>
-</a>
+          <a
+            class="game-card game-card-blue"
+            onclick="
+              loadGame('rhythmTap');
+              return false;
+            "
+            href="#"
+          >
+            <div class="game-icon">🎵</div>
+            <div class="game-info">
+              <div class="game-name">Rhythm Tap</div>
+              <div class="game-tag">Timing · Memory</div>
+              <div class="game-desc">
+                Follow the rhythm and tap in the correct pattern!
+              </div>
+              <p class="menu-benefit">
+                Improves your ability to remember patterns and react in
+                sequence.
+              </p>
+            </div>
+            <div class="game-arrow">›</div>
+          </a>
         </div>
       </section>
 
@@ -633,34 +704,65 @@
       </section>
 
       <footer>
-        🧠 Cognitive Training Games &nbsp;·&nbsp;
-        <a onclick="openSettings(); return false;" href="#">Settings</a> &nbsp;·&nbsp; Built for sharper
-        minds
+        Cognitive Training Games &nbsp;·&nbsp;
+        <a
+          onclick="
+            openSettings();
+            return false;
+          "
+          href="#"
+          >Settings</a
+        >
+        &nbsp;·&nbsp; Built for sharper minds
       </footer>
     </div>
     <!-- /ctg-zoom-wrap -->
 
     <div class="ctg-toast" id="ctg-toast"></div>
 
-    <iframe id="gameFrame" style="display:none; width:100%; height:100vh; border:none; position:fixed; top:0; left:0; z-index:1000;"></iframe>
+    <iframe
+      id="gameFrame"
+      style="
+        display: none;
+        width: 100%;
+        height: 100vh;
+        border: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      "
+    ></iframe>
 
     <script src="shared.js"></script>
     <script>
-      window.loadGame = function(game) {
-        const frame = document.getElementById('gameFrame');
-        frame.src = game + '.html';
-        frame.style.display = 'block';
-        document.querySelector('.ctg-main').style.display = 'none';
+      window.loadGame = function (game) {
+        const frame = document.getElementById("gameFrame");
+        frame.src = game + ".html";
+        frame.style.display = "block";
+        document.querySelector(".ctg-main").style.display = "none";
       };
-      window.goBack = function() {
-        const frame = document.getElementById('gameFrame');
-        frame.src = '';
-        frame.style.display = 'none';
-        document.querySelector('.ctg-main').style.display = 'block';
+      window.goBack = function () {
+        const frame = document.getElementById("gameFrame");
+        frame.src = "";
+        frame.style.display = "none";
+        document.querySelector(".ctg-main").style.display = "block";
       };
-      window.openSettings = function() {
-        window.loadGame('settings');
+      window.openSettings = function () {
+        window.loadGame("settings");
       };
+    </script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/Cognitive-Games/sw.js", {
+              scope: "/Cognitive-Games/",
+            })
+            .then((reg) => console.log("SW registered:", reg.scope))
+            .catch((err) => console.error("SW error:", err));
+        });
+      }
     </script>
   </body>
 </html>

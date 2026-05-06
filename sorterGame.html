@@ -250,7 +250,8 @@ canvas {
 /* LANDSCAPE MODE FIX */
 @media (orientation: landscape) and (max-height: 520px) {
   body {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y:auto;
   }
 
   .header {
@@ -262,12 +263,12 @@ canvas {
   }
 
   #gameScreen {
-    height: 100vh;
-    min-height: 100vh;
+    min-height: 100dvh;
     padding-top: 42px;
     padding-bottom: 6px;
     justify-content: flex-start;
-    overflow: hidden;
+    height:auto;
+    overflow-y:auto;
   }
 
   .top-bar {

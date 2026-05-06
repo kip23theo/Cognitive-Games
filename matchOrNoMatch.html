@@ -160,10 +160,9 @@ body {
 
 .top-bar {
   width: 95%;
-  max-width: 520px;
+  max-width: 560px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin: 0 auto 18px auto;
   font-weight: bold;
   font-size: 14px;
@@ -178,20 +177,29 @@ body {
 
 .panels {
   width: 100%;
-  max-width: 520px;
+  max-width: 560px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 60px;
+  gap: 70px;
   margin: 20px auto 30px auto;
 }
 
 .panel {
-  width: 140px;
-  height: 140px;
+  width: 170px;
+  height: 170px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  position: relative;
+}
+.panel > * {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .circle {
@@ -200,12 +208,55 @@ body {
   border-radius: 50%;
 }
 
+.square {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+}
+
 .triangle {
   width: 0;
   height: 0;
   border-left: 45px solid transparent;
   border-right: 45px solid transparent;
   border-bottom: 90px solid;
+}
+
+.pattern-row,
+.pattern-grid {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pattern-grid {
+  width: 120px;
+  height: 120px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  place-items: center;
+  gap: 12px;
+}
+
+.mini-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.mini-square {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+}
+
+.mini-triangle {
+  width: 0;
+  height: 0;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-bottom: 34px solid;
 }
 
 .buttons {
@@ -286,23 +337,24 @@ body {
   }
 
   .panels {
-    gap: 30px;
+    gap: 28px;
   }
 
   .panel {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
   }
 
-  .circle {
-    width: 80px;
-    height: 80px;
+  .circle,
+  .square {
+    width: 75px;
+    height: 75px;
   }
 
   .triangle {
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
-    border-bottom: 80px solid;
+    border-left: 38px solid transparent;
+    border-right: 38px solid transparent;
+    border-bottom: 76px solid;
   }
 
   .buttons button {
@@ -335,7 +387,7 @@ body {
     </div>
     <div class="step">
       <div class="num">2</div>
-      <div>Compare shapes or colors</div>
+      <div>Compare shapes, colors, and patterns</div>
     </div>
     <div class="step">
       <div class="num">3</div>
@@ -355,7 +407,7 @@ body {
   </div>
 
   <div class="rule" id="rule">
-    Compare only shapes — MATCH or NO MATCH?
+    Level 1: Same shape or different shape?
   </div>
 
   <div class="panels">
@@ -394,15 +446,14 @@ let score = 0;
 let level = 1;
 let round = 1;
 let maxRounds = 30;
+let isMatch = false;
+let audioCtx = null;
 
 let highScore = Number(localStorage.getItem("match-high")) || 0;
 highEl.innerText = highScore;
 
-const shapes = ["circle", "triangle"];
+const shapes = ["circle", "triangle", "square"];
 const colors = ["#6c5ce7", "#00b894", "#e17055", "#fdcb6e"];
-
-let isMatch = false;
-let audioCtx = null;
 
 function goHome() {
   window.location.href = "index.html";
@@ -448,11 +499,7 @@ function beep(type) {
   osc.connect(gain);
   gain.connect(audioCtx.destination);
 
-  if (type === "good") {
-    osc.frequency.value = 700;
-  } else {
-    osc.frequency.value = 180;
-  }
+  osc.frequency.value = type === "good" ? 700 : 180;
 
   gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
@@ -475,9 +522,9 @@ function startGame() {
   level = 1;
   round = 1;
 
-  scoreEl.innerText = 0;
-  levelEl.innerText = 1;
-  roundEl.innerText = 1;
+  scoreEl.innerText = score;
+  levelEl.innerText = level;
+  roundEl.innerText = round;
   messageEl.innerText = "";
 
   newRound();
@@ -487,12 +534,38 @@ function restartGame() {
   startGame();
 }
 
+function randomFrom(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 function randomShape() {
-  return shapes[Math.floor(Math.random() * shapes.length)];
+  return randomFrom(shapes);
 }
 
 function randomColor() {
-  return colors[Math.floor(Math.random() * colors.length)];
+  return randomFrom(colors);
+}
+
+function updateLevel() {
+  if (round <= 5) level = 1;
+  else if (round <= 10) level = 2;
+  else if (round <= 15) level = 3;
+  else if (round <= 20) level = 4;
+  else if (round <= 25) level = 5;
+  else level = 6;
+
+  levelEl.innerText = level;
+
+  const rules = {
+    1: "Level 1: Same shape or different shape?",
+    2: "Level 2: Same color or different color?",
+    3: "Level 3: Shape and color must match.",
+    4: "Level 4: Compare shape pairs carefully.",
+    5: "Level 5: Compare 2×2 patterns.",
+    6: "Level 6: Spot subtle pattern differences."
+  };
+
+  ruleEl.innerText = rules[level];
 }
 
 function makeShape(shape, color) {
@@ -500,6 +573,11 @@ function makeShape(shape, color) {
 
   if (shape === "circle") {
     d.className = "circle";
+    d.style.backgroundColor = color;
+  }
+
+  if (shape === "square") {
+    d.className = "square";
     d.style.backgroundColor = color;
   }
 
@@ -511,24 +589,25 @@ function makeShape(shape, color) {
   return d;
 }
 
-function updateLevel() {
-  if (score >= 20) {
-    level = 3;
-  } else if (score >= 10) {
-    level = 2;
-  } else {
-    level = 1;
+function makeMiniShape(shape, color) {
+  const d = document.createElement("div");
+
+  if (shape === "circle") {
+    d.className = "mini-circle";
+    d.style.backgroundColor = color;
   }
 
-  levelEl.innerText = level;
-
-  if (level === 1) {
-    ruleEl.innerText = "Compare only shapes — MATCH or NO MATCH?";
-  } else if (level === 2) {
-    ruleEl.innerText = "Compare shape and color — MATCH or NO MATCH?";
-  } else {
-    ruleEl.innerText = "Compare carefully — shape and color must both match!";
+  if (shape === "square") {
+    d.className = "mini-square";
+    d.style.backgroundColor = color;
   }
+
+  if (shape === "triangle") {
+    d.className = "mini-triangle";
+    d.style.borderBottomColor = color;
+  }
+
+  return d;
 }
 
 function newRound() {
@@ -537,26 +616,40 @@ function newRound() {
 
   updateLevel();
 
+  isMatch = Math.random() > 0.5;
+
+  if (level <= 3) {
+    createSingleShapeRound();
+  } else {
+    createPatternRound();
+  }
+}
+
+function createSingleShapeRound() {
   let leftShape = randomShape();
   let leftColor = randomColor();
 
   let rightShape = leftShape;
   let rightColor = leftColor;
 
-  isMatch = Math.random() > 0.5;
-
-  if (level === 1) {
-    if (!isMatch) {
+  if (!isMatch) {
+    if (level === 1) {
       do {
         rightShape = randomShape();
       } while (rightShape === leftShape);
+
+      rightColor = randomColor();
     }
 
-    rightColor = randomColor();
-  }
+    else if (level === 2) {
+      rightShape = leftShape;
 
-  else if (level === 2) {
-    if (!isMatch) {
+      do {
+        rightColor = randomColor();
+      } while (rightColor === leftColor);
+    }
+
+    else {
       if (Math.random() > 0.5) {
         do {
           rightShape = randomShape();
@@ -569,40 +662,74 @@ function newRound() {
     }
   }
 
-  else {
-    if (!isMatch) {
-      const changeType = Math.floor(Math.random() * 3);
-
-      if (changeType === 0) {
-        do {
-          rightShape = randomShape();
-        } while (rightShape === leftShape);
-      }
-
-      else if (changeType === 1) {
-        do {
-          rightColor = randomColor();
-        } while (rightColor === leftColor);
-      }
-
-      else {
-        do {
-          rightShape = randomShape();
-        } while (rightShape === leftShape);
-
-        do {
-          rightColor = randomColor();
-        } while (rightColor === leftColor);
-      }
-    }
-  }
-
   leftPanel.appendChild(makeShape(leftShape, leftColor));
   rightPanel.appendChild(makeShape(rightShape, rightColor));
 }
 
-function answer(user) {
-  if (user === isMatch) {
+function createPatternRound() {
+  const leftPattern = [];
+  const rightPattern = [];
+
+  const count = level === 4 ? 2 : 4;
+
+  for (let i = 0; i < count; i++) {
+    const item = {
+      shape: randomShape(),
+      color: randomColor()
+    };
+
+    leftPattern.push(item);
+    rightPattern.push({
+      shape: item.shape,
+      color: item.color
+    });
+  }
+
+  if (!isMatch) {
+    const index = Math.floor(Math.random() * count);
+
+    if (level === 4) {
+      do {
+        rightPattern[index].shape = randomShape();
+      } while (rightPattern[index].shape === leftPattern[index].shape);
+    }
+
+    else if (level === 5) {
+      if (Math.random() > 0.5) {
+        do {
+          rightPattern[index].shape = randomShape();
+        } while (rightPattern[index].shape === leftPattern[index].shape);
+      } else {
+        do {
+          rightPattern[index].color = randomColor();
+        } while (rightPattern[index].color === leftPattern[index].color);
+      }
+    }
+
+    else {
+      do {
+        rightPattern[index].color = randomColor();
+      } while (rightPattern[index].color === leftPattern[index].color);
+    }
+  }
+
+  drawPattern(leftPanel, leftPattern, count);
+  drawPattern(rightPanel, rightPattern, count);
+}
+
+function drawPattern(panel, pattern, count) {
+  const box = document.createElement("div");
+  box.className = count === 2 ? "pattern-row" : "pattern-grid";
+
+  pattern.forEach(item => {
+    box.appendChild(makeMiniShape(item.shape, item.color));
+  });
+
+  panel.appendChild(box);
+}
+
+function answer(userAnswer) {
+  if (userAnswer === isMatch) {
     score += 2;
     messageEl.style.color = "green";
     messageEl.innerText = "Correct ✅";

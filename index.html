@@ -889,61 +889,56 @@
     </script>
 
     <!-- PWA INSTALL LOGIC -->
-    <script>
-      (function () {
-        let deferredPrompt = null;
-        const banner = document.getElementById("install-banner");
-        const iosPopup = document.getElementById("ios-popup");
+  <!-- PWA INSTALL LOGIC -->
+<script>
+  let deferredPrompt;
 
-        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-        const isSafari = /^((?!chrome|android).)*safari/i.test(
-          navigator.userAgent,
-        );
-        const isInStandaloneMode =
-          window.matchMedia("(display-mode: standalone)").matches ||
-          window.navigator.standalone === true;
-        const isDismissed = sessionStorage.getItem("pwa-install-dismissed");
+  const installBanner = document.getElementById("install-banner");
+  const installBtn = document.getElementById("install-btn");
+  const dismissBtn = document.getElementById("dismiss-btn");
 
-        if (isInStandaloneMode || isDismissed) return;
+  // Show install popup when browser allows PWA install
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
 
-        window.addEventListener("beforeinstallprompt", (e) => {
-          e.preventDefault();
-          deferredPrompt = e;
-          console.log("Install prompt available");
-          banner.classList.add("visible");
-        });
+    deferredPrompt = e;
 
-        if (isIOS && isSafari) {
-          setTimeout(() => {
-            iosPopup.classList.add("visible");
-          }, 2000);
-        }
+    console.log("PWA install available");
 
-        document
-          .getElementById("install-btn")
-          .addEventListener("click", async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            banner.classList.remove("visible");
-          });
+    installBanner.classList.add("visible");
+  });
 
-        document.getElementById("dismiss-btn").addEventListener("click", () => {
-          banner.classList.remove("visible");
-          sessionStorage.setItem("pwa-install-dismissed", "true");
-        });
+  // Install button click
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
 
-        document.getElementById("ios-dismiss").addEventListener("click", () => {
-          iosPopup.classList.remove("visible");
-          sessionStorage.setItem("pwa-install-dismissed", "true");
-        });
+    deferredPrompt.prompt();
 
-        window.addEventListener("appinstalled", () => {
-          banner.classList.remove("visible");
-        });
-      })();
-    </script>
+    const choiceResult = await deferredPrompt.userChoice;
+
+    if (choiceResult.outcome === "accepted") {
+      console.log("User accepted install");
+    } else {
+      console.log("User dismissed install");
+    }
+
+    deferredPrompt = null;
+
+    installBanner.classList.remove("visible");
+  });
+
+  // Not now button
+  dismissBtn.addEventListener("click", () => {
+    installBanner.classList.remove("visible");
+  });
+
+  // Hide after install
+  window.addEventListener("appinstalled", () => {
+    console.log("PWA installed");
+
+    installBanner.classList.remove("visible");
+  });
+</script>
 
     <!-- SERVICE WORKER -->
     <script>

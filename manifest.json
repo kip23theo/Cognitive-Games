@@ -2,28 +2,22 @@
   "name": "Cognitive Training Games",
   "short_name": "CogGames",
   "description": "Brain-training mini-games to sharpen focus, reaction speed, and spatial awareness.",
-  "start_url": "/Cognitive-Games/index.html",
-  "scope": "/Cognitive-Games/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4dabf7",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/Cognitive-Games/icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/Cognitive-Games/icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "/Cognitive-Games/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }

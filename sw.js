@@ -1,23 +1,22 @@
-const CACHE_NAME = "cognitive-games-v1";
+const CACHE_NAME = "cognitive-games-v2";
 
 const FILES_TO_CACHE = [
-  "/Cognitive-Games/",
-  "/Cognitive-Games/index.html",
-  "/Cognitive-Games/manifest.json",
-  "/Cognitive-Games/shared.js",
-  "/Cognitive-Games/sw.js",
-  "/Cognitive-Games/word-wise-data.js",
-  "/Cognitive-Games/balloon-float.html",
-  "/Cognitive-Games/light-catcher.html",
-  "/Cognitive-Games/matchOrNoMatch.html",
-  "/Cognitive-Games/rhythmTap.html",
-  "/Cognitive-Games/road-runner.html",
-  "/Cognitive-Games/settings.html",
-  "/Cognitive-Games/simons-path.html",
-  "/Cognitive-Games/sorterGame.html",
-  "/Cognitive-Games/word-wise.html",
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./shared.js",
+  "./sw.js",
+  "./word-wise-data.js",
+  "./balloon-float.html",
+  "./light-catcher.html",
+  "./matchOrNoMatch.html",
+  "./rhythmTap.html",
+  "./road-runner.html",
+  "./settings.html",
+  "./simons-path.html",
+  "./sorterGame.html",
+  "./word-wise.html",
 ];
-
 // INSTALL
 self.addEventListener("install", (event) => {
   event.waitUntil(

@@ -13,9 +13,6 @@
     <meta name="apple-mobile-web-app-title" content="Cognitive Games" />
     <link rel="apple-touch-icon" href="/Cognitive-Games/icon-192.png" />
     <style>
-      /* ═══════════════════════════════════════════
-   CSS VARIABLES — LIGHT (default) + DARK
-═══════════════════════════════════════════ */
       :root {
         --bg: #f8f6f3;
         --surface: #ffffff;
@@ -49,9 +46,6 @@
         --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
       }
 
-      /* ═══════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════ */
       *,
       *::before,
       *::after {
@@ -59,11 +53,9 @@
         margin: 0;
         padding: 0;
       }
-
       html {
         scroll-behavior: smooth;
       }
-
       body {
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -82,16 +74,13 @@
         flex-direction: column;
       }
 
-      /* ═══════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════ */
+      /* HERO */
       .hero {
         text-align: center;
         padding: 48px 20px 36px;
         max-width: 620px;
         margin: 0 auto;
       }
-
       .hero-emoji {
         font-size: clamp(44px, 10vw, 64px);
         line-height: 1;
@@ -99,7 +88,6 @@
         display: block;
         filter: drop-shadow(0 4px 12px rgba(225, 112, 85, 0.25));
       }
-
       .hero h1 {
         font-size: clamp(26px, 7vw, 42px);
         font-weight: 800;
@@ -108,11 +96,9 @@
         margin-bottom: 10px;
         line-height: 1.1;
       }
-
       .hero h1 span {
         color: var(--accent);
       }
-
       .hero p {
         font-size: clamp(14px, 3.5vw, 17px);
         color: var(--text-light);
@@ -120,14 +106,12 @@
         max-width: 440px;
         margin: 0 auto 24px;
       }
-
       .hero-cta {
         display: flex;
         gap: 10px;
         justify-content: center;
         flex-wrap: wrap;
       }
-
       .btn-hero {
         padding: 14px 28px;
         border-radius: 12px;
@@ -144,7 +128,6 @@
       .btn-hero:active {
         transform: scale(0.97);
       }
-
       .btn-hero-primary {
         background: linear-gradient(135deg, var(--accent), #d63031);
         color: #fff;
@@ -154,7 +137,6 @@
         box-shadow: 0 8px 24px rgba(225, 112, 85, 0.5);
         transform: translateY(-2px);
       }
-
       .btn-hero-secondary {
         background: var(--surface);
         color: var(--text);
@@ -166,9 +148,7 @@
         transform: translateY(-1px);
       }
 
-      /* ═══════════════════════════════════════════
-   SECTION TITLE
-═══════════════════════════════════════════ */
+      /* SECTION LABEL */
       .section-label {
         font-size: 11px;
         text-transform: uppercase;
@@ -180,21 +160,93 @@
         margin: 0 auto 10px;
       }
 
-      /* ═══════════════════════════════════════════
-   GAME CARDS
-═══════════════════════════════════════════ */
+      /* STATS STRIP */
+      .stats-strip {
+        display: flex;
+        align-items: stretch;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin: 0 0 28px;
+        transition: background 0.3s;
+      }
+      .stat-item {
+        flex: 1;
+        text-align: center;
+        padding: 18px 10px;
+        border-right: 1px solid var(--border);
+      }
+      .stat-item:last-child {
+        border-right: none;
+      }
+      .stat-num {
+        font-size: clamp(22px, 6vw, 30px);
+        font-weight: 800;
+        color: var(--text);
+        display: block;
+        letter-spacing: -0.02em;
+      }
+      .stat-desc {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      /* HOW IT WORKS */
+      .how-section {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 16px 28px;
+      }
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      @media (max-width: 480px) {
+        .steps-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .step-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 14px;
+        text-align: center;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      .step-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .step-card h3 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .step-card p {
+        font-size: 12px;
+        color: var(--text-light);
+        line-height: 1.4;
+      }
+
+      /* GAME CARDS */
       .games-section {
         max-width: 680px;
         margin: 0 auto;
         padding: 0 16px 32px;
       }
-
       .games-list {
         display: flex;
         flex-direction: column;
         gap: 12px;
       }
-
       .game-card {
         background: var(--surface);
         border-radius: var(--radius);
@@ -222,7 +274,6 @@
       .game-card:active {
         transform: scale(0.98);
       }
-
       .game-card-blue {
         border-left-color: var(--highlight);
       }
@@ -233,7 +284,6 @@
         background: rgba(116, 185, 255, 0.12);
         color: var(--highlight);
       }
-
       .game-icon {
         width: 56px;
         height: 56px;
@@ -246,19 +296,16 @@
         background: var(--accent-soft);
         transition: background 0.3s;
       }
-
       .game-info {
         flex: 1;
         min-width: 0;
       }
-
       .game-name {
         font-size: clamp(15px, 4vw, 18px);
         font-weight: 700;
         margin-bottom: 3px;
         color: var(--text);
       }
-
       .game-tag {
         display: inline-block;
         background: var(--accent-soft);
@@ -270,20 +317,17 @@
         margin-bottom: 4px;
         transition: background 0.3s;
       }
-
       .game-desc {
         font-size: clamp(12px, 3vw, 14px);
         color: var(--text-light);
         line-height: 1.45;
       }
-
       .menu-benefit {
         font-size: 13px;
         color: var(--text-light);
         margin-top: 6px;
         font-style: italic;
       }
-
       .game-arrow {
         font-size: 22px;
         color: var(--border);
@@ -297,90 +341,7 @@
         transform: translateX(3px);
       }
 
-      /* ═══════════════════════════════════════════
-   STATS STRIP
-═══════════════════════════════════════════ */
-      .stats-strip {
-        display: flex;
-        align-items: stretch;
-        background: var(--surface);
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-        margin: 0 0 28px;
-        transition: background 0.3s;
-      }
-
-      .stat-item {
-        flex: 1;
-        text-align: center;
-        padding: 18px 10px;
-        border-right: 1px solid var(--border);
-      }
-      .stat-item:last-child {
-        border-right: none;
-      }
-
-      .stat-num {
-        font-size: clamp(22px, 6vw, 30px);
-        font-weight: 800;
-        color: var(--text);
-        display: block;
-        letter-spacing: -0.02em;
-      }
-
-      .stat-desc {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--text-light);
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-      }
-
-      /* ═══════════════════════════════════════════
-   HOW IT WORKS
-═══════════════════════════════════════════ */
-      .how-section {
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 0 16px 40px;
-      }
-
-      .steps-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 12px;
-      }
-
-      .step-card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 18px 14px;
-        text-align: center;
-        transition:
-          background 0.3s,
-          border-color 0.3s;
-      }
-
-      .step-icon {
-        font-size: 28px;
-        margin-bottom: 8px;
-        display: block;
-      }
-      .step-card h3 {
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 4px;
-      }
-      .step-card p {
-        font-size: 12px;
-        color: var(--text-light);
-        line-height: 1.4;
-      }
-
-      /* ═══════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════ */
+      /* FOOTER */
       footer {
         margin-top: auto;
         text-align: center;
@@ -389,7 +350,6 @@
         color: var(--text-light);
         border-top: 1px solid var(--border);
       }
-
       footer a {
         color: var(--accent);
         text-decoration: none;
@@ -398,9 +358,7 @@
         text-decoration: underline;
       }
 
-      /* ═══════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════ */
+      /* TOAST */
       .ctg-toast {
         position: fixed;
         bottom: 24px;
@@ -425,9 +383,7 @@
         opacity: 1;
       }
 
-      /* ═══════════════════════════════════════════
-   PWA INSTALL BANNER
-═══════════════════════════════════════════ */
+      /* PWA INSTALL BANNER */
       #install-banner {
         display: none;
         position: fixed;
@@ -449,35 +405,29 @@
       #install-banner.visible {
         display: flex;
       }
-
       .install-banner-left {
         display: flex;
         align-items: center;
         gap: 12px;
       }
-
       .install-banner-emoji {
         font-size: 2rem;
         line-height: 1;
       }
-
       .install-banner-title {
         font-weight: 700;
         font-size: 1rem;
         color: var(--text);
       }
-
       .install-banner-sub {
         font-size: 0.78rem;
         color: var(--text-light);
         margin-top: 2px;
       }
-
       .install-banner-btns {
         display: flex;
         gap: 8px;
       }
-
       #install-btn {
         background: linear-gradient(135deg, var(--accent), #d63031);
         color: #fff;
@@ -493,7 +443,6 @@
       #install-btn:active {
         transform: scale(0.96);
       }
-
       #dismiss-btn {
         background: transparent;
         color: var(--text-light);
@@ -508,9 +457,7 @@
         background: var(--surface2);
       }
 
-      /* ═══════════════════════════════════════════
-   iOS INSTALL POPUP
-═══════════════════════════════════════════ */
+      /* iOS POPUP */
       #ios-popup {
         display: none;
         position: fixed;
@@ -531,29 +478,24 @@
       #ios-popup.visible {
         display: block;
       }
-
       .ios-popup-icon {
         font-size: 1.8rem;
         margin-bottom: 8px;
       }
-
       .ios-popup-title {
         font-weight: 700;
         font-size: 1rem;
         margin-bottom: 8px;
         color: var(--text);
       }
-
       .ios-popup-desc {
         font-size: 0.85rem;
         color: var(--text-light);
         line-height: 1.6;
       }
-
       .ios-popup-desc strong {
         color: var(--text);
       }
-
       #ios-dismiss {
         margin-top: 16px;
         background: linear-gradient(135deg, var(--accent), #d63031);
@@ -565,8 +507,6 @@
         cursor: pointer;
         font-size: 0.9rem;
       }
-
-      /* Arrow pointing down */
       .ios-popup-arrow {
         position: absolute;
         bottom: -10px;
@@ -577,15 +517,6 @@
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
         border-top: 10px solid var(--accent);
-      }
-
-      /* ═══════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════ */
-      @media (min-width: 540px) {
-        .games-list {
-          flex-direction: column;
-        }
       }
 
       @media (orientation: landscape) and (max-height: 500px) {
@@ -599,9 +530,7 @@
     </style>
   </head>
   <body>
-    <!-- ══════════════════════════════════════
-     PWA INSTALL BANNER (Android / Chrome)
-    ══════════════════════════════════════ -->
+    <!-- PWA INSTALL BANNER -->
     <div id="install-banner">
       <div class="install-banner-left">
         <div class="install-banner-emoji">🧠</div>
@@ -618,9 +547,7 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-     iOS MANUAL INSTALL POPUP
-    ══════════════════════════════════════ -->
+    <!-- iOS INSTALL POPUP -->
     <div id="ios-popup">
       <div class="ios-popup-icon">📲</div>
       <div class="ios-popup-title">Install on iPhone</div>
@@ -633,7 +560,7 @@
     </div>
 
     <div id="ctg-zoom-wrap">
-      <!-- ── HERO ── -->
+      <!-- HERO -->
       <section class="hero">
         <span class="hero-emoji">🧠</span>
         <h1>Cognitive<br /><span>Training</span> Games</h1>
@@ -663,27 +590,50 @@
         </div>
       </section>
 
-      <!-- ── STATS STRIP ── -->
+      <!-- STATS STRIP -->
       <div class="stats-strip">
         <div class="stat-item">
-          <span class="stat-num">8</span>
-          <span class="stat-desc">Games</span>
+          <span class="stat-num">8</span><span class="stat-desc">Games</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">∞</span>
-          <span class="stat-desc">Replays</span>
+          <span class="stat-num">∞</span><span class="stat-desc">Replays</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">100%</span>
-          <span class="stat-desc">Free</span>
+          <span class="stat-num">100%</span><span class="stat-desc">Free</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num">0</span>
-          <span class="stat-desc">Sign-up</span>
+          <span class="stat-num">0</span><span class="stat-desc">Sign-up</span>
         </div>
       </div>
 
-      <!-- ── GAMES ── -->
+      <!-- ── HOW IT WORKS (now ABOVE games) ── -->
+      <p class="section-label">How It Works</p>
+      <section class="how-section">
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-icon">🎮</span>
+            <h3>Pick a Game</h3>
+            <p>Choose from our library of activities.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-icon">⏱</span>
+            <h3>Play Daily</h3>
+            <p>Short sessions to keep your mind sharp.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-icon">📈</span>
+            <h3>Beat Your Score</h3>
+            <p>Track progress and aim higher each time.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-icon">⚙️</span>
+            <h3>Customize</h3>
+            <p>Adjust theme &amp; zoom from Settings.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── ALL GAMES ── -->
       <p class="section-label">All Games</p>
       <section class="games-section">
         <div class="games-list">
@@ -868,33 +818,6 @@
         </div>
       </section>
 
-      <!-- ── HOW IT WORKS ── -->
-      <p class="section-label">How It Works</p>
-      <section class="how-section">
-        <div class="steps-grid">
-          <div class="step-card">
-            <span class="step-icon">🎮</span>
-            <h3>Pick a Game</h3>
-            <p>Choose from our library of activities.</p>
-          </div>
-          <div class="step-card">
-            <span class="step-icon">⏱</span>
-            <h3>Play Daily</h3>
-            <p>Short sessions to keep your mind sharp.</p>
-          </div>
-          <div class="step-card">
-            <span class="step-icon">📈</span>
-            <h3>Beat Your Score</h3>
-            <p>Track progress and aim higher each time.</p>
-          </div>
-          <div class="step-card">
-            <span class="step-icon">⚙️</span>
-            <h3>Customize</h3>
-            <p>Adjust theme &amp; zoom from Settings.</p>
-          </div>
-        </div>
-      </section>
-
       <footer>
         Cognitive Training Games &nbsp;·&nbsp;
         <a
@@ -908,7 +831,6 @@
         &nbsp;·&nbsp; Built for sharper minds
       </footer>
     </div>
-    <!-- /ctg-zoom-wrap -->
 
     <div class="ctg-toast" id="ctg-toast"></div>
 
@@ -947,9 +869,7 @@
       };
     </script>
 
-    <!-- ══════════════════════════════════════
-     PWA INSTALL LOGIC
-    ══════════════════════════════════════ -->
+    <!-- PWA INSTALL LOGIC -->
     <script>
       (function () {
         let deferredPrompt = null;
@@ -965,24 +885,20 @@
           window.navigator.standalone === true;
         const isDismissed = sessionStorage.getItem("pwa-install-dismissed");
 
-        // Don't show anything if already installed or dismissed this session
         if (isInStandaloneMode || isDismissed) return;
 
-        // ── Android / Chrome: listen for browser prompt ──
         window.addEventListener("beforeinstallprompt", (e) => {
           e.preventDefault();
           deferredPrompt = e;
           banner.classList.add("visible");
         });
 
-        // ── iOS Safari: show manual instructions after 2s ──
         if (isIOS && isSafari) {
           setTimeout(() => {
             iosPopup.classList.add("visible");
           }, 2000);
         }
 
-        // Install button (Android)
         document
           .getElementById("install-btn")
           .addEventListener("click", async () => {
@@ -993,35 +909,28 @@
             banner.classList.remove("visible");
           });
 
-        // Dismiss banner
         document.getElementById("dismiss-btn").addEventListener("click", () => {
           banner.classList.remove("visible");
           sessionStorage.setItem("pwa-install-dismissed", "true");
         });
 
-        // Dismiss iOS popup
         document.getElementById("ios-dismiss").addEventListener("click", () => {
           iosPopup.classList.remove("visible");
           sessionStorage.setItem("pwa-install-dismissed", "true");
         });
 
-        // Auto-hide after successful install
         window.addEventListener("appinstalled", () => {
           banner.classList.remove("visible");
         });
       })();
     </script>
 
-    <!-- ══════════════════════════════════════
-     SERVICE WORKER
-    ══════════════════════════════════════ -->
+    <!-- SERVICE WORKER -->
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("/Cognitive-Games/sw.js", {
-              scope: "/Cognitive-Games/",
-            })
+            .register("/Cognitive-Games/sw.js", { scope: "/Cognitive-Games/" })
             .then((reg) => console.log("SW registered:", reg.scope))
             .catch((err) => console.error("SW error:", err));
         });

@@ -909,6 +909,7 @@
         window.addEventListener("beforeinstallprompt", (e) => {
           e.preventDefault();
           deferredPrompt = e;
+          console.log("Install prompt available");
           banner.classList.add("visible");
         });
 

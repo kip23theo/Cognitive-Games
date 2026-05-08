@@ -7,11 +7,11 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <title>Cognitive Training Games</title>
-    <link rel="manifest" href="/Cognitive-Games/manifest.json" />
+    <link rel="manifest" href="./manifest.json" />
     <meta name="theme-color" content="#e17055" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Cognitive Games" />
-    <link rel="apple-touch-icon" href="/Cognitive-Games/icon-192.png" />
+    <link rel="apple-touch-icon" href="./icon-192.png" />
     <style>
       :root {
         --bg: #f8f6f3;
@@ -944,8 +944,7 @@
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/Cognitive-Games/sw.js", { scope: "/Cognitive-Games/" })
+         navigator.serviceWorker.register("./sw.js")
             .then((reg) => console.log("SW registered:", reg.scope))
             .catch((err) => console.error("SW error:", err));
         });

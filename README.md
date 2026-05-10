@@ -1,62 +1,69 @@
-# 🧠 Cognitive Games for Elder Care
-A cognitive wellness platform designed to support elderly individuals through engaging brain-training activities that help improve memory, attention, reflexes, coordination, and cognitive stimulation. Developed as a Tata Consultancy Services (TCS) use-case prototype, this platform focuses on accessible, responsive, and easy-to-use digital cognitive exercises tailored for senior users.
+# 🧠 Cognitive Training Games for Elder Care
+
+A browser-based cognitive wellness platform designed specifically for elderly users (65+) to support memory, attention, processing speed, coordination, and language skills through engaging interactive games.
+
+Developed as a **Tata Consultancy Services (TCS) elderly care innovation use-case prototype**, this platform explores how accessible digital cognitive training can support healthy ageing, preventive cognitive care, and rehabilitation programs.
 
 ## 🌟 Key Features
 
 ### 👵 Elder-Friendly Cognitive Training
-Interactive games specifically designed to stimulate cognitive abilities in elderly users:
+A suite of interactive mini-games tailored for senior users:
 
-- **Light Catcher** – Enhances reflexes and visual response
-- **Road Runner** – Improves focus, reaction speed, and coordination
-- **Simon’s Path** – Strengthens short-term memory and recall
-- **Match Or No Match** – Boosts pattern recognition and decision-making
-- **Word Wise** – Supports vocabulary retention and language cognition
-- **Sorter Game** – Encourages logical thinking and categorization
-- **Rhythm Tap** – Develops auditory timing and hand-eye coordination
-- **Balloon Float** – Improves attention span and reaction speed
+- **Light Catcher** — Improves processing speed and visual reaction
+- **Road Runner** — Enhances attention, quick decision-making, and coordination
+- **Simon’s Path** — Strengthens working memory and recall
+- **Word Wise** — Supports vocabulary, language cognition, and recognition
+- **Sorter Game** — Encourages executive thinking and categorization
+- **Match Or No Match** — Improves visual recognition and decision accuracy
+- **Balloon Float** — Builds sustained attention and control
+- **Rhythm Tap** — Develops motor coordination and timing
 
 ---
 
-## ♿ Accessibility & Senior-Friendly Design
+## ♿ Accessibility & Senior-Centric Design
 
-Built with usability in mind for elderly users:
+Designed with elderly usability as the priority:
 
-- Large interactive buttons
+- Large touch-friendly UI components
+- Clean and calm visual design
+- Responsive layout for desktop, tablet, and mobile
+- Adjustable text/UI zoom controls
+- Light & dark mode support
+- Sound controls for accessibility
 - Simple navigation flow
-- Mobile-friendly responsive layouts
-- Reduced complexity user interface
-- Sound control settings
-- Clear visual hierarchy
-- PWA support for app-like access
+- Progressive Web App (PWA) installation support
+- Offline-ready experience
 
 ---
 
-## 🧠 Cognitive Health Focus
+## 🧠 Cognitive Health Objectives
 
-The platform supports mental wellness objectives including:
+This platform is designed to support:
 
 - Memory reinforcement
-- Attention improvement
-- Reaction speed enhancement
-- Coordination training
 - Cognitive stimulation
-- Pattern recognition exercises
-- Language engagement
+- Attention improvement
+- Processing speed enhancement
+- Executive function training
+- Language retention
+- Visual recognition
+- Reflex and motor coordination
 
 ---
 
-## 🌟 TCS Use Case Vision
+## 🌍 TCS Elder Care Use Case
 
-This project aligns with the Tata Consultancy Services (TCS) elderly care innovation use case, exploring how digital cognitive therapy tools can support senior wellness and preventive cognitive care.
+This solution aligns with the **Tata Consultancy Services (TCS) elderly healthcare innovation use case**, exploring digital tools for cognitive wellness and preventive elderly care.
 
-Potential applications:
+Potential applications include:
 
-- Elder care centers
 - Assisted living facilities
+- Elder care centres
+- Day care cognitive therapy programs
 - Home-based cognitive engagement
-- Preventive dementia support programs
-- Senior rehabilitation programs
-- Healthcare wellness initiatives
+- Preventive dementia support initiatives
+- Senior rehabilitation environments
+- Healthcare wellness programs
 
 ---
 
@@ -65,15 +72,15 @@ Potential applications:
 ### Frontend
 - HTML5
 - CSS3
-- JavaScript (Vanilla JS)
+- Vanilla JavaScript
 
 ### Progressive Web App
 - Service Workers
 - Web App Manifest
-- Offline support
+- Offline caching
+- Installable home-screen experience
 
 ### Deployment
-- Vercel
 - GitHub Pages
 
 ---
@@ -83,41 +90,50 @@ Potential applications:
 ```bash
 Cognitive-Games/
 │
-├── index.html
-├── light-catcher.html
-├── road-runner.html
-├── simons-path.html
-├── matchOrNoMatch.html
-├── sorterGame.html
-├── rhythmTap.html
-├── word-wise.html
-├── balloon-float.html
+├── index.html              # Main landing page
+├── light-catcher.html      # Reflex & speed game
+├── road-runner.html        # Attention & coordination game
+├── simons-path.html        # Memory recall game
+├── word-wise.html          # Language cognition game
+├── sorterGame.html         # Executive thinking game
+├── matchOrNoMatch.html     # Visual recognition game
+├── balloon-float.html      # Sustained attention game
+├── rhythmTap.html          # Motor timing game
 │
-├── settings.html
-├── shared.js
-├── word-wise-data.js
+├── settings.html           # Accessibility & user preferences
+├── shared.js               # Shared logic utilities
+├── word-wise-data.js       # Vocabulary dataset
 │
-├── manifest.json
-├── sw.js
-├── icon-192.png
-├── icon-512.png
+├── manifest.json           # PWA configuration
+├── sw.js                   # Service worker
+├── icon-192.png            # App icon
+├── icon-512.png            # App icon
 │
-└── CTG_mobile_fixed.html
+└── CTG_mobile_fixed.html   # Mobile compatibility improvements
 ```
+
+---
+
+## 🚀 Live Deployment
+
+🔗 **GitHub Pages Deployment:**  
+https://kip23theo.github.io/Cognitive-Games/
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Modern browser
+You only need:
+
+- Modern web browser
 - Git (optional)
 - VS Code (recommended)
 
 ### Clone Repository
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/Cognitive-Games.git
+git clone https://github.com/kip23theo/Cognitive-Games.git
 ```
 
 ### Run Locally
@@ -132,50 +148,62 @@ Open:
 index.html
 ```
 
-Or use Live Server in VS Code.
+Or run with VS Code Live Server.
 
 ---
 
 ## 🎯 Cognitive Skill Mapping
 
-| Game | Primary Cognitive Benefit |
-|------|--------------------------|
-| Light Catcher | Reflex & Visual Response |
-| Road Runner | Focus & Coordination |
+| Game | Cognitive Benefit |
+|------|------------------|
+| Light Catcher | Processing Speed & Reflexes |
+| Road Runner | Attention & Quick Decisions |
 | Simon’s Path | Memory Recall |
-| Match Or No Match | Pattern Recognition |
-| Word Wise | Language Cognition |
-| Sorter Game | Logical Thinking |
-| Rhythm Tap | Auditory Coordination |
-| Balloon Float | Attention & Reaction |
+| Word Wise | Language & Vocabulary |
+| Sorter Game | Executive Function |
+| Match Or No Match | Visual Recognition |
+| Balloon Float | Sustained Attention |
+| Rhythm Tap | Coordination & Timing |
 
 ---
 
-## 🌍 Live Demo
+## 📱 Progressive Web App Features
 
-https://cognitive-disorder-games.vercel.app
+Install the platform directly to your device:
+
+- Works like a native app
+- Offline accessibility
+- Fast loading performance
+- Home-screen shortcut support
+- Browser-independent user experience
 
 ---
 
 ## 🔮 Future Enhancements
 
-- Personalized cognitive assessment
-- Progress tracking dashboard
-- Difficulty adaptation based on user performance
-- Caregiver monitoring dashboard
-- AI-generated cognitive insights
-- Voice guidance for elderly accessibility
+Planned improvements include:
+
+- AI-based cognitive performance analysis
+- Personalized difficulty adaptation
+- Progress tracking dashboards
+- Caregiver monitoring portal
 - Multi-language support
-- Healthcare integration modules
+- Voice-guided accessibility mode
+- Healthcare integration for elder care programs
+- Analytics for rehabilitation professionals
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributors
 
-Contributions are welcome for improving accessibility, gameplay, and elder-care features.
+Developed collaboratively as part of a TCS innovation prototype.
+
+Contributors:
+- kip23theo
+- Project collaborators
 
 ---
 
 ## 📄 License
 
-Prototype developed as part of a Tata Consultancy Services (TCS) innovation use case focused on elderly cognitive wellness.
+This project is a prototype developed for educational and innovation purposes under a Tata Consultancy Services (TCS) elderly care use case.

@@ -1,4 +1,4 @@
-# 🧠 Cognitive Training Games for Elder Care
+# Cognitive Training Games for Elder Care
 
 A browser-based cognitive wellness platform designed specifically for elderly users (65+) to support memory, attention, processing speed, coordination, and language skills through engaging interactive games.
 
@@ -199,9 +199,10 @@ Planned improvements include:
 Developed collaboratively as part of a TCS innovation prototype.
 
 Contributors:
-- kip23theo
-- Project collaborators
-
+-Crispin Theophane
+-Adharsh Jolly
+-Malavika
+-Asna
 ---
 
 ## 📄 License

@@ -396,21 +396,45 @@ body {
 #panelRight .panel-arrow,
 #panelRight .panel-label { color: rgba(255,255,255,0.75); }
 
+.panel.active-left,
+.panel.active-right {
+  position: relative;
+  overflow: hidden;
+  border-color: white;
+  transform: scale(1.03);
+}
+
+/* Moving light effect */
+.panel.active-left::before,
+.panel.active-right::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -60%;
+  width: 60%;
+  height: 180%;
+  background: rgba(255,255,255,0.45);
+  transform: rotate(25deg);
+  filter: blur(12px);
+
+  animation: lightSweep 1s linear infinite;
+}
+
+/* Blue glow */
 .panel.active-left {
   background: linear-gradient(135deg, #74B9FF, #0984e3);
-  box-shadow: 0 6px 30px rgba(116,185,255,0.5);
-  transform: scale(1.03);
-  border-color: #74B9FF;
+  box-shadow: 0 0 25px rgba(116,185,255,0.7);
 }
+
+/* Pink glow */
+.panel.active-right {
+  background: linear-gradient(135deg, #FD79A8, #e84393);
+  box-shadow: 0 0 25px rgba(253,121,168,0.7);
+}
+
 .panel.active-left .panel-arrow,
 .panel.active-left .panel-label { color: white; }
 
-.panel.active-right {
-  background: linear-gradient(135deg, #FD79A8, #e84393);
-  box-shadow: 0 6px 30px rgba(253,121,168,0.5);
-  transform: scale(1.03);
-  border-color: #FD79A8;
-}
 .panel.active-right .panel-arrow,
 .panel.active-right .panel-label { color: white; }
 
@@ -436,6 +460,15 @@ body {
   0%,100% { transform: translateX(0); }
   25% { transform: translateX(-6px); }
   75% { transform: translateX(6px); }
+}
+@keyframes lightSweep {
+  0% {
+    left: -70%;
+  }
+
+  100% {
+    left: 140%;
+  }
 }
 
 /* ── BOTTOM ── */

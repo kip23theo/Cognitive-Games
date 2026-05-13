@@ -66,7 +66,19 @@ button{
 
 <div class="card">
 
-<h1>Institution Registration</h1>
+<h1>Registration Portal</h1>
+
+<button onclick="showAdminForm()">
+Admin Registration
+</button>
+
+<button onclick="showParticipantForm()">
+Participant Registration
+</button>
+
+<!-- ADMIN FORM -->
+
+<div id="adminForm" style="display:none;">
 
 <label>Institution Name</label>
 <input type="text" id="institution">
@@ -78,14 +90,52 @@ button{
 <input type="password" id="secret">
 
 <button onclick="registerInstitution()">
-Complete Registration
+Complete Admin Registration
 </button>
+
+</div>
+
+<!-- PARTICIPANT FORM -->
+
+<div id="participantForm" style="display:none;">
+
+<label>Participant Name</label>
+<input type="text" id="participantName">
+
+<label>Age</label>
+<input type="number" id="participantAge">
+
+<label>Participant ID</label>
+<input type="text" id="participantId">
+
+<button onclick="addParticipant()">
+Register Participant
+</button>
+  <div id="participantList"></div>
+
+</div>
 
 </div>
 
 <script>
 
 const ADMIN_SECRET = "CTG2026";
+
+function showAdminForm(){
+
+  document.getElementById("adminForm").style.display = "block";
+
+  document.getElementById("participantForm").style.display = "none";
+}
+
+function showParticipantForm(){
+
+  document.getElementById("participantForm").style.display = "block";
+
+  document.getElementById("adminForm").style.display = "none";
+}
+
+/* ADMIN REGISTRATION */
 
 function registerInstitution(){
 
@@ -99,16 +149,21 @@ function registerInstitution(){
     document.getElementById("secret").value.trim();
 
   if(!institution || !admin || !secret){
+
     alert("Please fill all fields");
     return;
   }
 
   if(secret !== ADMIN_SECRET){
+
     alert("Invalid secret code");
     return;
   }
 
-  localStorage.setItem("ctg_registered","true");
+  localStorage.setItem(
+    "ctg_registered",
+    "true"
+  );
 
   localStorage.setItem(
     "ctg_institution",
@@ -120,9 +175,165 @@ function registerInstitution(){
     admin
   );
 
-  window.location.href = "index.html";
+  /* create empty participant list */
+
+  if(!localStorage.getItem("ctg_participants")){
+
+    localStorage.setItem(
+      "ctg_participants",
+      JSON.stringify([])
+    );
+  }
+
+  logActivity(
+    "Institution Registered : " + institution
+  );
+
+  alert("Admin registration successful");
 }
 
+/* PARTICIPANT REGISTRATION */
+
+function addParticipant(){
+
+  const name =
+    document.getElementById("participantName").value.trim();
+
+  const age =
+    document.getElementById("participantAge").value.trim();
+
+  const id =
+    document.getElementById("participantId").value.trim();
+
+  if(!name || !age || !id){
+
+    alert("Please fill all fields");
+    return;
+  }
+
+  let participants =
+    JSON.parse(
+      localStorage.getItem("ctg_participants")
+    ) || [];
+
+  participants.push({
+    name,
+    age,
+    id
+  });
+
+  localStorage.setItem(
+    "ctg_participants",
+    JSON.stringify(participants)
+  );
+
+  logActivity(
+    "Participant Added : " + name
+  );
+
+  alert("Participant registered successfully");
+
+  renderParticipants();
+}
+
+/* PARTICIPANT LIST */
+
+function renderParticipants(){
+
+  let participants =
+    JSON.parse(
+      localStorage.getItem("ctg_participants")
+    ) || [];
+
+  let html = "";
+
+  participants.forEach((p,index)=>{
+
+    html += `
+      <div style="
+        margin-top:15px;
+        padding:10px;
+        border:1px solid #ccc;
+        border-radius:10px;
+      ">
+
+        <b>${p.name}</b><br>
+        Age : ${p.age}<br>
+        ID : ${p.id}<br><br>
+
+        <button onclick="deleteParticipant(${index})">
+          Delete
+        </button>
+
+      </div>
+    `;
+  });
+
+  document.getElementById(
+    "participantList"
+  ).innerHTML = html;
+}
+
+function deleteParticipant(index){
+
+  const confirmDelete =
+    confirm("Are you sure?");
+
+  if(!confirmDelete){
+    return;
+  }
+
+  const word =
+    prompt("Type DELETE to confirm");
+
+  if(word !== "DELETE"){
+
+    alert("Deletion cancelled");
+    return;
+  }
+
+  let participants =
+    JSON.parse(
+      localStorage.getItem("ctg_participants")
+    ) || [];
+
+  const removed =
+    participants[index];
+
+  participants.splice(index,1);
+
+  localStorage.setItem(
+    "ctg_participants",
+    JSON.stringify(participants)
+  );
+
+  logActivity(
+    "Participant Deleted : " + removed.name
+  );
+
+  renderParticipants();
+}
+
+/* ACTIVITY LOG */
+
+function logActivity(message){
+
+  let logs =
+    JSON.parse(
+      localStorage.getItem("ctg_logs")
+    ) || [];
+
+  logs.push({
+    message,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem(
+    "ctg_logs",
+    JSON.stringify(logs)
+  );
+}
+renderParticipants();
 </script>
 
 </body>

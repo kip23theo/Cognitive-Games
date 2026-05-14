@@ -118,8 +118,7 @@ Register Participant
 </div>
 
 <script>
-
-const ADMIN_SECRET = "CTG2026";
+  let isAdminLoggedIn = false;
 
 function showAdminForm(){
 
@@ -154,11 +153,7 @@ function registerInstitution(){
     return;
   }
 
-  if(secret !== ADMIN_SECRET){
-
-    alert("Invalid secret code");
-    return;
-  }
+  /* SAVE ADMIN DETAILS */
 
   localStorage.setItem(
     "ctg_registered",
@@ -175,7 +170,21 @@ function registerInstitution(){
     admin
   );
 
-  /* create empty participant list */
+  /* ADMIN CREATES SECRET CODE */
+
+  localStorage.setItem(
+    "ctg_admin_secret",
+    secret
+  );
+
+  /* MARK THIS USER AS ADMIN */
+
+  localStorage.setItem(
+    "ctg_role",
+    "admin"
+  );
+
+  /* CREATE PARTICIPANT STORAGE */
 
   if(!localStorage.getItem("ctg_participants")){
 
@@ -189,9 +198,10 @@ function registerInstitution(){
     "Institution Registered : " + institution
   );
 
-alert("Admin registration successful");
+  alert("Admin registration successful");
 
-window.location.replace("index.html");
+  window.location.href = "index.html";
+}
 
 /* PARTICIPANT REGISTRATION */
 
@@ -205,6 +215,18 @@ function addParticipant(){
 
   const id =
     document.getElementById("participantId").value.trim();
+
+  const enteredSecret =
+    prompt("Enter Institution Secret Code");
+
+  const savedSecret =
+    localStorage.getItem("ctg_admin_secret");
+
+  if(enteredSecret !== savedSecret){
+
+    alert("Invalid Secret Code");
+    return;
+  }
 
   if(!name || !age || !id){
 
@@ -228,13 +250,25 @@ function addParticipant(){
     JSON.stringify(participants)
   );
 
+  /* MARK USER AS PARTICIPANT */
+
+  localStorage.setItem(
+    "ctg_registered",
+    "true"
+  );
+
+  localStorage.setItem(
+    "ctg_role",
+    "participant"
+  );
+
   logActivity(
     "Participant Added : " + name
   );
 
   alert("Participant registered successfully");
 
-  renderParticipants();
+  window.location.href = "index.html";
 }
 
 /* PARTICIPANT LIST */
@@ -262,9 +296,17 @@ function renderParticipants(){
         Age : ${p.age}<br>
         ID : ${p.id}<br><br>
 
-        <button onclick="deleteParticipant(${index})">
-          Delete
-        </button>
+       ${
+  localStorage.getItem("ctg_role") === "admin"
+  ?
+  `
+  <button onclick="deleteParticipant(${index})">
+    Delete
+  </button>
+  `
+  :
+  ""
+}
 
       </div>
     `;

@@ -1,10 +1,18 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>
-if (localStorage.getItem("ctg_registered") !== "true") {
-  window.location.href = "registration.html";
-}
+  <script>
+window.addEventListener("load", () => {
+
+  const registered =
+    localStorage.getItem("ctg_registered");
+
+  if (registered !== "true") {
+
+    window.location.href = "./registration.html";
+  }
+
+});
 </script>
     <meta charset="UTF-8" />
     <meta

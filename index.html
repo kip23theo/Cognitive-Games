@@ -4,9 +4,10 @@
   <script>
 window.addEventListener("load", () => {
 
-  const registered =
-    localStorage.getItem("ctg_registered");
+  const role =
+  localStorage.getItem("ctg_role");
 
+console.log("Current role:", role);
   if (registered !== "true") {
 
     window.location.replace("registration.html");

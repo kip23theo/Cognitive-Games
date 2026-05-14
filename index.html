@@ -1,13 +1,17 @@
 <!doctype html>
 <html lang="en">
   <head>
-  <script>
+ <script>
 window.addEventListener("load", () => {
 
-  const role =
-  localStorage.getItem("ctg_role");
+  const registered =
+    localStorage.getItem("ctg_registered");
 
-console.log("Current role:", role);
+  const role =
+    localStorage.getItem("ctg_role");
+
+  console.log("Current role:", role);
+
   if (registered !== "true") {
 
     window.location.replace("registration.html");

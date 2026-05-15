@@ -147,6 +147,38 @@ function registerInstitution(){
   const secret =
     document.getElementById("secret").value.trim();
 
+  const savedInstitution =
+  localStorage.getItem("ctg_institution");
+
+const savedSecret =
+  localStorage.getItem("ctg_admin_secret");
+
+/* IF INSTITUTION ALREADY EXISTS */
+
+if(savedInstitution === institution){
+
+  if(savedSecret !== secret){
+
+    alert("Wrong Secret Code");
+    return;
+  }
+
+  alert("Admin Login Successful");
+
+  localStorage.setItem(
+    "ctg_registered",
+    "true"
+  );
+
+  localStorage.setItem(
+    "ctg_role",
+    "admin"
+  );
+
+  window.location.href = "index.html";
+  return;
+}
+
   if(!institution || !admin || !secret){
 
     alert("Please fill all fields");

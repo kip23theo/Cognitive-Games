@@ -7,11 +7,14 @@ window.addEventListener("load", () => {
   const registered =
     localStorage.getItem("ctg_registered");
 
+
   console.log("Registered:", registered);
 
-  if (registered !== "true") {
+  // if not registered → go to registration page
+  if (!registered || registered !== "true") {
 
-    window.location.href = "registration.html";
+    window.location.replace("registration.html");
+    return;
   }
 
 });

@@ -105,8 +105,8 @@ Complete Admin Registration
 <label>Age</label>
 <input type="number" id="participantAge">
 
-<label>Participant ID</label>
-<input type="text" id="participantId">
+<label>Institution Name</label>
+<input type="text" id="participantInstitution">
 
 <button onclick="addParticipant()">
 Register Participant
@@ -244,10 +244,13 @@ function addParticipant(){
   const age =
     document.getElementById("participantAge").value.trim();
 
-  const id =
-    document.getElementById("participantId").value.trim();
+  const institution =
+  document.getElementById(
+    "participantInstitution"
+  ).value.trim();
 
-  if(!name || !age || !id){
+
+  if(!name || !age || !institution){
 
     alert("Please fill all fields");
     return;
@@ -261,7 +264,7 @@ function addParticipant(){
   participants.push({
     name,
     age,
-    id
+    institution
   });
 
   localStorage.setItem(
@@ -298,6 +301,11 @@ function addParticipant(){
 /* PARTICIPANT LIST */
 
 function renderParticipants(){
+
+  const adminInstitution =
+  localStorage.getItem(
+    "ctg_institution"
+  );
 
   let participants =
     JSON.parse(

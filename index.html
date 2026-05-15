@@ -595,6 +595,11 @@ window.addEventListener("load", () => {
   </head>
   <body>
     <div id="participantBadge"></div>
+    <div id="adminParticipantsPanel" style="display:none;">
+  <h2>Institution Participants</h2>
+
+  <div id="adminParticipantsList"></div>
+</div>
     <!-- PWA INSTALL BANNER -->
   <div id="install-banner">
   <div class="install-content">
@@ -1021,6 +1026,81 @@ window.addEventListener("load", () => {
 
     badge.style.display = "none";
   }
+
+});
+</script>
+    <script>
+window.addEventListener("load", () => {
+
+  const role =
+    localStorage.getItem("ctg_role");
+
+  if(role !== "admin"){
+    return;
+  }
+
+  const panel =
+    document.getElementById(
+      "adminParticipantsPanel"
+    );
+
+  const list =
+    document.getElementById(
+      "adminParticipantsList"
+    );
+
+  const adminInstitution =
+    localStorage.getItem(
+      "ctg_institution"
+    );
+
+  let participants =
+    JSON.parse(
+      localStorage.getItem(
+        "ctg_participants"
+      )
+    ) || [];
+
+  participants =
+    participants.filter(
+      p => p.institution === adminInstitution
+    );
+
+  panel.style.display = "block";
+
+  if(participants.length === 0){
+
+    list.innerHTML =
+      "<p>No participants registered yet.</p>";
+
+    return;
+  }
+
+  let html = "";
+
+  participants.forEach((p,index)=>{
+
+    html += `
+      <div style="
+        background:white;
+        padding:14px;
+        margin-top:12px;
+        border-radius:12px;
+        border:1px solid #ddd;
+        box-shadow:0 2px 8px rgba(0,0,0,0.05);
+      ">
+
+        <b>👤 ${p.name}</b><br><br>
+
+        Age : ${p.age}<br>
+
+        Institution : ${p.institution}
+
+      </div>
+    `;
+  });
+
+  list.innerHTML = html;
 
 });
 </script>

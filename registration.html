@@ -281,6 +281,11 @@ function addParticipant(){
     "participant"
   );
 
+    localStorage.setItem(
+  "ctg_current_participant",
+  name
+);
+
   logActivity(
     "Participant Added : " + name
   );
